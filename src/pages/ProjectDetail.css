@@ -1,0 +1,131 @@
+.page-project-detail {
+    min-height: 200vh;
+    /* Ensure scroll space */
+}
+
+.project-hero {
+    height: 80vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 4rem;
+}
+
+.hero-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.hero-image {
+    width: 100%;
+    height: 120%;
+    /* Extra height for parallax */
+    object-fit: cover;
+    object-position: center;
+}
+
+.project-detail-title {
+    font-size: var(--font-size-hero);
+    color: #fff;
+    /* Assuming dark overlay or image contrast - forcing white for now or need mixed blend mode */
+    mix-blend-mode: difference;
+    text-transform: capitalize;
+}
+
+.project-content {
+    margin-top: 6rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+}
+
+.project-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.meta-label {
+    font-size: var(--font-size-meta);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.meta-value {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.project-description {
+    font-size: var(--font-size-section);
+    /* Using section size for description lead */
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.project-description p {
+    margin-bottom: 2rem;
+}
+
+.project-gallery {
+    margin-top: 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.gallery-image-wrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+.gallery-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.next-project {
+    margin-top: 10rem;
+    margin-bottom: 6rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.next-project p {
+    font-size: var(--font-size-meta);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.next-project h2 {
+    font-size: var(--font-size-section);
+    transition: color 0.3s ease;
+}
+
+.next-project:hover h2 {
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .project-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .project-description {
+        font-size: var(--font-size-body);
+    }
+}

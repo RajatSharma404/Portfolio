@@ -1,0 +1,146 @@
+.about-section {
+    padding: var(--spacing-xl) 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--spacing-xl);
+    align-items: center;
+    width: 100%;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1;
+}
+
+.about-text {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.7;
+    max-width: 90%;
+}
+
+.about-footer {
+    margin-top: var(--spacing-lg);
+}
+
+.download-resume {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border: 1px solid var(--text-dim);
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.download-resume:hover {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border-color: var(--text-primary);
+}
+
+/* Visuals Column */
+.about-visuals {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.portrait-container {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--bg-secondary);
+    /* Asymmetrical Border Radius */
+    border-radius: 12px 12px 12px 120px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.portrait-image {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    position: relative;
+}
+
+.noise-overlay-local {
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Now Playing Widget */
+.now-playing-widget {
+    position: absolute;
+    bottom: -30px;
+    right: -20px;
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.rotating-text-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: rotate 10s linear infinite;
+    fill: var(--text-secondary);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.album-art {
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    background-color: var(--accent-glow);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .portrait-container {
+        width: 80%;
+        margin: 0 auto;
+        border-radius: 12px 12px 12px 80px;
+    }
+
+    .now-playing-widget {
+        right: 10%;
+    }
+}
