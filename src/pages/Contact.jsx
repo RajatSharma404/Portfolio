@@ -33,7 +33,7 @@ const Contact = () => {
             onClick={handleCopyEmail}
             data-cursor="hover"
           >
-            <h1 className="email-link">hello@rajat.com</h1>
+            <h1 className="email-link">rajat.sharma.myid1@gmail.com</h1>
             <AnimatePresence>
               {copied && (
                 <motion.span
