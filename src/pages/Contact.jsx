@@ -57,8 +57,14 @@ const Contact = () => {
           transition={{ delay: 0.6 }}
         >
           {[
-            { name: "Instagram", url: "https://instagram.com" },
-            { name: "LinkedIn", url: "https://linkedin.com" },
+            {
+              name: "Instagram",
+              url: "https://www.instagram.com/btw.rajat625/",
+            },
+            {
+              name: "LinkedIn",
+              url: "https://www.linkedin.com/in/rajat-sharma-9a053128b/",
+            },
             { name: "GitHub", url: "https://github.com/RajatSharma404" },
           ].map((social, index) => (
             <Magnetic key={index}>
