@@ -1,131 +1,131 @@
 .navigation {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--nav-height);
-    z-index: 100;
-    background-color: rgba(253, 253, 253, 0.9);
-    backdrop-filter: blur(5px);
-    transition: background-color 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--nav-height);
+  z-index: 100;
+  background-color: rgba(253, 253, 253, 0.9);
+  backdrop-filter: blur(5px);
+  transition: background-color 0.3s ease;
 }
 
-[data-theme='dark'] .navigation {
-    background-color: rgba(14, 14, 14, 0.9);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    /* subtle separation in dark mode */
+[data-theme="dark"] .navigation {
+  background-color: rgba(14, 14, 14, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  /* subtle separation in dark mode */
 }
 
 .nav-container {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .nav-logo {
-    font-size: 1.25rem;
-    font-weight: 500;
-    letter-spacing: -0.02em;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
 }
 
 .nav-links {
-    display: flex;
-    gap: 2rem;
+  display: flex;
+  gap: 2rem;
 }
 
 .nav-link {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    transition: color 0.3s ease;
-    position: relative;
-    padding-bottom: 4px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+  position: relative;
+  padding-bottom: 4px;
 }
 
 .nav-link:hover {
-    color: var(--text-primary);
+  color: var(--text-primary);
 }
 
 /* Active State Indicator - Dot below active link */
 .nav-link.active {
-    color: var(--text-primary);
-    font-weight: 500;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 .nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    background-color: var(--text-primary);
-    border-radius: 50%;
-    animation: fadeIn 0.3s ease;
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: var(--text-primary);
+  border-radius: 50%;
+  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(5px);
-    }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .nav-controls {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .theme-toggle {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: none;
-    padding: 0.5rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .theme-toggle:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: var(--text-primary);
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
 }
 
-[data-theme='dark'] .theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+[data-theme="dark"] .theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .theme-toggle svg {
-    transition: transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .theme-toggle:hover svg {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
-    .nav-right {
-        gap: 1.5rem;
-    }
+  .nav-right {
+    gap: 1.5rem;
+  }
 
-    .nav-links {
-        display: none;
-    }
+  .nav-links {
+    display: none;
+  }
 }
