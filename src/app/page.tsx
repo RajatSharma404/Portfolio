@@ -344,6 +344,11 @@ const contactCards = [
     link: "mailto:rajat.sharma.myid1@gmail.com",
   },
   {
+    title: "LINKEDIN",
+    value: "linkedin.com/in/rajat-sharma-9a053128b",
+    link: "https://www.linkedin.com/in/rajat-sharma-9a053128b/",
+  },
+  {
     title: "GITHUB",
     value: "github.com/RajatSharma404",
     link: "https://github.com/RajatSharma404",
@@ -413,6 +418,10 @@ const skillSections = [
 ];
 
 const socialLinks = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/rajat-sharma-9a053128b/",
+  },
   { label: "GitHub", href: "https://github.com/RajatSharma404" },
   { label: "LeetCode", href: "https://leetcode.com/u/RajatSharma404/" },
   { label: "Instagram", href: "https://www.instagram.com/btw.rajat625/" },
@@ -652,6 +661,9 @@ export default function Home() {
   const [chatBoost, setChatBoost] = useState(0);
   const [themePickerOpen, setThemePickerOpen] = useState(false);
   const [cursorFx, setCursorFx] = useState({ x: 120, y: 160, visible: false });
+  const [windowClosed, setWindowClosed] = useState(false);
+  const [windowMinimized, setWindowMinimized] = useState(false);
+  const [windowMaximized, setWindowMaximized] = useState(false);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -699,6 +711,22 @@ export default function Home() {
   );
 
   const maxMessages = 15 + chatBoost;
+
+  const handleWindowControl = (action: "close" | "minimize" | "maximize") => {
+    if (action === "close") {
+      setWindowClosed(true);
+      setWindowMinimized(false);
+      return;
+    }
+    if (action === "minimize") {
+      setWindowMinimized(true);
+      setWindowClosed(false);
+      return;
+    }
+    setWindowMaximized((prev) => !prev);
+    setWindowClosed(false);
+    setWindowMinimized(false);
+  };
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem(
@@ -1700,19 +1728,83 @@ npm run dev`}
     );
   }
 
+  if (windowClosed) {
+    return (
+      <div className="ide-ui flex h-screen items-center justify-center">
+        <button
+          onClick={() => setWindowClosed(false)}
+          className="rounded-lg border border-(--border) bg-(--bg-tabbar) px-5 py-3 text-sm text-(--text-main) hover:bg-(--bg-sidebar)"
+        >
+          Reopen Rajat&apos;s Portfolio
+        </button>
+      </div>
+    );
+  }
+
+  if (windowMinimized) {
+    return (
+      <div className="ide-ui flex h-screen items-end p-4">
+        <button
+          onClick={() => setWindowMinimized(false)}
+          className="flex items-center gap-3 rounded-lg border border-(--border) bg-(--bg-tabbar) px-4 py-2 text-sm"
+        >
+          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+          <span className="ml-2 text-(--text-main)">
+            Rajat&apos;s Portfolio (minimized)
+          </span>
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="ide-ui relative h-screen w-full p-2 md:p-4">
+    <div
+      className={`ide-ui relative h-screen w-full ${
+        windowMaximized ? "p-0" : "p-2 md:p-4"
+      }`}
+    >
       <motion.div
-        className="relative flex h-full flex-col overflow-hidden rounded-xl border border-(--border) bg-(--bg-main) shadow-2xl"
+        className={`relative flex h-full flex-col overflow-hidden border border-(--border) bg-(--bg-main) shadow-2xl ${
+          windowMaximized ? "rounded-none" : "rounded-xl"
+        }`}
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
         <header className="flex items-center justify-between bg-(--titlebar) px-4 py-1.5 text-sm">
           <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-            <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-            <span className="h-3 w-3 rounded-full bg-[#28c840]" />
+            <button
+              aria-label="Close window"
+              title="Close"
+              onClick={() => handleWindowControl("close")}
+              className="group flex h-3 w-3 items-center justify-center rounded-full bg-[#ff5f57]"
+            >
+              <span className="relative block h-2 w-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="absolute left-1/2 top-0 h-2 w-[1.5px] -translate-x-1/2 rotate-45 rounded bg-black/70" />
+                <span className="absolute left-1/2 top-0 h-2 w-[1.5px] -translate-x-1/2 -rotate-45 rounded bg-black/70" />
+              </span>
+            </button>
+            <button
+              aria-label="Minimize window"
+              title="Minimize"
+              onClick={() => handleWindowControl("minimize")}
+              className="group flex h-3 w-3 items-center justify-center rounded-full bg-[#febc2e]"
+            >
+              <span className="block h-[1.5px] w-2 rounded bg-black/70 opacity-0 transition-opacity group-hover:opacity-100" />
+            </button>
+            <button
+              aria-label="Maximize window"
+              title="Maximize"
+              onClick={() => handleWindowControl("maximize")}
+              className="group flex h-3 w-3 items-center justify-center rounded-full bg-[#28c840]"
+            >
+              <span className="relative block h-2 w-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="absolute right-0 top-0 h-1.5 w-1.5 border-r border-t border-black/70" />
+                <span className="absolute bottom-0 left-0 h-1.5 w-1.5 border-b border-l border-black/70" />
+              </span>
+            </button>
             <button
               className="md:hidden"
               aria-label="Toggle mobile sidebar"
