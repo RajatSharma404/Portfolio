@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rajat's Portfolio
+
+An interactive, VS Code-inspired portfolio for Rajat Sharma. It blends a polished developer workspace aesthetic with personal branding, project showcases, a terminal, a Copilot-style assistant, and smooth motion throughout the site.
+
+## Highlights
+
+- VS Code-style layout with explorer, tabs, status bar, terminal, and command palette
+- Personalized sections for home, about, projects, skills, experience, and contact
+- Built-in Copilot assistant with portfolio-aware responses
+- Animated interactions powered by Framer Motion
+- Responsive design tuned for desktop and mobile
+- Dark-first visual system with custom typography and UI theming
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Framer Motion
+- Lucide React
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- [src/app/page.tsx](src/app/page.tsx) - main portfolio experience and UI logic
+- [src/app/layout.tsx](src/app/layout.tsx) - metadata, fonts, and global shell
+- [src/app/globals.css](src/app/globals.css) - theme tokens and base styling
+- [src/app/api/copilot/route.ts](src/app/api/copilot/route.ts) - Copilot assistant API
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Copilot Tips
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The Copilot panel understands a few portfolio-specific shortcuts:
 
-## Deploy on Vercel
+- `/projects` - opens the projects section guidance
+- `/contact` - points to contact details
+- `/resume` - points to the resume file in the sidebar
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+If a visitor asks about dark mode, it replies with the portfolio's running joke: it lives in Dark+.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+This project is ready for standard Next.js deployment targets such as Vercel or any Node-compatible hosting platform.
+
+## Notes
+
+If you want to expand the project, the best places to start are the main page shell in [src/app/page.tsx](src/app/page.tsx) and the assistant logic in [src/app/api/copilot/route.ts](src/app/api/copilot/route.ts).
