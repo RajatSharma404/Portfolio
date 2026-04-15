@@ -425,6 +425,11 @@ const skillSections = [
   },
 ];
 
+const leetCodeStats = {
+  profile: "https://leetcode.com/u/RajatSharma404/",
+  username: "RajatSharma404",
+};
+
 const socialLinks = [
   {
     label: "LinkedIn",
@@ -464,6 +469,27 @@ function ProjectCard({
   index: number;
 }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [stars, setStars] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchStars = async () => {
+      try {
+        const url = new URL(project.github);
+        const [, owner, repo] = url.pathname.split("/");
+        if (!owner || !repo) return;
+
+        const res = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}`,
+        );
+        if (!res.ok) return;
+        const data = (await res.json()) as { stargazers_count?: number };
+        setStars(data.stargazers_count ?? 0);
+      } catch {
+        // silently fail
+      }
+    };
+    fetchStars();
+  }, [project.github]);
 
   return (
     <motion.article
@@ -482,8 +508,13 @@ function ProjectCard({
       onMouseLeave={() => setTilt({ x: 0, y: 0 })}
       whileHover={{ scale: 1.03, boxShadow: "0 20px 40px rgba(0, 0, 0, 0.5)" }}
     >
-      <h4 className="display-font bg-linear-to-r from-violet-400 to-cyan-300 bg-clip-text text-lg font-semibold text-transparent">
-        {project.title}
+      <h4 className="display-font bg-linear-to-r from-violet-400 to-cyan-300 bg-clip-text text-lg font-semibold text-transparent flex items-center justify-between">
+        <span>{project.title}</span>
+        {stars !== null && (
+          <span className="text-xs bg-white/10 rounded-full px-2 py-1 text-[#c9cede]">
+            ★ {stars > 999 ? (stars / 1000).toFixed(1) + "k" : stars}
+          </span>
+        )}
       </h4>
       <p className="mt-1 text-sm text-(--text-muted)">{project.description}</p>
       <p className="mt-3 text-[10px] uppercase tracking-[0.22em] text-[#8f8f8f]">
@@ -1057,6 +1088,10 @@ export default function Home() {
         body: JSON.stringify({ question }),
       });
 
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
+
       if (!res.body) throw new Error("No stream");
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -1072,7 +1107,7 @@ export default function Home() {
           return next;
         });
       }
-    } catch {
+    } catch (err) {
       const fallback = question.toLowerCase().includes("tech")
         ? "Stack: React, Next.js, Tailwind, Node.js, Flask, PostgreSQL, Prisma, AI/ML tooling."
         : question.toLowerCase().includes("project")
@@ -1363,6 +1398,19 @@ export default function Home() {
               practical over hype
             </span>
           </div>
+
+          <a
+            href={leetCodeStats.profile}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 inline-flex items-center gap-2 rounded-full border border-orange-500/40 bg-orange-500/10 px-4 py-2.5 transition-colors hover:border-orange-500/60 hover:bg-orange-500/15"
+          >
+            <span className="text-lg">⚡</span>
+            <span className="text-sm font-medium text-orange-100">
+              LeetCode: {leetCodeStats.username}
+            </span>
+            <span className="text-xs text-orange-300/70">→</span>
+          </a>
 
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
             {skillSections.map((section) => (
@@ -1983,6 +2031,15 @@ npm run dev`}
                     </span>
                     <span className="text-[10px] opacity-70">AI</span>
                   </button>
+
+                  <div className="mt-3 rounded-lg border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-[11px] leading-5 text-cyan-300">
+                    <p className="font-semibold uppercase tracking-wider mb-1">
+                      Shortcuts
+                    </p>
+                    <p className="text-[10px] opacity-75">
+                      Ctrl+P search • Ctrl+` terminal • Ctrl+Shift+C copilot
+                    </p>
+                  </div>
                 </div>
               </motion.aside>
             )}

@@ -97,7 +97,8 @@ export async function POST(req: NextRequest) {
 
   if (!anthropicResponse.ok) {
     const text = await anthropicResponse.text();
-    return new Response(`Anthropic error: ${text}`, { status: 500 });
+    const errorMsg = `Sorry, the Copilot API encountered an error. Try refreshing your browser or ask again in a moment. (${anthropicResponse.status})`;
+    return new Response(errorMsg, { status: 500 });
   }
 
   const data = (await anthropicResponse.json()) as {
