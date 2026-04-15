@@ -714,6 +714,7 @@ export default function Home() {
   const [windowMinimized, setWindowMinimized] = useState(false);
   const [windowMaximized, setWindowMaximized] = useState(false);
   const [stackCopied, setStackCopied] = useState(false);
+  const [recentCommits, setRecentCommits] = useState<Array<{ message: string; date: string; sha: string }>>([]);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -798,6 +799,28 @@ export default function Home() {
   useEffect(() => {
     window.localStorage.setItem("portfolio-tabs", JSON.stringify(openTabs));
   }, [openTabs]);
+
+  useEffect(() => {
+    const fetchRecentCommits = async () => {
+      try {
+        const res = await fetch(
+          "https://api.github.com/repos/RajatSharma404/Portfolio/commits?per_page=5"
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        setRecentCommits(
+          data.map((commit: any) => ({
+            message: commit.commit.message.split("\n")[0],
+            date: new Date(commit.commit.author.date).toLocaleDateString(),
+            sha: commit.sha.slice(0, 7),
+          }))
+        );
+      } catch (error) {
+        console.log("Failed to fetch commits");
+      }
+    };
+    fetchRecentCommits();
+  }, []);
 
   useEffect(() => {
     const keyListener = (event: KeyboardEvent) => {
@@ -1377,6 +1400,26 @@ export default function Home() {
                   solving.
                 </div>
               </section>
+
+              {recentCommits.length > 0 && (
+                <section className="rounded-3xl border border-green-500/25 bg-green-500/5 p-5">
+                  <p className="text-xs uppercase tracking-[0.28em] text-[#8f8f8f]">
+                    Recently Building
+                  </p>
+                  <div className="mt-3 space-y-2">
+                    {recentCommits.slice(0, 3).map((commit) => (
+                      <div
+                        key={commit.sha}
+                        className="rounded-xl border border-green-500/20 bg-green-500/5 px-3 py-2 text-xs"
+                      >
+                        <p className="font-mono text-green-300">{commit.sha}</p>
+                        <p className="mt-1 text-green-200 line-clamp-1">{commit.message}</p>
+                        <p className="mt-1 text-green-300/60 text-xs">{commit.date}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
           </div>
         </div>
