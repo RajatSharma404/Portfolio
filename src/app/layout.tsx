@@ -27,7 +27,7 @@ const uiDisplay = League_Spartan({
 export const metadata: Metadata = {
   title: "Rajat Sharma | Full Stack Developer",
   description:
-    "VS Code-themed portfolio of Rajat Sharma, a Full Stack Developer and B.Tech student from Kanpur Institute of Technology.",
+    "Interactive VS Code-themed portfolio of Rajat Sharma, a Full Stack Developer and B.Tech student from Kanpur Institute of Technology.",
   keywords: [
     "full stack developer",
     "kanpur institute of technology",
@@ -42,6 +42,13 @@ export const metadata: Metadata = {
     description:
       "Browse files to explore Rajat's projects, skills, education, and contact details.",
     type: "website",
+    siteName: "Rajat Sharma Portfolio",
+  },
+  twitter: {
+    card: "summary",
+    title: "Rajat Sharma | Portfolio",
+    description:
+      "Interactive VS Code-themed portfolio of Rajat Sharma, a Full Stack Developer and B.Tech student from Kanpur Institute of Technology.",
   },
 };
 

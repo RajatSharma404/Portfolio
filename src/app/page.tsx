@@ -98,7 +98,7 @@ const menuItems: Record<MenuName, MenuItem[]> = {
     { label: "experience.ts", action: "open-education" },
     { label: "contact.css", action: "open-contact" },
     { label: "README.md", action: "open-readme" },
-    { label: "Rajat_Sharma_Resume.pdf", action: "download-resume" },
+    { label: "resume.pdf", action: "download-resume" },
   ],
   Run: [{ label: "Start Terminal", hint: "Ctrl+`", action: "toggle-terminal" }],
   Terminal: [
@@ -234,8 +234,8 @@ const files: Array<FileNode & { name: string }> = [
   },
   {
     id: "resume",
-    name: "Rajat_Sharma_Resume.pdf",
-    label: "Rajat_Sharma_Resume.pdf",
+    name: "resume.pdf",
+    label: "resume.pdf",
     ext: "pdf",
     folder: "public",
   },
@@ -246,6 +246,8 @@ const projectItems = [
     title: "DSA Tracker",
     description:
       "Practice dashboard and progress tracker for DSA problem solving.",
+    impact:
+      "Tracks solved problems by topic so revision and weak-area review stay organized.",
     stack: ["TypeScript", "React", "Tracking"],
     github: "https://github.com/RajatSharma404/DSA-Tracker",
     live: "https://github.com/RajatSharma404/DSA-Tracker",
@@ -254,6 +256,8 @@ const projectItems = [
     title: "Expense Tracker",
     description:
       "Track and visualize daily expenses with clean TypeScript workflows.",
+    impact:
+      "Turns daily spending into a clearer category-by-category budgeting habit.",
     stack: ["TypeScript", "Finance", "UI"],
     github: "https://github.com/RajatSharma404/expense-tracker",
     live: "https://github.com/RajatSharma404/expense-tracker",
@@ -262,6 +266,8 @@ const projectItems = [
     title: "Weather Forecast App",
     description:
       "Weather dashboard with intuitive forecasts and city-based lookup.",
+    impact:
+      "Makes city search and short-range weather checks faster for everyday use.",
     stack: ["JavaScript", "API", "Frontend"],
     github: "https://github.com/RajatSharma404/weather-forecast-app",
     live: "https://github.com/RajatSharma404/weather-forecast-app",
@@ -270,6 +276,8 @@ const projectItems = [
     title: "Finance Track",
     description:
       "Personal finance and tracking workflow project built in TypeScript.",
+    impact:
+      "Helps structure budgets, recurring expenses, and personal finance routines.",
     stack: ["TypeScript", "Tracker", "Dashboard"],
     github: "https://github.com/RajatSharma404/Finance_track",
     live: "https://github.com/RajatSharma404/Finance_track",
@@ -302,9 +310,9 @@ const heroSignals = [
 ];
 
 const heroStats = [
-  { label: "Projects shipped", value: "08+" },
-  { label: "Core focus", value: "Full stack + AI" },
-  { label: "DSA grind", value: "Daily" },
+  { label: "Featured projects", value: "4" },
+  { label: "Core focus", value: "Full stack + AI tooling" },
+  { label: "DSA practice", value: "Daily" },
   { label: "Response time", value: "< 24h" },
 ];
 
@@ -325,14 +333,14 @@ const experienceItems = [
     period: "2023 - Present",
     role: "B.Tech Student Developer",
     org: "Kanpur Institute of Technology",
-    desc: "Building full-stack projects, solving DSA problems, and exploring AI while pursuing B.Tech.",
+    desc: "Building full-stack projects, solving DSA problems, and exploring AI while pursuing B.Tech. Current work includes the DSA Tracker, Expense Tracker, and Weather Forecast App.",
     tags: ["C++", "JavaScript", "TypeScript", "Node.js", "React", "AI"],
   },
   {
     period: "Current Focus",
     role: "Project Builder",
     org: "Personal Portfolio Projects",
-    desc: "Shipping trackers, problem-solving tools, and productivity apps with a focus on clean engineering.",
+    desc: "Shipping trackers, problem-solving tools, and productivity apps with a focus on clean engineering, readable UX, and honest project demos.",
     tags: ["DSA Tracker", "Expense Tracker", "Weather App", "Finance"],
   },
 ];
@@ -478,6 +486,10 @@ function ProjectCard({
         {project.title}
       </h4>
       <p className="mt-1 text-sm text-(--text-muted)">{project.description}</p>
+      <p className="mt-3 text-[10px] uppercase tracking-[0.22em] text-[#8f8f8f]">
+        What it solves
+      </p>
+      <p className="mt-1 text-sm text-[#c9cede]">{project.impact}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {project.stack.map((tech) => (
           <span
@@ -493,18 +505,24 @@ function ProjectCard({
           href={project.github}
           target="_blank"
           rel="noreferrer"
-          aria-label={`${project.title} github`}
+          aria-label={`${project.title} source code`}
         >
-          GitHub
+          Source
         </a>
-        <a
-          href={project.live}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`${project.title} live link`}
-        >
-          Live
-        </a>
+        {project.live !== project.github ? (
+          <a
+            href={project.live}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${project.title} live demo`}
+          >
+            Live
+          </a>
+        ) : (
+          <span className="rounded border border-white/10 px-2 py-1 text-xs text-(--text-muted)">
+            Demo pending
+          </span>
+        )}
       </div>
     </motion.article>
   );
@@ -697,18 +715,15 @@ export default function Home() {
     item.label.toLowerCase().includes(paletteQuery.toLowerCase()),
   );
 
-  const openFile = useCallback(
-    (id: string) => {
-      if (id === "resume") {
-        window.open("/resume.pdf", "_blank");
-        return;
-      }
-      if (!openTabs.includes(id)) setOpenTabs((prev) => [...prev, id]);
-      setActiveFile(id);
-      setMobileSidebar(false);
-    },
-    [openTabs],
-  );
+  const openFile = useCallback((id: string) => {
+    if (id === "resume") {
+      window.open("/resume.pdf", "_blank");
+      return;
+    }
+    setOpenTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setActiveFile(id);
+    setMobileSidebar(false);
+  }, []);
 
   const maxMessages = 15 + chatBoost;
 
@@ -798,7 +813,7 @@ export default function Home() {
         if (selected.type === "file") {
           openFile(selected.id);
         } else if (selected.id === "cmd-download") {
-          window.open("/Rajat_Sharma_Resume.pdf", "_blank");
+          window.open("/resume.pdf", "_blank");
         } else if (selected.id === "cmd-github") {
           window.open("https://github.com/RajatSharma404", "_blank");
         } else if (selected.id === "cmd-theme") {
@@ -972,7 +987,7 @@ export default function Home() {
     } else if (id === "cmd-download") {
       window.open("/resume.pdf", "_blank");
     } else if (id === "cmd-github") {
-      window.open("https://github.com/", "_blank");
+      window.open("https://github.com/RajatSharma404", "_blank");
     } else if (id === "cmd-theme") {
       setThemePickerOpen(true);
     } else if (id === "cmd-dino") {
@@ -1008,7 +1023,7 @@ export default function Home() {
     } else if (action === "toggle-copilot") {
       setChatOpen((prev) => !prev);
     } else if (action === "open-github") {
-      window.open("https://github.com/", "_blank");
+      window.open("https://github.com/RajatSharma404", "_blank");
     } else if (action === "run-last") {
       if (lastTerminalCommand) runTerminalCommand(lastTerminalCommand);
     } else if (action === "copilot-projects") {
@@ -1061,7 +1076,7 @@ export default function Home() {
       const fallback = question.toLowerCase().includes("tech")
         ? "Stack: React, Next.js, Tailwind, Node.js, Flask, PostgreSQL, Prisma, AI/ML tooling."
         : question.toLowerCase().includes("project")
-          ? "Projects include DSA Tracker Pro, AI Job Hunter, Fitness Roadmap App, and AI Salary Predictor."
+          ? "Projects include DSA Tracker, Expense Tracker, Weather Forecast App, and Finance Track."
           : question.toLowerCase().includes("intern")
             ? "Yes, available for internships and engineering collaborations."
             : "Outside coding: gym training, problem solving, and building side projects.";
@@ -1159,13 +1174,9 @@ export default function Home() {
               </div>
 
               <p className="mt-5 max-w-2xl text-lg leading-8 text-[#b1b6c6] md:text-xl">
-                I live at the crossroads of{" "}
-                <span className="text-(--keyword)">full stack engineering</span>
-                , <span className="text-(--keyword)">AI/ML</span>, and{" "}
-                <span className="text-(--keyword)">DSA</span>. I build systems
-                that are genuinely{" "}
-                <span className="text-(--keyword)">intelligent</span> and{" "}
-                <span className="text-(--keyword)">scalable</span>.
+                I build portfolio-grade full-stack apps, AI utilities, and DSA
+                tools while studying Computer Science. The goal is simple: ship
+                useful products, not just polished screens.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm">
@@ -1345,7 +1356,7 @@ export default function Home() {
                 Skills Matrix
               </h3>
               <p className="mt-2 text-sm text-(--text-muted)">
-                Technologies I use to design, ship, and scale products.
+                Technologies I use to build and ship the projects shown above.
               </p>
             </div>
             <span className="rounded-full border border-cyan-400/35 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-100">

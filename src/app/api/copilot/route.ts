@@ -27,8 +27,7 @@ const commandReplies: Record<string, string> = {
     "Open projects.js in the sidebar to inspect Rajat's featured work.",
   "/contact":
     "Open contact.css in the sidebar for contact details, then check the social links at the bottom.",
-  "/resume":
-    "Open Rajat_Sharma_Resume.pdf from the sidebar to view the resume.",
+  "/resume": "Open resume.pdf from the sidebar to view the resume.",
 };
 
 const promptReply = (rawPrompt: string) => {
@@ -41,34 +40,6 @@ const promptReply = (rawPrompt: string) => {
 
   if (normalized.includes("dark mode") || normalized.includes("light mode")) {
     return "I'm a developer—I only live in Dark+. Check the status bar!";
-  }
-
-  if (normalized.includes("project")) {
-    return "Scanning Rajat's repositories now: open projects.js for the full list, or README.md for the quick tour.";
-  }
-
-  if (
-    normalized.includes("skill") ||
-    normalized.includes("tech stack") ||
-    normalized.includes("stack")
-  ) {
-    return "Rajat's stack is centered on Full Stack Development, AI/ML, and DSA. For the detailed breakdown, check README.md or experience.ts.";
-  }
-
-  if (normalized.includes("contact") || normalized.includes("reach out")) {
-    return "Open contact.css in the sidebar for the direct path, then use the social links at the bottom if you want to say hi faster.";
-  }
-
-  if (normalized.includes("resume") || normalized.includes("cv")) {
-    return "Open Rajat_Sharma_Resume.pdf from the sidebar to get the full résumé.";
-  }
-
-  if (
-    normalized.includes("education") ||
-    normalized.includes("college") ||
-    normalized.includes("experience")
-  ) {
-    return "For the latest details, open experience.ts in the sidebar. README.md has the broader overview too.";
   }
 
   return null;
