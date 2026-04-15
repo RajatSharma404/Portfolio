@@ -441,6 +441,16 @@ const socialLinks = [
   { label: "Email", href: "mailto:rajat.sharma.myid1@gmail.com" },
 ];
 
+type GitHubCommitResponse = {
+  commit: {
+    message: string;
+    author: {
+      date: string;
+    };
+  };
+  sha: string;
+};
+
 const extIcon = (ext: FileNode["ext"]) => {
   if (ext === "tsx") return "TSX";
   if (ext === "html") return "HTML";
@@ -809,15 +819,15 @@ export default function Home() {
           "https://api.github.com/repos/RajatSharma404/Portfolio/commits?per_page=5",
         );
         if (!res.ok) return;
-        const data = await res.json();
+        const data = (await res.json()) as GitHubCommitResponse[];
         setRecentCommits(
-          data.map((commit: any) => ({
+          data.map((commit) => ({
             message: commit.commit.message.split("\n")[0],
             date: new Date(commit.commit.author.date).toLocaleDateString(),
             sha: commit.sha.slice(0, 7),
           })),
         );
-      } catch (error) {
+      } catch {
         console.log("Failed to fetch commits");
       }
     };
@@ -1133,7 +1143,7 @@ export default function Home() {
           return next;
         });
       }
-    } catch (err) {
+    } catch {
       const fallback = question.toLowerCase().includes("tech")
         ? "Stack: React, Next.js, Tailwind, Node.js, Flask, PostgreSQL, Prisma, AI/ML tooling."
         : question.toLowerCase().includes("project")

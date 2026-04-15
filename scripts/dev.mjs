@@ -26,7 +26,6 @@ async function findOpenPort() {
   for (let port = START_PORT; port <= END_PORT; port += 1) {
     // Use the first available port in the configured range.
     // This avoids hard failures when common dev ports are occupied.
-    // eslint-disable-next-line no-await-in-loop
     if (await canListen(port)) {
       return port;
     }
