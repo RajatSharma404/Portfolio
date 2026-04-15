@@ -713,6 +713,7 @@ export default function Home() {
   const [windowClosed, setWindowClosed] = useState(false);
   const [windowMinimized, setWindowMinimized] = useState(false);
   const [windowMaximized, setWindowMaximized] = useState(false);
+  const [stackCopied, setStackCopied] = useState(false);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -1411,6 +1412,23 @@ export default function Home() {
             </span>
             <span className="text-xs text-orange-300/70">→</span>
           </a>
+
+          <button
+            onClick={() => {
+              const allSkills = skillSections
+                .flatMap((section) => section.items.map((item) => item.name))
+                .join(", ");
+              navigator.clipboard.writeText(allSkills);
+              setStackCopied(true);
+              setTimeout(() => setStackCopied(false), 2000);
+            }}
+            className="ml-2 inline-flex items-center gap-2 rounded-full border border-green-500/40 bg-green-500/10 px-4 py-2.5 transition-all hover:border-green-500/60 hover:bg-green-500/15"
+          >
+            <span className="text-lg">{stackCopied ? "✓" : "📋"}</span>
+            <span className="text-sm font-medium text-green-100">
+              {stackCopied ? "Copied!" : "Share Stack"}
+            </span>
+          </button>
 
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
             {skillSections.map((section) => (
