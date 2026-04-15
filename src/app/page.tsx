@@ -714,7 +714,9 @@ export default function Home() {
   const [windowMinimized, setWindowMinimized] = useState(false);
   const [windowMaximized, setWindowMaximized] = useState(false);
   const [stackCopied, setStackCopied] = useState(false);
-  const [recentCommits, setRecentCommits] = useState<Array<{ message: string; date: string; sha: string }>>([]);
+  const [recentCommits, setRecentCommits] = useState<
+    Array<{ message: string; date: string; sha: string }>
+  >([]);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -804,7 +806,7 @@ export default function Home() {
     const fetchRecentCommits = async () => {
       try {
         const res = await fetch(
-          "https://api.github.com/repos/RajatSharma404/Portfolio/commits?per_page=5"
+          "https://api.github.com/repos/RajatSharma404/Portfolio/commits?per_page=5",
         );
         if (!res.ok) return;
         const data = await res.json();
@@ -813,7 +815,7 @@ export default function Home() {
             message: commit.commit.message.split("\n")[0],
             date: new Date(commit.commit.author.date).toLocaleDateString(),
             sha: commit.sha.slice(0, 7),
-          }))
+          })),
         );
       } catch (error) {
         console.log("Failed to fetch commits");
@@ -1413,8 +1415,12 @@ export default function Home() {
                         className="rounded-xl border border-green-500/20 bg-green-500/5 px-3 py-2 text-xs"
                       >
                         <p className="font-mono text-green-300">{commit.sha}</p>
-                        <p className="mt-1 text-green-200 line-clamp-1">{commit.message}</p>
-                        <p className="mt-1 text-green-300/60 text-xs">{commit.date}</p>
+                        <p className="mt-1 text-green-200 line-clamp-1">
+                          {commit.message}
+                        </p>
+                        <p className="mt-1 text-green-300/60 text-xs">
+                          {commit.date}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -2332,7 +2338,25 @@ npm run dev`}
                   {msg.text}
                 </p>
               ))}
-              {chatLoading && <p className="text-(--text-muted)">typing...</p>}
+              {chatLoading && (
+                <div className="rounded p-2 bg-[#1d2230] space-y-1.5">
+                  <motion.div
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="h-3 bg-[#2a3449] rounded w-3/4"
+                  />
+                  <motion.div
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity, delay: 0.2 }}
+                    className="h-3 bg-[#2a3449] rounded w-full"
+                  />
+                  <motion.div
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}
+                    className="h-3 bg-[#2a3449] rounded w-2/3"
+                  />
+                </div>
+              )}
               <div className="flex flex-wrap gap-2">
                 {[
                   "What's your tech stack?",
