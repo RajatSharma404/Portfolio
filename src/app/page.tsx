@@ -1883,7 +1883,7 @@ npm run dev`}
               </span>
             </button>
             <button
-              className="md:hidden"
+              className="md:hidden p-2 hover:bg-white/10 rounded transition-colors"
               aria-label="Toggle mobile sidebar"
               onClick={() => setMobileSidebar((prev) => !prev)}
             >
@@ -2262,10 +2262,11 @@ npm run dev`}
 
       <button
         aria-label="Open Copilot assistant"
-        className="absolute bottom-16 right-4 rounded-full border border-cyan-400/40 bg-[#1f2430] px-4 py-2 text-sm shadow-lg shadow-cyan-500/20"
+        className="absolute bottom-16 right-2 sm:right-4 rounded-full border border-cyan-400/40 bg-[#1f2430] px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm shadow-lg shadow-cyan-500/20 hover:border-cyan-400/60 hover:bg-[#253548] transition-colors"
         onClick={() => setChatOpen((prev) => !prev)}
       >
-        Ask Rajat&apos;s Copilot
+        <span className="hidden sm:inline">Ask Rajat&apos;s Copilot</span>
+        <span className="sm:hidden">Ask Copilot</span>
       </button>
 
       <AnimatePresence>
@@ -2274,7 +2275,7 @@ npm run dev`}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            className="absolute bottom-28 right-4 z-40 flex h-107.5 w-82.5 flex-col rounded-xl border border-(--border) bg-[#11161f]"
+            className="absolute bottom-24 right-2 z-40 flex h-96 w-80 flex-col rounded-xl border border-(--border) bg-[#11161f] sm:bottom-28 sm:right-4 sm:h-107.5 sm:w-82.5"
           >
             <div className="border-b border-(--border) px-3 py-2 text-sm">
               Rajat&apos;s Copilot Chat
@@ -2298,7 +2299,7 @@ npm run dev`}
                 ].map((q) => (
                   <button
                     key={q}
-                    className="rounded border border-(--border) px-2 py-1 text-xs"
+                    className="rounded border border-(--border) px-2 py-1.5 sm:py-1 text-xs hover:bg-white/5 transition-colors active:bg-white/10"
                     onClick={() => askCopilot(q)}
                   >
                     {q}
