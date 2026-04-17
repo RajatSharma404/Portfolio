@@ -4,6 +4,7 @@ import {
   League_Spartan,
   Space_Grotesk,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const uiSans = Space_Grotesk({
@@ -113,7 +114,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-9999 focus:rounded focus:bg-black focus:px-3 focus:py-2 focus:text-white"
+        >
+          Skip to main content
+        </a>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

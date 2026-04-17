@@ -19,7 +19,7 @@ Rules:
 - If you do not know a specific detail, tell the user to check README.md or experience.ts in the sidebar.
 - If the user types /projects, /contact, or /resume, tell them exactly which sidebar file to click.
 - Always encourage them to reach out via contact.css or the social links at the bottom.
-- If the user asks for dark mode or light mode, reply exactly: I'm a developer—I only live in Dark+. Check the status bar!
+- If the user asks for dark mode or light mode, reply exactly: I'm a developer—I only live in Dark+. Check the theme chip in the top-right.
 `;
 
 const commandReplies: Record<string, string> = {
@@ -39,7 +39,7 @@ const promptReply = (rawPrompt: string) => {
   }
 
   if (normalized.includes("dark mode") || normalized.includes("light mode")) {
-    return "I'm a developer—I only live in Dark+. Check the status bar!";
+    return "I'm a developer—I only live in Dark+. Check the theme chip in the top-right.";
   }
 
   return null;

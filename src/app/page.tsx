@@ -1,18 +1,38 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Blocks,
   ChevronRight,
   FolderOpen,
   GitBranch,
   Search,
-  Sparkles,
   TerminalSquare,
   UserRound,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import {
+  projectItems,
+  type ProjectCategory,
+  type ProjectItem,
+} from "@/content/site-data";
+
+const DinoGame = dynamic(() => import("@/components/dino-game"), {
+  ssr: false,
+  loading: () => (
+    <p className="mt-2 text-xs text-(--text-muted)">Loading dino game...</p>
+  ),
+});
 
 type ThemeName = "darkplus" | "dracula" | "monokai" | "onedark" | "solarized";
 
@@ -241,49 +261,6 @@ const files: Array<FileNode & { name: string }> = [
   },
 ];
 
-const projectItems = [
-  {
-    title: "DSA Tracker",
-    description:
-      "Practice dashboard and progress tracker for DSA problem solving.",
-    impact:
-      "Tracks solved problems by topic so revision and weak-area review stay organized.",
-    stack: ["TypeScript", "React", "Tracking"],
-    github: "https://github.com/RajatSharma404/DSA-Tracker",
-    live: "https://github.com/RajatSharma404/DSA-Tracker",
-  },
-  {
-    title: "Expense Tracker",
-    description:
-      "Track and visualize daily expenses with clean TypeScript workflows.",
-    impact:
-      "Turns daily spending into a clearer category-by-category budgeting habit.",
-    stack: ["TypeScript", "Finance", "UI"],
-    github: "https://github.com/RajatSharma404/expense-tracker",
-    live: "https://github.com/RajatSharma404/expense-tracker",
-  },
-  {
-    title: "Weather Forecast App",
-    description:
-      "Weather dashboard with intuitive forecasts and city-based lookup.",
-    impact:
-      "Makes city search and short-range weather checks faster for everyday use.",
-    stack: ["JavaScript", "API", "Frontend"],
-    github: "https://github.com/RajatSharma404/weather-forecast-app",
-    live: "https://github.com/RajatSharma404/weather-forecast-app",
-  },
-  {
-    title: "Finance Track",
-    description:
-      "Personal finance and tracking workflow project built in TypeScript.",
-    impact:
-      "Helps structure budgets, recurring expenses, and personal finance routines.",
-    stack: ["TypeScript", "Tracker", "Dashboard"],
-    github: "https://github.com/RajatSharma404/Finance_track",
-    live: "https://github.com/RajatSharma404/Finance_track",
-  },
-];
-
 const quickNav = [
   { id: "projects", label: "Projects" },
   { id: "about", label: "About Me" },
@@ -310,7 +287,7 @@ const heroSignals = [
 ];
 
 const heroStats = [
-  { label: "Featured projects", value: "4" },
+  { label: "Featured projects", value: String(projectItems.length) },
   { label: "Core focus", value: "Full stack + AI tooling" },
   { label: "DSA practice", value: "Daily" },
   { label: "Response time", value: "< 24h" },
@@ -451,6 +428,28 @@ type GitHubCommitResponse = {
   sha: string;
 };
 
+type GitHubRepoResponse = {
+  name: string;
+  html_url: string;
+  stargazers_count: number;
+  pushed_at: string;
+  description: string | null;
+  language: string | null;
+};
+
+type GitHubUserResponse = {
+  public_repos: number;
+  followers: number;
+  following: number;
+};
+
+type ContactFormState = {
+  name: string;
+  email: string;
+  message: string;
+  website: string;
+};
+
 const extIcon = (ext: FileNode["ext"]) => {
   if (ext === "tsx") return "TSX";
   if (ext === "html") return "HTML";
@@ -474,41 +473,33 @@ const tokenClass: Record<Token["type"], string> = {
 function ProjectCard({
   project,
   index,
+  stars,
+  isLoading,
+  onOpenDetails,
 }: {
-  project: (typeof projectItems)[number];
+  project: ProjectItem;
   index: number;
+  stars?: number;
+  isLoading?: boolean;
+  onOpenDetails: (project: ProjectItem) => void;
 }) {
+  const reduceMotion = useReducedMotion();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [stars, setStars] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetchStars = async () => {
-      try {
-        const url = new URL(project.github);
-        const [, owner, repo] = url.pathname.split("/");
-        if (!owner || !repo) return;
-
-        const res = await fetch(
-          `https://api.github.com/repos/${owner}/${repo}`,
-        );
-        if (!res.ok) return;
-        const data = (await res.json()) as { stargazers_count?: number };
-        setStars(data.stargazers_count ?? 0);
-      } catch {
-        // silently fail
-      }
-    };
-    fetchStars();
-  }, [project.github]);
 
   return (
     <motion.article
       className="glass-card will-transform rounded-xl p-4"
       style={{
-        transform: `perspective(600px) rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+        transform: reduceMotion
+          ? "none"
+          : `perspective(600px) rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
       }}
-      animate={{ y: [0, -6, 0] }}
-      transition={{ duration: 3 + index, repeat: Number.POSITIVE_INFINITY }}
+      animate={reduceMotion ? undefined : { y: [0, -6, 0] }}
+      transition={
+        reduceMotion
+          ? undefined
+          : { duration: 3 + index, repeat: Number.POSITIVE_INFINITY }
+      }
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -516,21 +507,35 @@ function ProjectCard({
         setTilt({ x: x * 15, y: -y * 15 });
       }}
       onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-      whileHover={{ scale: 1.03, boxShadow: "0 20px 40px rgba(0, 0, 0, 0.5)" }}
+      whileHover={
+        reduceMotion
+          ? undefined
+          : { scale: 1.03, boxShadow: "0 20px 40px rgba(0, 0, 0, 0.5)" }
+      }
     >
       <h4 className="display-font bg-linear-to-r from-violet-400 to-cyan-300 bg-clip-text text-lg font-semibold text-transparent flex items-center justify-between">
         <span>{project.title}</span>
-        {stars !== null && (
+        {isLoading ? (
+          <span className="h-6 w-16 animate-pulse rounded-full bg-white/10" />
+        ) : typeof stars === "number" ? (
           <span className="text-xs bg-white/10 rounded-full px-2 py-1 text-[#c9cede]">
             ★ {stars > 999 ? (stars / 1000).toFixed(1) + "k" : stars}
           </span>
-        )}
+        ) : null}
       </h4>
+      <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-cyan-300/80">
+        {project.category}
+      </p>
       <p className="mt-1 text-sm text-(--text-muted)">{project.description}</p>
       <p className="mt-3 text-[10px] uppercase tracking-[0.22em] text-[#8f8f8f]">
         What it solves
       </p>
       <p className="mt-1 text-sm text-[#c9cede]">{project.impact}</p>
+      <ul className="mt-3 list-disc space-y-1 pl-4 text-xs text-[#b9bfce]">
+        {project.highlights.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
       <div className="mt-3 flex flex-wrap gap-2">
         {project.stack.map((tech) => (
           <span
@@ -542,6 +547,20 @@ function ProjectCard({
         ))}
       </div>
       <div className="mt-3 flex gap-3 text-sm">
+        <button
+          className="rounded border border-white/20 px-2 py-1 text-xs hover:bg-white/10"
+          onClick={() => onOpenDetails(project)}
+          aria-label={`Open details for ${project.title}`}
+        >
+          Details
+        </button>
+        <Link
+          href={`/projects/${project.slug}`}
+          className="rounded border border-cyan-300/30 px-2 py-1 text-xs text-cyan-100 hover:bg-cyan-500/10"
+          aria-label={`Open standalone page for ${project.title}`}
+        >
+          Page
+        </Link>
         <a
           href={project.github}
           target="_blank"
@@ -569,115 +588,8 @@ function ProjectCard({
   );
 }
 
-function DinoGame({
-  onScoreUnlock,
-  onStop,
-}: {
-  onScoreUnlock: () => void;
-  onStop: () => void;
-}) {
-  const gameRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = gameRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let raf = 0;
-    let score = 0;
-    let unlocked = false;
-    let dinoY = 0;
-    let velocityY = 0;
-    const gravity = 0.7;
-    const jump = -10;
-    const obstacles: { x: number; w: number; h: number }[] = [
-      { x: 500, w: 22, h: 40 },
-    ];
-
-    const keyHandler = (e: KeyboardEvent) => {
-      if ((e.key === " " || e.key === "ArrowUp") && dinoY === 0)
-        velocityY = jump;
-      if (e.key === "Escape") onStop();
-    };
-
-    window.addEventListener("keydown", keyHandler);
-
-    const loop = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#d4d4d4";
-      ctx.fillRect(0, 120, canvas.width, 2);
-
-      dinoY += velocityY;
-      velocityY += gravity;
-      if (dinoY > 0) {
-        dinoY = 0;
-        velocityY = 0;
-      }
-
-      ctx.fillStyle = "#7bd88f";
-      ctx.fillRect(40, 90 + dinoY, 22, 30);
-
-      obstacles.forEach((o) => {
-        o.x -= 5;
-        ctx.fillStyle = "#f78c6c";
-        ctx.fillRect(o.x, 120 - o.h, o.w, o.h);
-      });
-
-      if (
-        obstacles[obstacles.length - 1] &&
-        obstacles[obstacles.length - 1].x < 300
-      ) {
-        obstacles.push({
-          x: 500 + Math.random() * 120,
-          w: 20 + Math.random() * 8,
-          h: 30 + Math.random() * 25,
-        });
-      }
-      if (obstacles[0] && obstacles[0].x < -40) obstacles.shift();
-
-      const collision = obstacles.some(
-        (o) => o.x < 62 && o.x + o.w > 40 && 90 + dinoY + 30 > 120 - o.h,
-      );
-
-      score += 1;
-      ctx.fillStyle = "#d4d4d4";
-      ctx.font = "14px Cascadia Code";
-      ctx.fillText(`Score: ${Math.floor(score / 4)}`, 360, 18);
-      ctx.fillText("Space/Up to jump, Esc to quit", 10, 18);
-
-      if (!unlocked && Math.floor(score / 4) >= 50) {
-        unlocked = true;
-        onScoreUnlock();
-      }
-
-      if (!collision) {
-        raf = requestAnimationFrame(loop);
-      } else {
-        ctx.fillStyle = "#ff6b6b";
-        ctx.fillText("Game Over - type play to retry", 130, 70);
-      }
-    };
-
-    raf = requestAnimationFrame(loop);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("keydown", keyHandler);
-    };
-  }, [onScoreUnlock, onStop]);
-
-  return (
-    <canvas
-      ref={gameRef}
-      width={520}
-      height={140}
-      className="mt-2 max-w-full rounded border border-(--border)"
-    />
-  );
-}
-
 export default function Home() {
+  const prefersReducedMotion = useReducedMotion();
   const [booting] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebar, setMobileSidebar] = useState(false);
@@ -719,15 +631,53 @@ export default function Home() {
   const [windowMinimized, setWindowMinimized] = useState(false);
   const [windowMaximized, setWindowMaximized] = useState(false);
   const [stackCopied, setStackCopied] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
+  const [projectFilter, setProjectFilter] = useState<ProjectCategory | "All">(
+    "All",
+  );
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(
+    null,
+  );
+  const [shortcutHelpOpen, setShortcutHelpOpen] = useState(false);
   const [recentCommits, setRecentCommits] = useState<
     Array<{ message: string; date: string; sha: string }>
   >([]);
+  const [recentCommitsLoading, setRecentCommitsLoading] = useState(true);
+  const [githubRepoStars, setGithubRepoStars] = useState<
+    Record<string, number>
+  >({});
+  const [githubOverview, setGithubOverview] = useState<{
+    followers: number;
+    publicRepos: number;
+    following: number;
+    totalStars: number;
+  } | null>(null);
+  const [githubStatsLoading, setGithubStatsLoading] = useState(true);
+  const [contactForm, setContactForm] = useState<ContactFormState>({
+    name: "",
+    email: "",
+    message: "",
+    website: "",
+  });
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [contactFeedback, setContactFeedback] = useState<string | null>(null);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const paletteItems = useMemo(
     () => [
       ...files.map((f) => ({ id: f.id, label: f.name, type: "file" as const })),
+      ...Array.from(
+        new Set(
+          skillSections.flatMap((section) =>
+            section.items.map((item) => item.name),
+          ),
+        ),
+      ).map((skill) => ({
+        id: `skill-${skill.toLowerCase()}`,
+        label: `Find skill: ${skill}`,
+        type: "command" as const,
+      })),
       {
         id: "cmd-download",
         label: "Download Resume",
@@ -747,12 +697,29 @@ export default function Home() {
         type: "command" as const,
       },
       { id: "cmd-copilot", label: "Toggle Copilot", type: "command" as const },
+      {
+        id: "cmd-shortcuts",
+        label: "Show Keyboard Shortcuts",
+        type: "command" as const,
+      },
+      {
+        id: "cmd-copy-email",
+        label: "Copy Email Address",
+        type: "command" as const,
+      },
     ],
     [],
   );
 
   const filteredPalette = paletteItems.filter((item) =>
     item.label.toLowerCase().includes(paletteQuery.toLowerCase()),
+  );
+  const filteredProjects = useMemo(
+    () =>
+      projectFilter === "All"
+        ? projectItems
+        : projectItems.filter((project) => project.category === projectFilter),
+    [projectFilter],
   );
 
   const openPalette = useCallback(() => {
@@ -803,6 +770,44 @@ export default function Home() {
     setWindowMinimized(false);
   };
 
+  const runPaletteSelection = useCallback(
+    (id: string) => {
+      if (files.some((f) => f.id === id)) {
+        openFile(id);
+        return;
+      }
+
+      if (id.startsWith("skill-")) {
+        openFile("skills");
+        return;
+      }
+
+      if (id === "cmd-download") {
+        window.open("/resume.pdf", "_blank");
+      } else if (id === "cmd-github") {
+        window.open("https://github.com/RajatSharma404", "_blank");
+      } else if (id === "cmd-theme") {
+        setThemePickerOpen((prev) => !prev);
+      } else if (id === "cmd-dino") {
+        setShowDino(true);
+        setTerminalOpen(true);
+      } else if (id === "cmd-toggle-sidebar") {
+        setSidebarOpen((prev) => !prev);
+      } else if (id === "cmd-toggle-terminal") {
+        setTerminalOpen((prev) => !prev);
+      } else if (id === "cmd-copilot") {
+        setChatOpen((prev) => !prev);
+      } else if (id === "cmd-shortcuts") {
+        setShortcutHelpOpen(true);
+      } else if (id === "cmd-copy-email") {
+        navigator.clipboard.writeText("rajat.sharma.myid1@gmail.com");
+        setEmailCopied(true);
+        window.setTimeout(() => setEmailCopied(false), 1800);
+      }
+    },
+    [openFile],
+  );
+
   useEffect(() => {
     const storedTheme = window.localStorage.getItem(
       "portfolio-theme",
@@ -824,6 +829,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchRecentCommits = async () => {
+      setRecentCommitsLoading(true);
       try {
         const res = await fetch(
           "https://api.github.com/repos/RajatSharma404/Portfolio/commits?per_page=5",
@@ -839,9 +845,52 @@ export default function Home() {
         );
       } catch {
         console.log("Failed to fetch commits");
+      } finally {
+        setRecentCommitsLoading(false);
       }
     };
+
+    const fetchGithubOverview = async () => {
+      setGithubStatsLoading(true);
+      try {
+        const [profileRes, reposRes] = await Promise.all([
+          fetch("https://api.github.com/users/RajatSharma404"),
+          fetch(
+            "https://api.github.com/users/RajatSharma404/repos?per_page=100&sort=updated",
+          ),
+        ]);
+
+        if (!profileRes.ok || !reposRes.ok) return;
+
+        const profile = (await profileRes.json()) as GitHubUserResponse;
+        const repos = (await reposRes.json()) as GitHubRepoResponse[];
+        const starsByRepo: Record<string, number> = {};
+
+        repos.forEach((repo) => {
+          starsByRepo[repo.name.toLowerCase()] = repo.stargazers_count;
+        });
+
+        const featuredStars = projectItems.reduce((total, project) => {
+          const repoName = project.github.split("/").pop()?.toLowerCase() ?? "";
+          return total + (starsByRepo[repoName] ?? 0);
+        }, 0);
+
+        setGithubRepoStars(starsByRepo);
+        setGithubOverview({
+          followers: profile.followers,
+          publicRepos: profile.public_repos,
+          following: profile.following,
+          totalStars: featuredStars,
+        });
+      } catch {
+        console.log("Failed to fetch GitHub overview");
+      } finally {
+        setGithubStatsLoading(false);
+      }
+    };
+
     fetchRecentCommits();
+    fetchGithubOverview();
   }, []);
 
   useEffect(() => {
@@ -866,9 +915,15 @@ export default function Home() {
         setThemePickerOpen((prev) => !prev);
         return;
       }
+      if (event.key === "?" && !paletteOpen) {
+        event.preventDefault();
+        setShortcutHelpOpen(true);
+        return;
+      }
       if (event.key === "Escape") {
         setMenuOpen(null);
         closePalette();
+        setShortcutHelpOpen(false);
         return;
       }
 
@@ -887,25 +942,8 @@ export default function Home() {
         const selected = filteredPalette[paletteIndex];
         if (!selected) return;
 
-        if (selected.type === "file") {
-          openFile(selected.id);
-        } else if (selected.id === "cmd-download") {
-          window.open("/resume.pdf", "_blank");
-        } else if (selected.id === "cmd-github") {
-          window.open("https://github.com/RajatSharma404", "_blank");
-        } else if (selected.id === "cmd-theme") {
-          setThemePickerOpen((prev) => !prev);
-        } else if (selected.id === "cmd-dino") {
-          setShowDino(true);
-          setTerminalOpen(true);
-        } else if (selected.id === "cmd-toggle-sidebar") {
-          setSidebarOpen((prev) => !prev);
-        } else if (selected.id === "cmd-toggle-terminal") {
-          setTerminalOpen((prev) => !prev);
-        } else if (selected.id === "cmd-copilot") {
-          setChatOpen((prev) => !prev);
-        }
-        setPaletteOpen(false);
+        runPaletteSelection(selected.id);
+        closePalette();
       }
     };
 
@@ -917,6 +955,7 @@ export default function Home() {
     openFile,
     paletteIndex,
     paletteOpen,
+    runPaletteSelection,
     togglePalette,
   ]);
 
@@ -965,8 +1004,7 @@ export default function Home() {
   const closeTab = (id: string) => {
     const updated = openTabs.filter((tabId) => tabId !== id);
     setOpenTabs(updated);
-    if (activeFile === id)
-      setActiveFile(updated[updated.length - 1] ?? "about");
+    if (activeFile === id) setActiveFile(updated[updated.length - 1] ?? "home");
   };
 
   const runTerminalCommand = (raw: string) => {
@@ -1066,24 +1104,7 @@ export default function Home() {
   };
 
   const handlePaletteSelect = (id: string) => {
-    if (files.some((f) => f.id === id)) {
-      openFile(id);
-    } else if (id === "cmd-download") {
-      window.open("/resume.pdf", "_blank");
-    } else if (id === "cmd-github") {
-      window.open("https://github.com/RajatSharma404", "_blank");
-    } else if (id === "cmd-theme") {
-      setThemePickerOpen(true);
-    } else if (id === "cmd-dino") {
-      setTerminalOpen(true);
-      setShowDino(true);
-    } else if (id === "cmd-toggle-sidebar") {
-      setSidebarOpen((prev) => !prev);
-    } else if (id === "cmd-toggle-terminal") {
-      setTerminalOpen((prev) => !prev);
-    } else if (id === "cmd-copilot") {
-      setChatOpen((prev) => !prev);
-    }
+    runPaletteSelection(id);
     closePalette();
   };
 
@@ -1175,6 +1196,47 @@ export default function Home() {
     } finally {
       setChatLoading(false);
     }
+  };
+
+  const submitContactForm = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (contactSubmitting) return;
+
+    setContactSubmitting(true);
+    setContactFeedback(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactForm),
+      });
+
+      const payload = (await res.json()) as {
+        ok?: boolean;
+        message?: string;
+        error?: string;
+      };
+      if (!res.ok || !payload.ok) {
+        setContactFeedback(
+          payload.error ?? "Unable to send message right now.",
+        );
+        return;
+      }
+
+      setContactFeedback(payload.message ?? "Message sent successfully.");
+      setContactForm({ name: "", email: "", message: "", website: "" });
+    } catch {
+      setContactFeedback("Network error. Please try again in a moment.");
+    } finally {
+      setContactSubmitting(false);
+    }
+  };
+
+  const copyEmailAddress = () => {
+    navigator.clipboard.writeText("rajat.sharma.myid1@gmail.com");
+    setEmailCopied(true);
+    window.setTimeout(() => setEmailCopied(false), 1800);
   };
 
   const renderCodeLine = (
@@ -1430,7 +1492,71 @@ export default function Home() {
                 </div>
               </section>
 
-              {recentCommits.length > 0 && (
+              <section className="rounded-3xl border border-cyan-400/25 bg-cyan-500/5 p-5">
+                <p className="text-xs uppercase tracking-[0.28em] text-[#8f8f8f]">
+                  GitHub Pulse
+                </p>
+                {githubStatsLoading ? (
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <div className="h-14 animate-pulse rounded-xl bg-white/10" />
+                    <div className="h-14 animate-pulse rounded-xl bg-white/10" />
+                    <div className="h-14 animate-pulse rounded-xl bg-white/10" />
+                    <div className="h-14 animate-pulse rounded-xl bg-white/10" />
+                  </div>
+                ) : githubOverview ? (
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                    <div className="rounded-xl border border-cyan-400/20 bg-[#101827] px-3 py-2">
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">
+                        Followers
+                      </p>
+                      <p className="mt-1 text-cyan-100">
+                        {githubOverview.followers}
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-cyan-400/20 bg-[#101827] px-3 py-2">
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">
+                        Public Repos
+                      </p>
+                      <p className="mt-1 text-cyan-100">
+                        {githubOverview.publicRepos}
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-cyan-400/20 bg-[#101827] px-3 py-2">
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">
+                        Following
+                      </p>
+                      <p className="mt-1 text-cyan-100">
+                        {githubOverview.following}
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-cyan-400/20 bg-[#101827] px-3 py-2">
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">
+                        Featured Stars
+                      </p>
+                      <p className="mt-1 text-cyan-100">
+                        {githubOverview.totalStars}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-[#a9b6cc]">
+                    Unable to load GitHub stats right now.
+                  </p>
+                )}
+              </section>
+
+              {recentCommitsLoading ? (
+                <section className="rounded-3xl border border-green-500/25 bg-green-500/5 p-5">
+                  <p className="text-xs uppercase tracking-[0.28em] text-[#8f8f8f]">
+                    Recently Building
+                  </p>
+                  <div className="mt-3 space-y-2">
+                    <div className="h-16 animate-pulse rounded-xl bg-green-500/10" />
+                    <div className="h-16 animate-pulse rounded-xl bg-green-500/10" />
+                    <div className="h-16 animate-pulse rounded-xl bg-green-500/10" />
+                  </div>
+                </section>
+              ) : recentCommits.length > 0 ? (
                 <section className="rounded-3xl border border-green-500/25 bg-green-500/5 p-5">
                   <p className="text-xs uppercase tracking-[0.28em] text-[#8f8f8f]">
                     Recently Building
@@ -1452,7 +1578,7 @@ export default function Home() {
                     ))}
                   </div>
                 </section>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
@@ -1556,21 +1682,46 @@ export default function Home() {
                 Featured Projects
               </h3>
               <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-3 py-1 text-xs text-fuchsia-200">
-                {projectItems.length} projects in focus
+                {filteredProjects.length} projects in focus
               </span>
             </div>
             <p className="mt-3 max-w-3xl text-sm text-(--text-muted)">
               A selection of products I engineered and shipped with emphasis on
               clean UX, useful workflows, and real utility.
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {(["All", "Web", "Productivity", "Finance", "AI"] as const).map(
+                (category) => (
+                  <button
+                    key={category}
+                    className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                      projectFilter === category
+                        ? "border-cyan-300/60 bg-cyan-400/15 text-cyan-100"
+                        : "border-white/15 bg-black/20 text-[#b5bfd5] hover:bg-white/10"
+                    }`}
+                    onClick={() => setProjectFilter(category)}
+                    aria-pressed={projectFilter === category}
+                  >
+                    {category}
+                  </button>
+                ),
+              )}
+            </div>
           </section>
 
           <div className="mt-5 grid gap-4 md:grid-cols-2">
-            {projectItems.map((project, index) => (
+            {filteredProjects.map((project, index) => (
               <ProjectCard
                 key={project.title}
                 project={project}
                 index={index}
+                stars={
+                  githubRepoStars[
+                    project.github.split("/").pop()?.toLowerCase() ?? ""
+                  ]
+                }
+                isLoading={githubStatsLoading}
+                onOpenDetails={setSelectedProject}
               />
             ))}
           </div>
@@ -1635,44 +1786,120 @@ export default function Home() {
           <div className="mt-5 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
             <div className="space-y-3">
               {contactCards.map((card) => (
-                <a
+                <div
                   key={card.title}
-                  href={card.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="section-card block rounded-2xl p-4 transition-transform hover:-translate-y-0.5"
+                  className="section-card rounded-2xl p-4 transition-transform hover:-translate-y-0.5"
                 >
-                  <p className="text-xs uppercase tracking-[0.2em] text-[#8f8f8f]">
-                    {card.title}
-                  </p>
-                  <p className="mt-1 text-sm text-[#e7e7e7]">{card.value}</p>
-                </a>
+                  <a href={card.link} target="_blank" rel="noreferrer">
+                    <p className="text-xs uppercase tracking-[0.2em] text-[#8f8f8f]">
+                      {card.title}
+                    </p>
+                    <p className="mt-1 text-sm text-[#e7e7e7]">{card.value}</p>
+                  </a>
+                  {card.title === "EMAIL" && (
+                    <button
+                      className="mt-2 rounded border border-white/20 px-2 py-1 text-xs text-cyan-100 hover:bg-white/10"
+                      onClick={copyEmailAddress}
+                    >
+                      {emailCopied ? "Copied" : "Copy email"}
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
 
-            <div className="accent-outline rounded-3xl border border-[#569cd6]/28 bg-[#171b22] p-5 code-font text-sm">
+            <form
+              className="accent-outline rounded-3xl border border-[#569cd6]/28 bg-[#171b22] p-5 code-font text-sm"
+              onSubmit={submitContactForm}
+            >
               <p className="text-(--comment)">{`// contact.ts`}</p>
-              <p className="mt-2 text-[#d8d8d8]">{`const reachOut = async () => ({`}</p>
-              <p className="pl-4 text-[#7ec0ff]">{`name: "your-name",`}</p>
-              <p className="pl-4 text-[#7ec0ff]">{`email: "you@email.com",`}</p>
-              <p className="pl-4 text-[#7ec0ff]">{`message: "let's build something cool"`}</p>
-              <p className="text-[#d8d8d8]">{`});`}</p>
+              <p className="mt-2 text-[#d8d8d8]">Send a real message:</p>
+
+              <label className="mt-4 block text-xs uppercase tracking-[0.2em] text-[#8fa2c7]">
+                Name
+              </label>
+              <input
+                value={contactForm.name}
+                onChange={(event) =>
+                  setContactForm((prev) => ({
+                    ...prev,
+                    name: event.target.value,
+                  }))
+                }
+                className="mt-1 w-full rounded border border-white/15 bg-black/20 px-3 py-2 text-sm text-white outline-none focus:border-cyan-300/60"
+                placeholder="Your name"
+                required
+              />
+
+              <label className="mt-4 block text-xs uppercase tracking-[0.2em] text-[#8fa2c7]">
+                Email
+              </label>
+              <input
+                type="email"
+                value={contactForm.email}
+                onChange={(event) =>
+                  setContactForm((prev) => ({
+                    ...prev,
+                    email: event.target.value,
+                  }))
+                }
+                className="mt-1 w-full rounded border border-white/15 bg-black/20 px-3 py-2 text-sm text-white outline-none focus:border-cyan-300/60"
+                placeholder="you@example.com"
+                required
+              />
+
+              <label className="mt-4 block text-xs uppercase tracking-[0.2em] text-[#8fa2c7]">
+                Message
+              </label>
+              <textarea
+                value={contactForm.message}
+                onChange={(event) =>
+                  setContactForm((prev) => ({
+                    ...prev,
+                    message: event.target.value,
+                  }))
+                }
+                className="mt-1 min-h-28 w-full rounded border border-white/15 bg-black/20 px-3 py-2 text-sm text-white outline-none focus:border-cyan-300/60"
+                placeholder="Tell me about your idea or opportunity..."
+                maxLength={3000}
+                required
+              />
+              <label className="sr-only" htmlFor="contact-website">
+                Website
+              </label>
+              <input
+                id="contact-website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={contactForm.website}
+                onChange={(event) =>
+                  setContactForm((prev) => ({
+                    ...prev,
+                    website: event.target.value,
+                  }))
+                }
+                className="hidden"
+              />
 
               <button
-                aria-label="Run contact action"
-                className="mt-5 rounded-full border border-[#6c63ff]/45 bg-[#6c63ff] px-5 py-2 text-white transition hover:brightness-110"
-                onClick={() => {
-                  setTerminalOpen(true);
-                  setTerminalLines((prev) => [
-                    ...prev,
-                    "> initiating contact request...",
-                    "> response ETA: under 24h",
-                  ]);
-                }}
+                type="submit"
+                aria-label="Send contact message"
+                className="mt-5 rounded-full border border-[#6c63ff]/45 bg-[#6c63ff] px-5 py-2 text-white transition hover:brightness-110 disabled:opacity-60"
+                disabled={contactSubmitting}
               >
-                Execute Contact Flow
+                {contactSubmitting ? "Sending..." : "Send Message"}
               </button>
-            </div>
+              {contactFeedback && (
+                <p
+                  className="mt-3 text-xs text-cyan-200"
+                  role="status"
+                  aria-live="polite"
+                >
+                  {contactFeedback}
+                </p>
+              )}
+            </form>
           </div>
         </div>
       );
@@ -1703,7 +1930,7 @@ export default function Home() {
               </h2>
               <div className="mt-3 grid gap-3 md:grid-cols-2">
                 {[
-                  "VS Code-style layout with explorer, tabs, status bar, terminal, and command palette",
+                  "VS Code-style layout with explorer, tabs, terminal, and command palette",
                   "Personalized sections for home, about, projects, skills, experience, and contact",
                   "Built-in Copilot assistant with portfolio-aware responses",
                   "Animated interactions powered by Framer Motion",
@@ -1924,7 +2151,7 @@ npm run dev`}
         }`}
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
       >
         <header className="flex items-center justify-between bg-(--titlebar) px-4 py-1.5 text-sm">
           <div className="flex items-center gap-2">
@@ -2129,7 +2356,12 @@ npm run dev`}
             )}
           </AnimatePresence>
 
-          <section className="flex min-w-0 flex-1 flex-col">
+          <section
+            id="main-content"
+            tabIndex={-1}
+            aria-label="Editor content"
+            className="flex min-w-0 flex-1 flex-col"
+          >
             <div className="scroll-thin flex overflow-x-auto bg-(--bg-tabbar)">
               {openTabs.map((tab) => {
                 const f = files.find((node) => node.id === tab);
@@ -2174,6 +2406,7 @@ npm run dev`}
               ref={editorRef}
               className="scroll-thin relative flex-1 overflow-auto bg-(--bg-main)"
               onMouseMove={(event) => {
+                if (prefersReducedMotion) return;
                 const rect = event.currentTarget.getBoundingClientRect();
                 setCursorFx({
                   x: event.clientX - rect.left,
@@ -2186,7 +2419,7 @@ npm run dev`}
               }
             >
               <AnimatePresence>
-                {cursorFx.visible && (
+                {!prefersReducedMotion && cursorFx.visible && (
                   <motion.div
                     className="pointer-events-none absolute z-20"
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -2215,7 +2448,7 @@ npm run dev`}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
                 >
                   {renderEditorContent()}
                 </motion.div>
@@ -2415,6 +2648,146 @@ npm run dev`}
       </AnimatePresence>
 
       <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            className="absolute inset-0 z-45 flex items-center justify-center bg-black/55 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedProject(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Project details dialog"
+          >
+            <motion.article
+              className="w-full max-w-2xl rounded-2xl border border-white/15 bg-[#121924] p-6"
+              initial={{ y: 14, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 14, opacity: 0 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.22em] text-cyan-300/70">
+                    {selectedProject.category}
+                  </p>
+                  <h3 className="display-font mt-2 text-3xl text-white">
+                    {selectedProject.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-[#b2bdd2]">
+                    {selectedProject.description}
+                  </p>
+                </div>
+                <button
+                  className="rounded border border-white/20 px-2 py-1 text-xs text-white hover:bg-white/10"
+                  onClick={() => setSelectedProject(null)}
+                >
+                  Close
+                </button>
+              </div>
+
+              <p className="mt-4 text-sm text-[#d7deed]">
+                {selectedProject.impact}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {selectedProject.stack.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-white/15 bg-white/5 px-2 py-1 text-xs"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-[#cdd6e9]">
+                {selectedProject.highlights.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <div className="mt-5 flex gap-3 text-sm">
+                <Link
+                  href={`/projects/${selectedProject.slug}`}
+                  className="rounded border border-cyan-300/40 px-3 py-1.5 text-cyan-100 hover:bg-cyan-500/10"
+                >
+                  Standalone Page
+                </Link>
+                <a
+                  href={selectedProject.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded border border-cyan-300/40 px-3 py-1.5 text-cyan-100 hover:bg-cyan-500/10"
+                >
+                  View Source
+                </a>
+                <a
+                  href={selectedProject.live}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded border border-violet-300/40 px-3 py-1.5 text-violet-100 hover:bg-violet-500/10"
+                >
+                  Live / Demo
+                </a>
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {shortcutHelpOpen && (
+          <motion.div
+            className="absolute inset-0 z-45 flex items-center justify-center bg-black/50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShortcutHelpOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Keyboard shortcuts"
+          >
+            <motion.section
+              className="w-full max-w-md rounded-2xl border border-white/15 bg-[#121924] p-5"
+              initial={{ y: 12, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 12, opacity: 0 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <h3 className="display-font text-2xl text-white">
+                Keyboard Shortcuts
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm text-[#ccd4e6]">
+                <li>Ctrl+P: Open command palette</li>
+                <li>Ctrl+B: Toggle sidebar</li>
+                <li>Ctrl+`: Toggle terminal</li>
+                <li>Ctrl+Shift+P: Theme switcher</li>
+                <li>Escape: Close overlays</li>
+                <li>?: Open this shortcut panel</li>
+              </ul>
+              <button
+                className="mt-5 rounded border border-white/20 px-3 py-1.5 text-sm hover:bg-white/10"
+                onClick={() => setShortcutHelpOpen(false)}
+              >
+                Close
+              </button>
+            </motion.section>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {emailCopied && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="absolute bottom-32 left-1/2 z-50 -translate-x-1/2 rounded-full border border-cyan-300/40 bg-[#122235] px-4 py-2 text-xs text-cyan-100"
+          >
+            Email copied to clipboard
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {paletteOpen && (
           <motion.div
             className="absolute inset-0 z-50 flex items-start justify-center bg-black/40 pt-16"
@@ -2422,6 +2795,9 @@ npm run dev`}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closePalette}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command palette overlay"
           >
             <div
               className="w-[92%] max-w-2xl rounded-lg border border-(--border) bg-[#1f2229]"
@@ -2441,15 +2817,21 @@ npm run dev`}
                 />
               </div>
               <div className="max-h-72 overflow-y-auto p-2 text-sm">
-                {filteredPalette.map((item, index) => (
-                  <button
-                    key={item.id}
-                    className={`block w-full rounded px-3 py-2 text-left ${index === paletteIndex ? "bg-white/10" : "hover:bg-white/5"}`}
-                    onClick={() => handlePaletteSelect(item.id)}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+                {filteredPalette.length === 0 ? (
+                  <p className="px-3 py-2 text-xs text-(--text-muted)">
+                    No matches. Try a filename, command, or tech keyword.
+                  </p>
+                ) : (
+                  filteredPalette.map((item, index) => (
+                    <button
+                      key={item.id}
+                      className={`block w-full rounded px-3 py-2 text-left ${index === paletteIndex ? "bg-white/10" : "hover:bg-white/5"}`}
+                      onClick={() => handlePaletteSelect(item.id)}
+                    >
+                      {item.label}
+                    </button>
+                  ))
+                )}
               </div>
             </div>
           </motion.div>
