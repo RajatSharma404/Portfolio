@@ -489,7 +489,11 @@ function ProjectCard({
       whileHover={
         reduceMotion
           ? undefined
-          : { scale: 1.015, y: -2, boxShadow: "0 16px 28px rgba(0, 0, 0, 0.38)" }
+          : {
+              scale: 1.015,
+              y: -2,
+              boxShadow: "0 16px 28px rgba(0, 0, 0, 0.38)",
+            }
       }
       transition={{ duration: reduceMotion ? 0 : 0.16 }}
     >
