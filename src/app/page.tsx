@@ -524,7 +524,7 @@ function ProjectCard({
         ) : null}
       </h4>
       <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-cyan-300/80">
-        {project.category}
+        {(project.categories ?? [project.category]).join(" · ")}
       </p>
       <p className="mt-1 text-sm text-(--text-muted)">{project.description}</p>
       <p className="mt-3 text-[10px] uppercase tracking-[0.22em] text-[#8f8f8f]">
@@ -661,6 +661,18 @@ export default function Home() {
   });
   const [contactSubmitting, setContactSubmitting] = useState(false);
   const [contactFeedback, setContactFeedback] = useState<string | null>(null);
+  const activeThemeLabel =
+    themes.find((item) => item.value === theme)?.label ?? "Dark+";
+  const themeDotColor =
+    theme === "dracula"
+      ? "#bd93f9"
+      : theme === "monokai"
+        ? "#fd971f"
+        : theme === "onedark"
+          ? "#61afef"
+          : theme === "solarized"
+            ? "#2aa198"
+            : "#61afef";
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -718,7 +730,9 @@ export default function Home() {
     () =>
       projectFilter === "All"
         ? projectItems
-        : projectItems.filter((project) => project.category === projectFilter),
+        : projectItems.filter((project) =>
+            (project.categories ?? [project.category]).includes(projectFilter),
+          ),
     [projectFilter],
   );
 
@@ -2200,14 +2214,17 @@ npm run dev`}
               Ctrl P
             </span>
           </div>
-          <div className="flex w-20 justify-end">
+          <div className="flex w-40 justify-end">
             <button
               onClick={() => setThemePickerOpen((prev) => !prev)}
               aria-label="Open theme picker"
-              className="flex items-center gap-2 rounded-md border border-white/10 bg-[#2a2d2e] px-2 py-1 text-xs text-white hover:bg-white/10"
+              className="inline-flex h-7 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-white/10 bg-[#2a2d2e] px-2 text-[11px] text-white hover:bg-white/10"
             >
-              <span className="h-2 w-2 rounded-full bg-[#61afef]" />
-              <span>{themes.find((item) => item.value === theme)?.label}</span>
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: themeDotColor }}
+              />
+              <span>{activeThemeLabel}</span>
             </button>
           </div>
         </header>
@@ -2269,13 +2286,24 @@ npm run dev`}
             <button aria-label="Search" onClick={togglePalette}>
               <Search size={18} />
             </button>
-            <button aria-label="Git">
+            <button
+              aria-label="Git"
+              onClick={() =>
+                window.open("https://github.com/RajatSharma404", "_blank")
+              }
+            >
               <GitBranch size={18} />
             </button>
             <button aria-label="Extensions">
               <Blocks size={18} />
             </button>
-            <button aria-label="Profile">
+            <button
+              aria-label="Toggle terminal"
+              onClick={() => setTerminalOpen((prev) => !prev)}
+            >
+              <TerminalSquare size={18} />
+            </button>
+            <button aria-label="Profile" onClick={() => openFile("contact")}>
               <UserRound size={18} />
             </button>
           </aside>
@@ -2495,16 +2523,6 @@ npm run dev`}
         </AnimatePresence>
       </motion.div>
 
-      <button
-        onClick={() => setTerminalOpen((prev) => !prev)}
-        className="absolute bottom-16 left-4 rounded border border-(--border) bg-[#1f222a] px-4 py-1 text-xs whitespace-nowrap"
-        aria-label="Toggle terminal"
-      >
-        <span className="flex items-center gap-1">
-          <TerminalSquare size={14} /> Terminal
-        </span>
-      </button>
-
       <AnimatePresence>
         {terminalOpen && (
           <motion.section
@@ -2669,7 +2687,9 @@ npm run dev`}
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.22em] text-cyan-300/70">
-                    {selectedProject.category}
+                    {(
+                      selectedProject.categories ?? [selectedProject.category]
+                    ).join(" · ")}
                   </p>
                   <h3 className="display-font mt-2 text-3xl text-white">
                     {selectedProject.title}

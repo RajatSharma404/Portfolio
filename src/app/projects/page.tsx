@@ -24,7 +24,7 @@ export default function ProjectsIndexPage() {
               className="rounded-xl border border-white/10 bg-[#121924] p-5"
             >
               <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/70">
-                {project.category}
+                {(project.categories ?? [project.category]).join(" · ")}
               </p>
               <h2 className="mt-2 text-2xl text-white">{project.title}</h2>
               <p className="mt-2 text-sm text-[#bac5dd]">

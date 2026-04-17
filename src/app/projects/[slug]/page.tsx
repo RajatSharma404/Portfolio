@@ -64,7 +64,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
     <main className="min-h-screen bg-[#0b1018] px-4 py-10 text-[#d5d9e6] md:px-8">
       <article className="mx-auto w-full max-w-4xl rounded-2xl border border-white/10 bg-[#121924] p-6 md:p-8">
         <p className="text-xs uppercase tracking-[0.22em] text-cyan-300/70">
-          {project.category}
+          {(project.categories ?? [project.category]).join(" · ")}
         </p>
         <h1 className="mt-3 text-4xl font-semibold text-white">
           {project.title}

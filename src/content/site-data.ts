@@ -9,6 +9,7 @@ export type ProjectItem = {
   github: string;
   live: string;
   category: ProjectCategory;
+  categories?: ProjectCategory[];
   highlights: string[];
   featured: boolean;
 };
@@ -25,6 +26,7 @@ export const projectItems: ProjectItem[] = [
     github: "https://github.com/RajatSharma404/DSA-Tracker",
     live: "https://github.com/RajatSharma404/DSA-Tracker",
     category: "Productivity",
+    categories: ["Productivity", "AI"],
     highlights: [
       "Topic-wise tracking and revision flow",
       "Progress-first dashboard UX",
