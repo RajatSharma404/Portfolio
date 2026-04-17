@@ -2554,7 +2554,7 @@ npm run dev`}
 
       <button
         aria-label="Open Copilot assistant"
-        className="absolute bottom-16 right-2 sm:right-4 rounded-full border border-cyan-400/40 bg-[#1f2430] px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm shadow-lg shadow-cyan-500/20 hover:border-cyan-400/60 hover:bg-[#253548] transition-colors"
+        className="absolute bottom-16 right-10 sm:right-12 rounded-full border border-cyan-400/40 bg-[#1f2430] px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm shadow-lg shadow-cyan-500/20 hover:border-cyan-400/60 hover:bg-[#253548] transition-colors"
         onClick={() => setChatOpen((prev) => !prev)}
       >
         <span className="hidden sm:inline">Ask Rajat&apos;s Copilot</span>
