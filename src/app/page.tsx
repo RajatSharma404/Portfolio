@@ -472,46 +472,26 @@ const tokenClass: Record<Token["type"], string> = {
 
 function ProjectCard({
   project,
-  index,
   stars,
   isLoading,
   onOpenDetails,
 }: {
   project: ProjectItem;
-  index: number;
   stars?: number;
   isLoading?: boolean;
   onOpenDetails: (project: ProjectItem) => void;
 }) {
   const reduceMotion = useReducedMotion();
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   return (
     <motion.article
       className="glass-card will-transform rounded-xl p-4"
-      style={{
-        transform: reduceMotion
-          ? "none"
-          : `perspective(600px) rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
-      }}
-      animate={reduceMotion ? undefined : { y: [0, -6, 0] }}
-      transition={
-        reduceMotion
-          ? undefined
-          : { duration: 3 + index, repeat: Number.POSITIVE_INFINITY }
-      }
-      onMouseMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        setTilt({ x: x * 15, y: -y * 15 });
-      }}
-      onMouseLeave={() => setTilt({ x: 0, y: 0 })}
       whileHover={
         reduceMotion
           ? undefined
-          : { scale: 1.03, boxShadow: "0 20px 40px rgba(0, 0, 0, 0.5)" }
+          : { scale: 1.015, y: -2, boxShadow: "0 16px 28px rgba(0, 0, 0, 0.38)" }
       }
+      transition={{ duration: reduceMotion ? 0 : 0.16 }}
     >
       <h4 className="display-font bg-linear-to-r from-violet-400 to-cyan-300 bg-clip-text text-lg font-semibold text-transparent flex items-center justify-between">
         <span>{project.title}</span>
@@ -593,7 +573,7 @@ export default function Home() {
   const [booting] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebar, setMobileSidebar] = useState(false);
-  const [theme, setTheme] = useState<ThemeName>("darkplus");
+  const [theme, setTheme] = useState<ThemeName>("dracula");
   const [activeFile, setActiveFile] = useState("home");
   const [openTabs, setOpenTabs] = useState<string[]>(["home"]);
   const [folderOpen, setFolderOpen] = useState({
@@ -1724,11 +1704,10 @@ export default function Home() {
           </section>
 
           <div className="mt-5 grid gap-4 md:grid-cols-2">
-            {filteredProjects.map((project, index) => (
+            {filteredProjects.map((project) => (
               <ProjectCard
                 key={project.title}
                 project={project}
-                index={index}
                 stars={
                   githubRepoStars[
                     project.github.split("/").pop()?.toLowerCase() ?? ""
