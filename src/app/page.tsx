@@ -22,6 +22,10 @@ import {
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
+  LanguageSkillChart,
+  type ProjectLanguageRepoStats,
+} from "../components/language-skill-chart";
+import {
   projectItems,
   type ProjectCategory,
   type ProjectItem,
@@ -161,32 +165,17 @@ const themes: { value: ThemeName; label: string }[] = [
   { value: "solarized", label: "Solarized" },
 ];
 
-const skillGroups = {
-  languages: [
-    { name: "C++", level: 88, color: "#e879f9" },
-    { name: "Java", level: 72, color: "#f97316" },
-    { name: "JavaScript", level: 81, color: "#facc15" },
-    { name: "TypeScript", level: 76, color: "#38bdf8" },
-  ],
-  ai: [
-    { name: "Prompt Engineering", level: 84, color: "#eab308" },
-    { name: "Agentic Workflows", level: 78, color: "#a855f7" },
-    { name: "RAG Concepts", level: 75, color: "#22d3ee" },
-    { name: "Python for AI", level: 82, color: "#34d399" },
-  ],
-  backend: [
-    { name: "Node.js", level: 83, color: "#22c55e" },
-    { name: "Express.js", level: 79, color: "#6366f1" },
-    { name: "REST APIs", level: 86, color: "#06b6d4" },
-    { name: "SQL", level: 74, color: "#f59e0b" },
-  ],
-  tools: [
-    { name: "Git", level: 90, color: "#f97316" },
-    { name: "GitHub", level: 88, color: "#6366f1" },
-    { name: "VS Code", level: 92, color: "#38bdf8" },
-    { name: "Postman", level: 80, color: "#34d399" },
-  ],
-};
+const languagePaletteItems = [
+  "TypeScript",
+  "JavaScript",
+  "CSS",
+  "HTML",
+  "PowerShell",
+  "Shell",
+  "Batchfile",
+  "React",
+  "Next.js",
+];
 
 const files: Array<FileNode & { name: string }> = [
   {
@@ -350,63 +339,6 @@ const contactCards = [
   },
 ];
 
-const skillSections = [
-  {
-    title: "LANGUAGES",
-    items: skillGroups.languages,
-  },
-  {
-    title: "GENERATIVE AI & LLM ENGINEERING",
-    items: skillGroups.ai,
-  },
-  {
-    title: "AI • ML • DATA SCIENCE",
-    items: [
-      { name: "Python", level: 82, color: "#22d3ee" },
-      { name: "TensorFlow", level: 70, color: "#f97316" },
-      { name: "scikit-learn", level: 74, color: "#facc15" },
-      { name: "Pandas", level: 76, color: "#6366f1" },
-    ],
-  },
-  {
-    title: "BACKEND & APIS",
-    items: skillGroups.backend,
-  },
-  {
-    title: "DATABASES",
-    items: [
-      { name: "PostgreSQL", level: 74, color: "#38bdf8" },
-      { name: "SQLite", level: 78, color: "#ef4444" },
-      { name: "Redis", level: 60, color: "#2dd4bf" },
-    ],
-  },
-  {
-    title: "DEVOPS & TOOLS",
-    items: skillGroups.tools,
-  },
-  {
-    title: "FRONTEND",
-    items: [
-      { name: "React", level: 80, color: "#38bdf8" },
-      { name: "Next.js", level: 72, color: "#a855f7" },
-      { name: "TailwindCSS", level: 85, color: "#34d399" },
-      { name: "Responsive Design", level: 83, color: "#22c55e" },
-    ],
-  },
-  {
-    title: "DESIGN",
-    items: [
-      { name: "Figma", level: 62, color: "#a855f7" },
-      { name: "UX Prototyping", level: 58, color: "#34d399" },
-    ],
-  },
-];
-
-const leetCodeStats = {
-  profile: "https://leetcode.com/u/RajatSharma404/",
-  username: "RajatSharma404",
-};
-
 const socialLinks = [
   {
     label: "LinkedIn",
@@ -436,6 +368,8 @@ type GitHubRepoResponse = {
   description: string | null;
   language: string | null;
 };
+
+type GitHubLanguageResponse = Record<string, number>;
 
 type GitHubUserResponse = {
   public_repos: number;
@@ -485,7 +419,16 @@ function ProjectCard({
 
   return (
     <motion.article
-      className="glass-card will-transform rounded-xl p-4"
+      className="glass-card will-transform cursor-pointer rounded-xl p-4"
+      role="button"
+      tabIndex={0}
+      onClick={() => onOpenDetails(project)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpenDetails(project);
+        }
+      }}
       whileHover={
         reduceMotion
           ? undefined
@@ -533,23 +476,20 @@ function ProjectCard({
       <div className="mt-3 flex gap-3 text-sm">
         <button
           className="rounded border border-white/20 px-2 py-1 text-xs hover:bg-white/10"
-          onClick={() => onOpenDetails(project)}
+          onClick={(event) => {
+            event.stopPropagation();
+            onOpenDetails(project);
+          }}
           aria-label={`Open details for ${project.title}`}
         >
           Details
         </button>
-        <Link
-          href={`/projects/${project.slug}`}
-          className="rounded border border-cyan-300/30 px-2 py-1 text-xs text-cyan-100 hover:bg-cyan-500/10"
-          aria-label={`Open standalone page for ${project.title}`}
-        >
-          Page
-        </Link>
         <a
           href={project.github}
           target="_blank"
           rel="noreferrer"
           aria-label={`${project.title} source code`}
+          onClick={(event) => event.stopPropagation()}
         >
           Source
         </a>
@@ -559,6 +499,7 @@ function ProjectCard({
             target="_blank"
             rel="noreferrer"
             aria-label={`${project.title} live demo`}
+            onClick={(event) => event.stopPropagation()}
           >
             Live
           </a>
@@ -614,7 +555,6 @@ export default function Home() {
   const [windowClosed, setWindowClosed] = useState(false);
   const [windowMinimized, setWindowMinimized] = useState(false);
   const [windowMaximized, setWindowMaximized] = useState(false);
-  const [stackCopied, setStackCopied] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
   const [projectFilter, setProjectFilter] = useState<ProjectCategory | "All">(
     "All",
@@ -637,6 +577,10 @@ export default function Home() {
     totalStars: number;
   } | null>(null);
   const [githubStatsLoading, setGithubStatsLoading] = useState(true);
+  const [projectLanguageStats, setProjectLanguageStats] = useState<
+    ProjectLanguageRepoStats[]
+  >([]);
+  const [projectLanguageLoading, setProjectLanguageLoading] = useState(true);
   const [contactForm, setContactForm] = useState<ContactFormState>({
     name: "",
     email: "",
@@ -663,15 +607,9 @@ export default function Home() {
   const paletteItems = useMemo(
     () => [
       ...files.map((f) => ({ id: f.id, label: f.name, type: "file" as const })),
-      ...Array.from(
-        new Set(
-          skillSections.flatMap((section) =>
-            section.items.map((item) => item.name),
-          ),
-        ),
-      ).map((skill) => ({
-        id: `skill-${skill.toLowerCase()}`,
-        label: `Find skill: ${skill}`,
+      ...languagePaletteItems.map((language) => ({
+        id: `language-${language.toLowerCase()}`,
+        label: `Find language: ${language}`,
         type: "command" as const,
       })),
       {
@@ -887,8 +825,54 @@ export default function Home() {
       }
     };
 
+    const fetchProjectLanguageStats = async () => {
+      setProjectLanguageLoading(true);
+      try {
+        const stats = await Promise.all(
+          projectItems.map(async (project) => {
+            const repoName = project.github.split("/").pop();
+            if (!repoName) {
+              return {
+                slug: project.slug,
+                title: project.title,
+                github: project.github,
+                languages: {},
+              };
+            }
+
+            const response = await fetch(
+              `https://api.github.com/repos/RajatSharma404/${repoName}/languages`,
+            );
+            if (!response.ok) {
+              return {
+                slug: project.slug,
+                title: project.title,
+                github: project.github,
+                languages: {},
+              };
+            }
+
+            const languages = (await response.json()) as GitHubLanguageResponse;
+            return {
+              slug: project.slug,
+              title: project.title,
+              github: project.github,
+              languages,
+            };
+          }),
+        );
+
+        setProjectLanguageStats(stats);
+      } catch {
+        console.log("Failed to fetch GitHub language stats");
+      } finally {
+        setProjectLanguageLoading(false);
+      }
+    };
+
     fetchRecentCommits();
     fetchGithubOverview();
+    fetchProjectLanguageStats();
   }, []);
 
   useEffect(() => {
@@ -1586,84 +1570,10 @@ export default function Home() {
     if (activeFile === "skills") {
       return (
         <div className="px-5 py-5 md:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h3 className="display-font text-3xl text-white">
-                Skills Matrix
-              </h3>
-              <p className="mt-2 text-sm text-(--text-muted)">
-                Technologies I use to build and ship the projects shown above.
-              </p>
-            </div>
-            <span className="rounded-full border border-cyan-400/35 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-100">
-              practical over hype
-            </span>
-          </div>
-
-          <a
-            href={leetCodeStats.profile}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-4 inline-flex items-center gap-2 rounded-full border border-orange-500/40 bg-orange-500/10 px-4 py-2.5 transition-colors hover:border-orange-500/60 hover:bg-orange-500/15"
-          >
-            <span className="text-lg">⚡</span>
-            <span className="text-sm font-medium text-orange-100">
-              LeetCode: {leetCodeStats.username}
-            </span>
-            <span className="text-xs text-orange-300/70">→</span>
-          </a>
-
-          <button
-            onClick={() => {
-              const allSkills = skillSections
-                .flatMap((section) => section.items.map((item) => item.name))
-                .join(", ");
-              navigator.clipboard.writeText(allSkills);
-              setStackCopied(true);
-              setTimeout(() => setStackCopied(false), 2000);
-            }}
-            className="ml-2 inline-flex items-center gap-2 rounded-full border border-green-500/40 bg-green-500/10 px-4 py-2.5 transition-all hover:border-green-500/60 hover:bg-green-500/15"
-          >
-            <span className="text-lg">{stackCopied ? "✓" : "📋"}</span>
-            <span className="text-sm font-medium text-green-100">
-              {stackCopied ? "Copied!" : "Share Stack"}
-            </span>
-          </button>
-
-          <div className="mt-5 grid gap-4 lg:grid-cols-2">
-            {skillSections.map((section) => (
-              <section
-                key={section.title}
-                className="section-card rounded-2xl p-4"
-                style={{
-                  boxShadow: `inset 0 1px 0 ${section.items[0]?.color ?? "rgba(255,255,255,0.05)"}`,
-                }}
-              >
-                <h4 className="text-xs uppercase tracking-[0.25em] text-[#9aa1b5]">
-                  {section.title}
-                </h4>
-                <div className="mt-3 space-y-3">
-                  {section.items.map((item) => (
-                    <div key={item.name}>
-                      <div className="mb-1 flex items-center justify-between text-xs text-[#cfcfcf]">
-                        <span>{item.name}</span>
-                        <span>{item.level}%</span>
-                      </div>
-                      <div className="h-2 w-full rounded bg-[#1a1f2a]">
-                        <div
-                          className="h-2 rounded"
-                          style={{
-                            width: `${item.level}%`,
-                            background: item.color,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          <LanguageSkillChart
+            repos={projectLanguageStats}
+            loading={projectLanguageLoading}
+          />
         </div>
       );
     }

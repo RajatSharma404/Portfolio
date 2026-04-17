@@ -8,6 +8,8 @@ An interactive, VS Code-inspired portfolio for Rajat Sharma. It blends a polishe
 - Command palette works with both click and keyboard flows (open via Search or Ctrl+P, close via Escape or outside click)
 - Dynamic GitHub pulse cards (followers, repos, stars) with loading states
 - Project filtering by category with per-project detail modal
+- Skills section powered by live GitHub language stats (interactive donut chart)
+- Skill chart supports hover bump, click-to-focus language detail, and grouped `Other` language listing
 - Dedicated project detail pages under `/projects/[slug]` with route metadata
 - Shared content model in `src/content/site-data.ts` for CMS-like content maintenance
 - Accessible motion handling that respects reduced-motion preferences
@@ -62,6 +64,7 @@ npm run lint
 - [src/app/layout.tsx](src/app/layout.tsx) - metadata, fonts, and global shell
 - [src/app/globals.css](src/app/globals.css) - theme tokens and base styling
 - [src/content/site-data.ts](src/content/site-data.ts) - shared portfolio content model
+- [src/components/language-skill-chart.tsx](src/components/language-skill-chart.tsx) - interactive language usage chart for Skills tab
 - [src/app/api/copilot/route.ts](src/app/api/copilot/route.ts) - Copilot assistant API
 - [src/app/api/contact/route.ts](src/app/api/contact/route.ts) - contact form submission API
 - [src/app/projects/page.tsx](src/app/projects/page.tsx) - projects index route
