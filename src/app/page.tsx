@@ -682,13 +682,8 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileSidebar, setMobileSidebar] = useState(false);
   const [theme, setTheme] = useState<ThemeName>("darkplus");
-  const [activeFile, setActiveFile] = useState("about");
-  const [openTabs, setOpenTabs] = useState<string[]>([
-    "about",
-    "home",
-    "projects",
-    "skills",
-  ]);
+  const [activeFile, setActiveFile] = useState("home");
+  const [openTabs, setOpenTabs] = useState<string[]>(["home"]);
   const [folderOpen, setFolderOpen] = useState({
     src: true,
     public: true,
@@ -760,6 +755,26 @@ export default function Home() {
     item.label.toLowerCase().includes(paletteQuery.toLowerCase()),
   );
 
+  const openPalette = useCallback(() => {
+    setPaletteQuery("");
+    setPaletteIndex(0);
+    setPaletteOpen(true);
+  }, []);
+
+  const closePalette = useCallback(() => {
+    setPaletteOpen(false);
+    setPaletteQuery("");
+    setPaletteIndex(0);
+  }, []);
+
+  const togglePalette = useCallback(() => {
+    if (paletteOpen) {
+      closePalette();
+      return;
+    }
+    openPalette();
+  }, [closePalette, openPalette, paletteOpen]);
+
   const openFile = useCallback((id: string) => {
     if (id === "resume") {
       window.open("/resume.pdf", "_blank");
@@ -792,12 +807,7 @@ export default function Home() {
     const storedTheme = window.localStorage.getItem(
       "portfolio-theme",
     ) as ThemeName | null;
-    const storedTabs = window.localStorage.getItem("portfolio-tabs");
     if (storedTheme) setTheme(storedTheme);
-    if (storedTabs) {
-      const parsed = JSON.parse(storedTabs) as string[];
-      if (parsed.length) setOpenTabs(parsed);
-    }
   }, []);
 
   useEffect(() => {
@@ -838,7 +848,7 @@ export default function Home() {
     const keyListener = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key.toLowerCase() === "p" && !event.shiftKey) {
         event.preventDefault();
-        setPaletteOpen((prev) => !prev);
+        togglePalette();
         return;
       }
       if (event.ctrlKey && event.key === "`") {
@@ -858,7 +868,7 @@ export default function Home() {
       }
       if (event.key === "Escape") {
         setMenuOpen(null);
-        setPaletteOpen(false);
+        closePalette();
         return;
       }
 
@@ -901,7 +911,14 @@ export default function Home() {
 
     window.addEventListener("keydown", keyListener);
     return () => window.removeEventListener("keydown", keyListener);
-  }, [paletteIndex, paletteOpen, filteredPalette, openFile]);
+  }, [
+    closePalette,
+    filteredPalette,
+    openFile,
+    paletteIndex,
+    paletteOpen,
+    togglePalette,
+  ]);
 
   useEffect(() => {
     const onClickOutside = (event: MouseEvent) => {
@@ -1067,7 +1084,7 @@ export default function Home() {
     } else if (id === "cmd-copilot") {
       setChatOpen((prev) => !prev);
     }
-    setPaletteOpen(false);
+    closePalette();
   };
 
   const executeMenuAction = (action?: string) => {
@@ -1075,7 +1092,7 @@ export default function Home() {
     if (action === "new-tab") {
       openFile("home");
     } else if (action === "open-file") {
-      setPaletteOpen(true);
+      openPalette();
     } else if (action === "close-tab") {
       closeTab(activeFile);
     } else if (action === "close-all-tabs") {
@@ -1956,7 +1973,16 @@ npm run dev`}
               Ctrl P
             </span>
           </div>
-          <div className="w-20" />
+          <div className="flex w-20 justify-end">
+            <button
+              onClick={() => setThemePickerOpen((prev) => !prev)}
+              aria-label="Open theme picker"
+              className="flex items-center gap-2 rounded-md border border-white/10 bg-[#2a2d2e] px-2 py-1 text-xs text-white hover:bg-white/10"
+            >
+              <span className="h-2 w-2 rounded-full bg-[#61afef]" />
+              <span>{themes.find((item) => item.value === theme)?.label}</span>
+            </button>
+          </div>
         </header>
 
         <div
@@ -2013,7 +2039,7 @@ npm run dev`}
             <button aria-label="Explorer" onClick={() => setSidebarOpen(true)}>
               <FolderOpen size={18} />
             </button>
-            <button aria-label="Search" onClick={() => setPaletteOpen(true)}>
+            <button aria-label="Search" onClick={togglePalette}>
               <Search size={18} />
             </button>
             <button aria-label="Git">
@@ -2098,25 +2124,6 @@ npm run dev`}
                       </AnimatePresence>
                     </div>
                   ))}
-
-                  <button
-                    className="mt-6 flex w-full items-center justify-between rounded-lg border border-violet-400/30 bg-violet-500/10 px-3 py-2 text-sm text-violet-300 hover:bg-violet-500/20"
-                    onClick={() => setChatOpen((prev) => !prev)}
-                  >
-                    <span className="flex items-center gap-1">
-                      <Sparkles size={14} /> Rajat&apos;s Copilot
-                    </span>
-                    <span className="text-[10px] opacity-70">AI</span>
-                  </button>
-
-                  <div className="mt-3 rounded-lg border border-cyan-400/20 bg-cyan-400/5 px-3 py-2 text-[11px] leading-5 text-cyan-300">
-                    <p className="font-semibold uppercase tracking-wider mb-1">
-                      Shortcuts
-                    </p>
-                    <p className="text-[10px] opacity-75">
-                      Ctrl+P search • Ctrl+` terminal • Ctrl+Shift+C copilot
-                    </p>
-                  </div>
                 </div>
               </motion.aside>
             )}
@@ -2217,54 +2224,47 @@ npm run dev`}
           </section>
         </div>
 
-        <footer className="relative flex items-center justify-between bg-(--statusbar) px-3 py-1 text-xs text-white">
-          <div className="flex gap-4">
+        <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-center justify-between px-1 text-[11px] text-(--text-muted)">
+          <div className="flex items-center gap-4">
             <span>⚠ 0</span>
             <span className="flex items-center gap-1">
               <GitBranch size={12} /> main
             </span>
-            <span>🔄 Rajat Sharma&apos;s Portfolio</span>
-            <span>Copilot</span>
+            <span>Rajat Sharma&apos;s Portfolio</span>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setThemePickerOpen((prev) => !prev)}
-              aria-label="Open theme picker"
-            >
-              {themes.find((item) => item.value === theme)?.label}
-            </button>
             <span>UTF-8</span>
             <span>TypeScript React</span>
           </div>
-          <AnimatePresence>
-            {themePickerOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 6 }}
-                className="absolute bottom-8 right-3 z-30 w-56 rounded border border-(--border) bg-[#1f2229] p-2"
-              >
-                {themes.map((item) => (
-                  <button
-                    key={item.value}
-                    className="block w-full rounded px-2 py-1 text-left hover:bg-white/10"
-                    onClick={() => {
-                      setTheme(item.value);
-                      setThemePickerOpen(false);
-                    }}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </footer>
+        </div>
+        <AnimatePresence>
+          {themePickerOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              className="absolute top-14 right-3 z-30 w-56 rounded border border-(--border) bg-[#1f2229] p-2"
+            >
+              {themes.map((item) => (
+                <button
+                  key={item.value}
+                  className="block w-full rounded px-2 py-1 text-left hover:bg-white/10"
+                  onClick={() => {
+                    setTheme(item.value);
+                    setThemePickerOpen(false);
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       <button
         onClick={() => setTerminalOpen((prev) => !prev)}
-        className="absolute bottom-16 left-4 rounded border border-(--border) bg-[#1f222a] px-3 py-1 text-xs"
+        className="absolute bottom-16 left-4 rounded border border-(--border) bg-[#1f222a] px-4 py-1 text-xs whitespace-nowrap"
         aria-label="Toggle terminal"
       >
         <span className="flex items-center gap-1">
@@ -2421,8 +2421,12 @@ npm run dev`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={closePalette}
           >
-            <div className="w-[92%] max-w-2xl rounded-lg border border-(--border) bg-[#1f2229]">
+            <div
+              className="w-[92%] max-w-2xl rounded-lg border border-(--border) bg-[#1f2229]"
+              onClick={(event) => event.stopPropagation()}
+            >
               <div className="border-b border-(--border) p-3">
                 <input
                   aria-label="Command palette"

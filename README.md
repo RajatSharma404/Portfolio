@@ -4,7 +4,8 @@ An interactive, VS Code-inspired portfolio for Rajat Sharma. It blends a polishe
 
 ## Highlights
 
-- VS Code-style layout with explorer, tabs, status bar, terminal, and command palette
+- VS Code-style layout with explorer, tabs, terminal, and command palette
+- Command palette works with both click and keyboard flows (open via Search or Ctrl+P, close via Escape or outside click)
 - Personalized sections for home, about, projects, skills, experience, and contact
 - Built-in Copilot assistant with portfolio-aware responses
 - Animated interactions powered by Framer Motion
