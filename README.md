@@ -90,6 +90,12 @@ Set these deployment environment variables for contact delivery:
 - Optional: `CONTACT_FROM_EMAIL` to customize sender identity
 - Optional fallback: `CONTACT_WEBHOOK_URL` to forward submissions to a webhook endpoint
 
+## Resume
+
+- The portfolio resume is served from [public/resume.pdf](public/resume.pdf).
+- Any in-app "Download Resume" action opens `/resume.pdf`.
+- To update the resume, replace [public/resume.pdf](public/resume.pdf) with your latest PDF and redeploy.
+
 ## Notes
 
 If you want to expand the project, the best places to start are the main page shell in [src/app/page.tsx](src/app/page.tsx) and the assistant logic in [src/app/api/copilot/route.ts](src/app/api/copilot/route.ts).
