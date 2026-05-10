@@ -94,7 +94,9 @@ export function SocialPreview({
           </span>
         </div>
 
-        <div style={{ maxWidth: 880 }}>
+        <div
+          style={{ maxWidth: 880, display: "flex", flexDirection: "column" }}
+        >
           <div
             style={{
               fontSize: 82,
