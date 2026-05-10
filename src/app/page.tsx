@@ -416,6 +416,8 @@ function ProjectCard({
   onOpenDetails: (project: ProjectItem) => void;
 }) {
   const reduceMotion = useReducedMotion();
+  const demoLink =
+    project.live && project.live !== project.github ? project.live : null;
 
   return (
     <motion.article
@@ -493,9 +495,9 @@ function ProjectCard({
         >
           Source
         </a>
-        {project.live !== project.github ? (
+        {demoLink ? (
           <a
-            href={project.live}
+            href={demoLink}
             target="_blank"
             rel="noreferrer"
             aria-label={`${project.title} live demo`}
@@ -505,7 +507,7 @@ function ProjectCard({
           </a>
         ) : (
           <span className="rounded border border-white/10 px-2 py-1 text-xs text-(--text-muted)">
-            Demo pending
+            Source only
           </span>
         )}
       </div>
@@ -591,6 +593,10 @@ export default function Home() {
   const [contactFeedback, setContactFeedback] = useState<string | null>(null);
   const activeThemeLabel =
     themes.find((item) => item.value === theme)?.label ?? "Dark+";
+  const selectedProjectDemoLink =
+    selectedProject?.live && selectedProject.live !== selectedProject.github
+      ? selectedProject.live
+      : null;
   const themeDotColor =
     theme === "dracula"
       ? "#bd93f9"
@@ -2632,14 +2638,20 @@ npm run dev`}
                 >
                   View Source
                 </a>
-                <a
-                  href={selectedProject.live}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded border border-violet-300/40 px-3 py-1.5 text-violet-100 hover:bg-violet-500/10"
-                >
-                  Live / Demo
-                </a>
+                {selectedProjectDemoLink ? (
+                  <a
+                    href={selectedProjectDemoLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded border border-violet-300/40 px-3 py-1.5 text-violet-100 hover:bg-violet-500/10"
+                  >
+                    Live / Demo
+                  </a>
+                ) : (
+                  <span className="rounded border border-white/15 px-3 py-1.5 text-white/70">
+                    No live demo yet
+                  </span>
+                )}
               </div>
             </motion.article>
           </motion.div>

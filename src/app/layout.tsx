@@ -49,21 +49,12 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Rajat Sharma Portfolio",
     url: "https://rajat-portfolio.vercel.app",
-    images: [
-      {
-        url: "https://rajat-portfolio.vercel.app/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Rajat Sharma Portfolio",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Rajat Sharma | Portfolio",
     description:
       "Interactive VS Code-themed portfolio of Rajat Sharma, a Full Stack Developer and B.Tech student from Kanpur Institute of Technology.",
-    images: ["https://rajat-portfolio.vercel.app/og-image.png"],
   },
 };
 

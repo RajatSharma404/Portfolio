@@ -32,22 +32,11 @@ export async function generateMetadata({
       description: project.impact,
       type: "article",
       url: `https://rajat-portfolio.vercel.app/projects/${project.slug}`,
-      images: [
-        {
-          url: `https://rajat-portfolio.vercel.app/og-image.png?project=${project.slug}`,
-          width: 1200,
-          height: 630,
-          alt: `${project.title} preview`,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${project.title} | Rajat Sharma`,
       description: project.description,
-      images: [
-        `https://rajat-portfolio.vercel.app/og-image.png?project=${project.slug}`,
-      ],
     },
   };
 }
