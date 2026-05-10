@@ -95,6 +95,7 @@ Set these deployment environment variables for contact delivery:
 - The portfolio resume is served from [public/resume.pdf](public/resume.pdf).
 - Any in-app "Download Resume" action opens `/resume.pdf`.
 - To update the resume, replace [public/resume.pdf](public/resume.pdf) with your latest PDF and redeploy.
+- Last refreshed on 2026-05-10.
 
 ## Notes
 
