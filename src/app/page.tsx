@@ -235,13 +235,6 @@ const files: Array<FileNode & { name: string }> = [
     folder: "config",
   },
   {
-    id: "env",
-    name: ".env.local",
-    label: ".env.local",
-    ext: "env",
-    folder: "config",
-  },
-  {
     id: "resume",
     name: "resume.pdf",
     label: "resume.pdf",
@@ -299,15 +292,15 @@ const experienceItems = [
     period: "2023 - Present",
     role: "B.Tech Student Developer",
     org: "Kanpur Institute of Technology",
-    desc: "Building full-stack projects, solving DSA problems, and exploring AI while pursuing B.Tech. Current work includes the DSA Tracker, Expense Tracker, and Weather Forecast App.",
-    tags: ["C++", "JavaScript", "TypeScript", "Node.js", "React", "AI"],
+    desc: "Solved 500+ LeetCode problems, built 15+ full-stack and AI applications, and actively contributing to open-source while pursuing B.Tech in Computer Science.",
+    tags: ["C++", "DSA", "TypeScript", "Node.js", "React", "AI"],
   },
   {
     period: "Current Focus",
     role: "Project Builder",
     org: "Personal Portfolio Projects",
-    desc: "Shipping trackers, problem-solving tools, and productivity apps with a focus on clean engineering, readable UX, and honest project demos.",
-    tags: ["DSA Tracker", "Expense Tracker", "Weather App", "Finance"],
+    desc: "Engineering scalable web applications, integrating AI workflows with Gemini/Stockfish, and building productivity trackers with a focus on clean, performant UX.",
+    tags: ["Next.js", "AI Workflows", "FastAPI", "System Design"],
   },
 ];
 
@@ -333,9 +326,9 @@ const contactCards = [
     link: "https://leetcode.com/u/RajatSharma404/",
   },
   {
-    title: "INSTAGRAM",
-    value: "instagram.com/btw.rajat625",
-    link: "https://www.instagram.com/btw.rajat625/",
+    title: "X / TWITTER",
+    value: "x.com/RajatSharma404",
+    link: "https://x.com/RajatSharma404",
   },
 ];
 
@@ -346,7 +339,7 @@ const socialLinks = [
   },
   { label: "GitHub", href: "https://github.com/RajatSharma404" },
   { label: "LeetCode", href: "https://leetcode.com/u/RajatSharma404/" },
-  { label: "Instagram", href: "https://www.instagram.com/btw.rajat625/" },
+  { label: "X / Twitter", href: "https://x.com/RajatSharma404" },
   { label: "Email", href: "mailto:rajat.sharma.myid1@gmail.com" },
 ];
 
@@ -437,7 +430,7 @@ function ProjectCard({
           : {
               scale: 1.015,
               y: -2,
-              boxShadow: "0 16px 28px rgba(0, 0, 0, 0.38)",
+              boxShadow: "0 16px 28px rgba(6, 182, 212, 0.2)",
             }
       }
       transition={{ duration: reduceMotion ? 0 : 0.16 }}
@@ -541,6 +534,7 @@ export default function Home() {
   const [terminalLines, setTerminalLines] = useState<string[]>([
     "Type help for available commands.",
   ]);
+  const [terminalBooted, setTerminalBooted] = useState(false);
   const [showDino, setShowDino] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
@@ -880,6 +874,36 @@ export default function Home() {
     fetchGithubOverview();
     fetchProjectLanguageStats();
   }, []);
+
+  useEffect(() => {
+    if (terminalOpen && !terminalBooted) {
+      setTerminalBooted(true);
+      setTerminalLines([]);
+      const sequence = [
+        "> rajat-portfolio@2.0.0 dev",
+        "> next dev",
+        "",
+        "  ▲ Next.js 15.0.0",
+        "  - Local:        http://localhost:3000",
+        "  - Environments: loaded",
+        "",
+        " ✓ Ready in 1250ms",
+        "Type help for available commands."
+      ];
+      
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < sequence.length) {
+          setTerminalLines(prev => [...prev, sequence[i]]);
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 150);
+      
+      return () => clearInterval(interval);
+    }
+  }, [terminalOpen, terminalBooted]);
 
   useEffect(() => {
     const keyListener = (event: KeyboardEvent) => {
@@ -1981,22 +2005,6 @@ npm run dev`}
       ));
     }
 
-    if (activeFile === "env") {
-      const envLines: Token[][] = [
-        [{ text: "# Local environment", type: "com" }],
-        [{ text: "NEXT_PUBLIC_NAME=Rajat Sharma", type: "plain" }],
-        [{ text: "NEXT_PUBLIC_ROLE=Full Stack Developer", type: "plain" }],
-        [{ text: "NEXT_PUBLIC_LOCATION=Kanpur,India", type: "plain" }],
-        [{ text: "NEXT_PUBLIC_GITHUB=RajatSharma404", type: "plain" }],
-        [{ text: "NEXT_PUBLIC_LEETCODE=RajatSharma404", type: "plain" }],
-        [{ text: "NEXT_PUBLIC_INSTAGRAM=btw.rajat625", type: "plain" }],
-        [{ text: "ANTHROPIC_API_KEY=optional_for_chat", type: "plain" }],
-      ];
-      return envLines.map((line, idx) => (
-        <div key={`env-line-${idx + 1}`}>{renderCodeLine(idx + 1, line)}</div>
-      ));
-    }
-
     return <div className="p-4">Open a file from the explorer.</div>;
   };
 
@@ -2261,10 +2269,10 @@ npm run dev`}
                                   key={file.id}
                                   aria-label={`open ${file.name}`}
                                   onClick={() => openFile(file.id)}
-                                  className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left ${
+                                  className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left transition-transform ${
                                     activeFile === file.id
                                       ? "bg-(--line-highlight)"
-                                      : "hover:bg-white/5"
+                                      : "hover:bg-white/5 hover:scale-[1.02]"
                                   }`}
                                 >
                                   <span className="w-8 text-[10px] text-(--text-muted)">
@@ -2372,10 +2380,10 @@ npm run dev`}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeFile}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: prefersReducedMotion ? 0 : 0.15 }}
                 >
                   {renderEditorContent()}
                 </motion.div>
@@ -2474,6 +2482,13 @@ npm run dev`}
         className="absolute bottom-16 right-10 sm:right-12 rounded-full border border-cyan-400/40 bg-[#1f2430] px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm shadow-lg shadow-cyan-500/20 hover:border-cyan-400/60 hover:bg-[#253548] transition-colors"
         onClick={() => setChatOpen((prev) => !prev)}
       >
+        <motion.span 
+          key={chatMessages.length}
+          initial={{ boxShadow: "0 0 0px #22d3ee00" }}
+          animate={chatMessages.length > 1 ? { boxShadow: ["0 0 0px #22d3ee00", "0 0 20px #22d3ee80", "0 0 0px #22d3ee00"] } : {}}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute inset-0 rounded-full pointer-events-none"
+        />
         <span className="hidden sm:inline">Ask Rajat&apos;s Copilot</span>
         <span className="sm:hidden">Ask Copilot</span>
       </button>
@@ -2481,10 +2496,11 @@ npm run dev`}
       <AnimatePresence>
         {chatOpen && (
           <motion.aside
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            className="absolute bottom-24 right-2 z-40 flex h-96 w-80 flex-col rounded-xl border border-(--border) bg-[#11161f] sm:bottom-28 sm:right-4 sm:h-107.5 sm:w-82.5"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute bottom-24 right-2 z-40 flex h-96 w-80 flex-col rounded-xl border border-(--border) bg-[#11161f] sm:bottom-28 sm:right-4 sm:h-107.5 sm:w-82.5 origin-bottom-right shadow-2xl"
           >
             <div className="border-b border-(--border) px-3 py-2 text-sm">
               Rajat&apos;s Copilot Chat
@@ -2538,28 +2554,26 @@ npm run dev`}
               className="flex gap-2 border-t border-(--border) p-3"
               onSubmit={(e) => {
                 e.preventDefault();
-                askCopilot(chatInput);
+                if (chatMessages.filter((m) => m.role === "user").length < maxMessages) {
+                  askCopilot(chatInput);
+                }
               }}
             >
               <input
                 aria-label="Copilot question"
-                className="flex-1 rounded border border-(--border) bg-[#0f131a] px-2 py-1"
-                placeholder="Ask me anything about Rajat..."
+                className="flex-1 rounded border border-(--border) bg-[#0f131a] px-2 py-1 disabled:opacity-50"
+                placeholder={chatMessages.filter((m) => m.role === "user").length >= maxMessages ? "Limit reached" : "Ask me anything about Rajat..."}
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
+                disabled={chatMessages.filter((m) => m.role === "user").length >= maxMessages}
               />
-              <button className="rounded bg-(--accent) px-3 py-1 text-white">
+              <button 
+                className="rounded bg-(--accent) px-3 py-1 text-white disabled:opacity-50"
+                disabled={chatMessages.filter((m) => m.role === "user").length >= maxMessages}
+              >
                 Send
               </button>
             </form>
-            <p className="px-3 pb-2 text-[11px] text-(--text-muted)">
-              Messages left:{" "}
-              {Math.max(
-                0,
-                maxMessages -
-                  chatMessages.filter((m) => m.role === "user").length,
-              )}
-            </p>
           </motion.aside>
         )}
       </AnimatePresence>
@@ -2567,7 +2581,7 @@ npm run dev`}
       <AnimatePresence>
         {selectedProject && (
           <motion.div
-            className="absolute inset-0 z-45 flex items-center justify-center bg-black/55 p-4"
+            className="absolute inset-0 z-45 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -2577,10 +2591,11 @@ npm run dev`}
             aria-label="Project details dialog"
           >
             <motion.article
-              className="w-full max-w-2xl rounded-2xl border border-white/15 bg-[#121924] p-6"
-              initial={{ y: 14, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 14, opacity: 0 }}
+              className="w-full max-w-2xl rounded-2xl border border-white/15 bg-[#121924] p-6 shadow-2xl"
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={(event) => event.stopPropagation()}
             >
               <div className="flex items-start justify-between gap-4">

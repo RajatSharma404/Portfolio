@@ -88,6 +88,42 @@ export const projectItems: ProjectItem[] = [
     ],
     featured: true,
   },
+  {
+    slug: "chess-engine",
+    title: "Chess Engine Evaluator",
+    description:
+      "A fast and precise chess game evaluator that calculates advantages and suggests optimal moves.",
+    impact:
+      "Helps players analyze their games with engine-level precision and intuitive visual feedback.",
+    stack: ["FastAPI", "Python", "Stockfish", "React", "TypeScript"],
+    github: "https://github.com/RajatSharma404",
+    live: "https://github.com/RajatSharma404",
+    category: "AI",
+    highlights: [
+      "Integrated Stockfish 16 engine",
+      "Real-time evaluation bar and move suggestions",
+      "FastAPI backend for rapid calculations",
+    ],
+    featured: true,
+  },
+  {
+    slug: "adaptive-fitness",
+    title: "Adaptive Fitness Planner",
+    description:
+      "AI-driven fitness planner that creates and adapts workout routines based on user progress.",
+    impact:
+      "Automates workout planning with intelligent adaptations, making personalized fitness accessible.",
+    stack: ["Next.js", "Prisma", "Gemini AI", "Tailwind", "TypeScript"],
+    github: "https://github.com/RajatSharma404",
+    live: "https://github.com/RajatSharma404",
+    category: "AI",
+    highlights: [
+      "Gemini AI integration for dynamic planning",
+      "Prisma ORM for reliable progress tracking",
+      "Seamless and responsive Next.js frontend",
+    ],
+    featured: true,
+  },
 ];
 
 export const siteMeta = {
