@@ -13,6 +13,7 @@ import React, {
 } from "react";
 import { projectItems, type ProjectCategory, type ProjectItem } from "@/content/site-data";
 import type {
+  BottomTab,
   ChatMessage,
   ContactFormState,
   FileNode,
@@ -248,6 +249,10 @@ interface WorkspaceContextType {
   runTerminalCommand: (cmd: string) => void;
   showDino: boolean;
   setShowDino: React.Dispatch<React.SetStateAction<boolean>>;
+  showMatrix: boolean;
+  setShowMatrix: React.Dispatch<React.SetStateAction<boolean>>;
+  activeBottomTab: BottomTab;
+  setActiveBottomTab: (tab: BottomTab) => void;
   chatOpen: boolean;
   setChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
   chatInput: string;
@@ -325,6 +330,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   ]);
   const [terminalBooted, setTerminalBooted] = useState(false);
   const [showDino, setShowDino] = useState(false);
+  const [showMatrix, setShowMatrix] = useState(false);
+  const [activeBottomTab, setActiveBottomTab] = useState<BottomTab>("terminal");
 
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
@@ -381,26 +388,25 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const paletteItems = useMemo(
     () => [
       ...files.map((f) => ({ id: f.id, label: f.name, type: "file" as const })),
-      { id: "cmd-download", label: "Download Resume", type: "command" as const },
-      { id: "cmd-github", label: "Open GitHub", type: "command" as const },
-      { id: "cmd-theme", label: "Switch Theme", type: "command" as const },
-      { id: "cmd-dino", label: "Play Dino Game", type: "command" as const },
-      { id: "cmd-toggle-sidebar", label: "Toggle Sidebar", type: "command" as const },
-      { id: "cmd-toggle-terminal", label: "Toggle Terminal", type: "command" as const },
-      { id: "cmd-copilot", label: "Toggle Copilot", type: "command" as const },
-      { id: "cmd-shortcuts", label: "Show Keyboard Shortcuts", type: "command" as const },
-      { id: "cmd-copy-email", label: "Copy Email Address", type: "command" as const },
+      ...themes.map((t) => ({
+        id: `theme-${t.value}`,
+        label: `Theme: ${t.label}`,
+        type: "theme" as const,
+      })),
+      { id: "action-terminal", label: "Toggle Terminal", type: "action" as const },
+      { id: "action-copilot", label: "Open Copilot Chat", type: "action" as const },
+      { id: "action-resume", label: "View Resume (PDF)", type: "action" as const },
+      { id: "action-dino", label: "Play Dino Runner", type: "action" as const },
     ],
     [],
   );
 
-  const filteredPalette = useMemo(
-    () =>
-      paletteItems.filter((item) =>
-        item.label.toLowerCase().includes(paletteQuery.toLowerCase()),
-      ),
-    [paletteItems, paletteQuery],
-  );
+  const filteredPalette = useMemo(() => {
+    if (!paletteQuery) return paletteItems;
+    return paletteItems.filter((item) =>
+      item.label.toLowerCase().includes(paletteQuery.toLowerCase()),
+    );
+  }, [paletteItems, paletteQuery]);
 
   const filteredProjects = useMemo(
     () =>
@@ -412,86 +418,75 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     [projectFilter],
   );
 
+  const copyEmailAddress = useCallback(() => {
+    navigator.clipboard.writeText("rajat.sharma.myid1@gmail.com");
+    setEmailCopied(true);
+    setTimeout(() => setEmailCopied(false), 2000);
+  }, []);
+
+  const openFile = useCallback((id: string) => {
+    setActiveFile(id);
+    setOpenTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  }, []);
+
+  const closeTab = useCallback(
+    (id: string) => {
+      setOpenTabs((prev) => {
+        const next = prev.filter((t) => t !== id);
+        if (next.length === 0) return ["home"];
+        if (activeFile === id) {
+          const nextActive = next[next.length - 1] ?? "home";
+          setActiveFile(nextActive);
+        }
+        return next;
+      });
+    },
+    [activeFile],
+  );
+
   const openPalette = useCallback(() => {
+    setPaletteOpen(true);
     setPaletteQuery("");
     setPaletteIndex(0);
-    setPaletteOpen(true);
   }, []);
 
   const closePalette = useCallback(() => {
     setPaletteOpen(false);
+  }, []);
+
+  const togglePalette = useCallback(() => {
+    setPaletteOpen((prev) => !prev);
     setPaletteQuery("");
     setPaletteIndex(0);
   }, []);
 
-  const togglePalette = useCallback(() => {
-    if (paletteOpen) {
-      closePalette();
-      return;
-    }
-    openPalette();
-  }, [closePalette, openPalette, paletteOpen]);
-
-  const openFile = useCallback((id: string) => {
-    if (id === "resume") {
-      window.open("/resume.pdf", "_blank");
-      return;
-    }
-    setOpenTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
-    setActiveFile(id);
-    setMobileSidebar(false);
-  }, []);
-
-  const closeTab = useCallback((id: string) => {
-    setOpenTabs((prev) => {
-      const updated = prev.filter((tabId) => tabId !== id);
-      if (updated.length === 0) {
-        return ["home"];
-      }
-      return updated;
-    });
-    setActiveFile((prev) => {
-      if (prev === id) {
-        return "home";
-      }
-      return prev;
-    });
-  }, []);
-
-  const copyEmailAddress = useCallback(() => {
-    navigator.clipboard.writeText("rajat.sharma.myid1@gmail.com");
-    setEmailCopied(true);
-    window.setTimeout(() => setEmailCopied(false), 1800);
-  }, []);
-
   const runPaletteSelection = useCallback(
     (id: string) => {
-      if (files.some((f) => f.id === id)) {
-        openFile(id);
+      if (id.startsWith("theme-")) {
+        const themeName = id.replace("theme-", "") as ThemeName;
+        setTheme(themeName);
         return;
       }
-      if (id === "cmd-download") {
-        window.open("/resume.pdf", "_blank");
-      } else if (id === "cmd-github") {
-        window.open("https://github.com/RajatSharma404", "_blank");
-      } else if (id === "cmd-theme") {
-        setThemePickerOpen((prev) => !prev);
-      } else if (id === "cmd-dino") {
-        setShowDino(true);
-        setTerminalOpen(true);
-      } else if (id === "cmd-toggle-sidebar") {
-        setSidebarOpen((prev) => !prev);
-      } else if (id === "cmd-toggle-terminal") {
+      if (id === "action-terminal") {
         setTerminalOpen((prev) => !prev);
-      } else if (id === "cmd-copilot") {
-        setChatOpen((prev) => !prev);
-      } else if (id === "cmd-shortcuts") {
-        setShortcutHelpOpen(true);
-      } else if (id === "cmd-copy-email") {
-        copyEmailAddress();
+        return;
       }
+      if (id === "action-copilot") {
+        setChatOpen(true);
+        return;
+      }
+      if (id === "action-resume") {
+        openFile("resume");
+        return;
+      }
+      if (id === "action-dino") {
+        setTerminalOpen(true);
+        setShowDino(true);
+        return;
+      }
+      openFile(id);
     },
-    [copyEmailAddress, openFile],
+    [openFile],
   );
 
   const handlePaletteSelect = useCallback(
@@ -516,28 +511,170 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   const runTerminalCommand = useCallback(
     (raw: string) => {
-      const command = raw.trim().toLowerCase();
+      const command = raw.trim();
+      const lower = command.toLowerCase();
       if (!command) return;
 
       setTerminalHistory((prev) => [...prev, raw]);
       setLastTerminalCommand(raw);
       setTerminalLines((prev) => [...prev, `$ ${raw}`]);
 
-      if (command === "help") {
+      if (lower === "help") {
         setTerminalLines((prev) => [
           ...prev,
-          "help | whoami | pwd | ls | cd <path> | cat <file> | open <file> | history | date | play | clear",
+          "Available Commands:",
+          "  neofetch      - Display system & developer specifications",
+          "  matrix        - Toggle digital matrix rain effect",
+          "  dsa / leetcode- Print 500+ LeetCode problem breakdown",
+          "  skills        - Print technical competency matrix",
+          "  theme <name>  - Switch theme (e.g. dracula, monokai, onedark, synthwave)",
+          "  git <status|log|branch> - Git commands",
+          "  whoami        - About developer",
+          "  ls / cd / cat - File system navigation",
+          "  contact       - Developer reach-out links",
+          "  play          - Launch dino runner easter egg",
+          "  clear         - Clear terminal buffer",
         ]);
-      } else if (command === "whoami") {
+      } else if (lower === "neofetch") {
+        setTerminalLines((prev) => [
+          ...prev,
+          "        /\\          rajat@portfolio",
+          "       /  \\         ---------------",
+          "      / /\\ \\        OS: Next.js 16.2.3 (Turbopack App Router)",
+          "     / /  \\ \\       Host: Vercel Cloud Serverless (Edge Runtime)",
+          "    / / /\\ \\ \\      Uptime: 24/7 Always Active",
+          "   / / /  \\ \\ \\     Shell: zsh 5.9 (x86_64-portfolio)",
+          "  /_/ /    \\ \\_\\    Editor: VS Code Web IDE v1.98.0",
+          "    \\ \\    / /      Languages: C++, TypeScript, Python, JavaScript",
+          "     \\ \\  / /       LeetCode: 500+ Solved (Top 10% Global Rank)",
+          "      \\ \\/ /        Primary Focus: Full-Stack Web & AI Tooling",
+          `       \\  /         Theme: ${activeThemeLabel}`,
+          "        \\/          Memory: 4096MB / 8192MB Allocated",
+        ]);
+      } else if (lower === "matrix") {
+        setShowMatrix((prev) => !prev);
+        setTerminalLines((prev) => [
+          ...prev,
+          "Toggling digital matrix stream... (type 'matrix' again to exit)",
+        ]);
+      } else if (lower.startsWith("theme ")) {
+        const themeArg = lower.replace("theme ", "").trim().toLowerCase();
+        const validThemes: ThemeName[] = [
+          "dracula",
+          "darkplus",
+          "monokai",
+          "onedark",
+          "solarized",
+          "synthwave",
+          "tokyonight",
+          "githubdark",
+        ];
+        if (validThemes.includes(themeArg as ThemeName)) {
+          setTheme(themeArg as ThemeName);
+          setTerminalLines((prev) => [
+            ...prev,
+            `✓ Theme switched to "${themeArg}"`,
+          ]);
+        } else {
+          setTerminalLines((prev) => [
+            ...prev,
+            `Unknown theme: "${themeArg}". Valid options: ${validThemes.join(", ")}`,
+          ]);
+        }
+      } else if (lower === "dsa" || lower === "leetcode") {
+        setTerminalLines((prev) => [
+          ...prev,
+          "=========================================",
+          "  LEETCODE PULSE: @RajatSharma404",
+          "=========================================",
+          "  Total Problems Solved : 500+",
+          "  Easy                  : 220",
+          "  Medium                : 250",
+          "  Hard                  : 30+",
+          "  Primary Language      : C++",
+          "  Global Percentile     : Top 10%",
+          "  Active Streak         : 100+ Days Badge Unlocked",
+          "  Core Patterns         : DP, Graphs, Trees, Sliding Window",
+          "=========================================",
+        ]);
+      } else if (lower === "skills") {
+        setTerminalLines((prev) => [
+          ...prev,
+          "Core Languages : C++, TypeScript, JavaScript, Python, HTML5, CSS3",
+          "Frameworks     : React 19, Next.js 16, FastAPI, Node.js, Express",
+          "Databases      : PostgreSQL, SQLite, Prisma ORM",
+          "AI & Tooling   : Stockfish 16 Engine, Google Gemini AI, Git",
+          "Design Systems : Tailwind CSS v4, Framer Motion, Vanilla CSS",
+        ]);
+      } else if (lower === "contact") {
+        setTerminalLines((prev) => [
+          ...prev,
+          "Email    : rajat.sharma.myid1@gmail.com",
+          "LinkedIn : https://linkedin.com/in/rajat-sharma-9a053128b/",
+          "GitHub   : https://github.com/RajatSharma404",
+          "LeetCode : https://leetcode.com/u/RajatSharma404/",
+        ]);
+      } else if (lower === "git status") {
+        setTerminalLines((prev) => [
+          ...prev,
+          "On branch main",
+          "Your branch is up to date with 'origin/main'.",
+          "",
+          "Changes to be committed:",
+          "  modified:   src/projects/chess-engine.ts",
+          "  modified:   src/skills/leetcode-pulse.json",
+          "  new file:   src/components/vscode/terminal-panel.tsx",
+        ]);
+      } else if (lower === "git log") {
+        setTerminalLines((prev) => [
+          ...prev,
+          "commit e7a31b4 (HEAD -> main, origin/main)",
+          "Author: Rajat Sharma <rajat.sharma.myid1@gmail.com>",
+          "Date:   Sat Aug 22 2026",
+          "",
+          "    feat: add multi-tab bottom panel & interactive CLI",
+          "",
+          "commit a9f20c1",
+          "Author: Rajat Sharma <rajat.sharma.myid1@gmail.com>",
+          "Date:   Sat Aug 22 2026",
+          "",
+          "    feat: add LeetCode Pulse & DSA Mastery showcase",
+        ]);
+      } else if (lower === "git branch") {
+        setTerminalLines((prev) => [
+          ...prev,
+          "* main",
+          "  feature/ai-copilot",
+          "  hotfix/dsa-grind",
+          "  chore/clean-architecture",
+        ]);
+      } else if (lower.startsWith("sudo")) {
+        setTerminalLines((prev) => [
+          ...prev,
+          "[sudo] password for rajat: **********",
+          "Permission denied: Rajat is the only root administrator.",
+        ]);
+      } else if (lower.startsWith("curl ")) {
+        const url = command.replace(/curl /i, "").trim();
+        setTerminalLines((prev) => [
+          ...prev,
+          `HTTP/1.1 200 OK`,
+          `Content-Type: application/json`,
+          `Server: Next.js/16.2.3`,
+          `{"status":"success","url":"${url}","data":{"author":"Rajat Sharma"}}`,
+        ]);
+      } else if (lower.startsWith("echo ")) {
+        setTerminalLines((prev) => [...prev, command.replace(/echo /i, "")]);
+      } else if (lower === "whoami") {
         setTerminalLines((prev) => [
           ...prev,
           "Rajat Sharma - Full Stack Developer | B.Tech student at Kanpur Institute of Technology.",
         ]);
-      } else if (command === "pwd") {
+      } else if (lower === "pwd") {
         setTerminalLines((prev) => [...prev, terminalPath]);
-      } else if (command === "date") {
+      } else if (lower === "date") {
         setTerminalLines((prev) => [...prev, new Date().toString()]);
-      } else if (command === "ls") {
+      } else if (lower === "ls") {
         const listing: Record<string, string[]> = {
           "~/home": ["src", "public", "config", "README.md"],
           "~/home/src": [
@@ -555,8 +692,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           ...prev,
           ...(listing[terminalPath] ?? listing["~/home"]),
         ]);
-      } else if (command.startsWith("cd ")) {
-        const target = command.replace("cd ", "").trim();
+      } else if (lower.startsWith("cd ")) {
+        const target = lower.replace("cd ", "").trim();
         const paths = ["~/home", "~/home/src", "~/home/public", "~/home/config"];
         const resolved =
           target === ".."
@@ -574,44 +711,47 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
             `cd: no such file or directory: ${target}`,
           ]);
         }
-      } else if (command === "ls projects") {
+      } else if (lower === "ls projects") {
         setTerminalLines((prev) => [
           ...prev,
           ...projectItems.map((p) => `- ${p.title}`),
         ]);
-      } else if (command === "cat resume.pdf" || command === "cat readme.md") {
+      } else if (lower === "cat resume.pdf" || lower === "cat readme.md") {
         setTerminalLines((prev) => [
           ...prev,
-          "Resume Summary: Web development, AI projects, internship-ready.",
+          "Resume Summary: Web development, AI projects, 500+ DSA problems solved, internship-ready.",
         ]);
-      } else if (command === "cat package.json") {
+      } else if (lower === "cat package.json") {
         setTerminalLines((prev) => [
           ...prev,
-          '{ "name": "rajat-portfolio", "version": "2.0.0" }',
+          '{ "name": "rajat-portfolio", "version": "2.0.0", "framework": "Next.js 16" }',
         ]);
-      } else if (command.startsWith("open ")) {
-        const target = command.replace("open ", "").trim();
+      } else if (lower.startsWith("open ")) {
+        const target = lower.replace("open ", "").trim();
         const mapped = files.find((f) => f.name.toLowerCase() === target);
         if (mapped) {
           openFile(mapped.id);
         } else {
           setTerminalLines((prev) => [...prev, `open: cannot find ${target}`]);
         }
-      } else if (command === "history") {
+      } else if (lower === "history") {
         setTerminalLines((prev) => [
           ...prev,
           ...terminalHistory.map((entry, idx) => `${idx + 1}  ${entry}`),
         ]);
-      } else if (command === "play") {
+      } else if (lower === "play") {
         setShowDino(true);
         setTerminalLines((prev) => [...prev, "Launching dino game..."]);
-      } else if (command === "clear") {
+      } else if (lower === "clear") {
         setTerminalLines([]);
       } else {
-        setTerminalLines((prev) => [...prev, `Command not found: ${command}`]);
+        setTerminalLines((prev) => [
+          ...prev,
+          `Command not found: "${command}". Type "help" for a list of commands.`,
+        ]);
       }
     },
-    [openFile, terminalHistory, terminalPath],
+    [activeThemeLabel, openFile, setTheme, terminalHistory, terminalPath],
   );
 
   const maxMessages = 15 + chatBoost;
@@ -1031,6 +1171,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     runTerminalCommand,
     showDino,
     setShowDino,
+    showMatrix,
+    setShowMatrix,
+    activeBottomTab,
+    setActiveBottomTab,
     chatOpen,
     setChatOpen,
     chatInput,
