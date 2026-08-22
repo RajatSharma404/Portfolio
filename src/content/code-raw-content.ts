@@ -339,16 +339,40 @@ export const projectItems = [
         { text: "  },", type: "plain" },
       ],
       [
-        { text: '  "dsa_stats": {', type: "str" },
+        { text: '  "dsa_mastery": {', type: "str" },
       ],
       [
-        { text: '    "leetcode_solved": 500,', type: "num" },
+        { text: '    "leetcode_handle": "RajatSharma404",', type: "str" },
       ],
       [
-        { text: '    "preferred_language": "C++",', type: "str" },
+        { text: '    "total_solved": 500,', type: "num" },
       ],
       [
-        { text: '    "focus_areas": ["Graphs", "Dynamic Programming", "Trees", "Binary Search"]', type: "str" },
+        { text: '    "difficulty_breakdown": { "easy": 220, "medium": 250, "hard": 30 },', type: "str" },
+      ],
+      [
+        { text: '    "primary_language": "C++",', type: "str" },
+      ],
+      [
+        { text: '    "global_ranking": "Top 10%",', type: "str" },
+      ],
+      [
+        { text: '    "core_patterns": [', type: "str" },
+      ],
+      [
+        { text: '      "Dynamic Programming (0/1 Knapsack, LCS, Grid DP)",', type: "str" },
+      ],
+      [
+        { text: '      "Graphs (Dijkstra, BFS/DFS, TopoSort, Union-Find)",', type: "str" },
+      ],
+      [
+        { text: '      "Trees & Binary Search (Segment Tree, Trie, LCA)",', type: "str" },
+      ],
+      [
+        { text: '      "Arrays & Sliding Window (Two Pointers, Kadane\'s)"', type: "str" },
+      ],
+      [
+        { text: '    ]', type: "plain" },
       ],
       [
         { text: "  }", type: "plain" },
@@ -366,10 +390,18 @@ export const projectItems = [
     "ai_tooling": ["Gemini AI API", "Stockfish 16 Engine", "Agentic Workflows"],
     "styling_and_motion": ["Tailwind CSS v4", "Framer Motion", "Vanilla CSS"]
   },
-  "dsa_stats": {
-    "leetcode_solved": 500,
-    "preferred_language": "C++",
-    "focus_areas": ["Graphs", "Dynamic Programming", "Trees", "Binary Search"]
+  "dsa_mastery": {
+    "leetcode_handle": "RajatSharma404",
+    "total_solved": 500,
+    "difficulty_breakdown": { "easy": 220, "medium": 250, "hard": 30 },
+    "primary_language": "C++",
+    "global_ranking": "Top 10%",
+    "core_patterns": [
+      "Dynamic Programming (0/1 Knapsack, LCS, Grid DP)",
+      "Graphs (Dijkstra, BFS/DFS, TopoSort, Union-Find)",
+      "Trees & Binary Search (Segment Tree, Trie, LCA)",
+      "Arrays & Sliding Window (Two Pointers, Kadane's)"
+    ]
   }
 }`,
   },
