@@ -581,55 +581,69 @@ export const experienceTimeline: ExperienceItem[] = [
     id: "readme",
     filename: "README.md",
     language: "Markdown",
-    symbol: "# Rajat's Portfolio",
+    symbol: "# Rajat's VS Code Portfolio",
     lines: [
       [
-        { text: "# Rajat's Interactive VS Code Portfolio", type: "kw" },
+        { text: "# Rajat Sharma | Interactive VS Code Portfolio", type: "kw" },
       ],
       [],
       [
-        { text: "An authentic, interactive developer workspace built for Rajat Sharma.", type: "str" },
+        { text: "> Full Stack Developer & B.Tech Student at Kanpur Institute of Technology", type: "str" },
       ],
       [],
       [
         { text: "## Key Features", type: "kw" },
       ],
       [
-        { text: "- VS Code-style workspace layout with activity bar, tabs, and terminal", type: "plain" },
+        { text: "- Dual View Engine: [Preview], [Code], and [Split View] modes", type: "plain" },
       ],
       [
-        { text: "- Dual View Mode ([Preview] / [Code] / [Split View])", type: "plain" },
+        { text: "- LeetCode Pulse: Concentric SVG difficulty rings for 500+ solved problems", type: "plain" },
       ],
       [
-        { text: "- Live GitHub API stats and language usage donut chart", type: "plain" },
+        { text: "- Multi-View Sidebar: File Explorer, Global Search, Git Source Control & Extensions Store", type: "plain" },
       ],
       [
-        { text: "- LeetCode DSA problem solver pulse (500+ solved)", type: "plain" },
+        { text: "- 5-Tab Bottom Console: Terminal (neofetch, matrix, git), Problems, Output, Debug, Ports", type: "plain" },
       ],
       [
-        { text: "- Built-in Copilot assistant with conversational streaming", type: "plain" },
+        { text: "- 8 Visual Themes: Dracula, Dark+, Monokai, One Dark, Solarized, SynthWave, Tokyo Night, GitHub Dark", type: "plain" },
+      ],
+      [
+        { text: "- Web Audio API Haptics: Synthesized mechanical clicks and harmonic chimes", type: "plain" },
       ],
       [],
       [
         { text: "## Tech Stack", type: "kw" },
       ],
       [
-        { text: "Next.js 16 · React 19 · TypeScript 5 · Tailwind CSS v4 · Framer Motion", type: "fn" },
+        { text: "Next.js 16.2.3 · React 19.2.4 · TypeScript 5.0 · Tailwind CSS v4 · Framer Motion 12", type: "fn" },
+      ],
+      [],
+      [
+        { text: "## Getting Started", type: "kw" },
+      ],
+      [
+        { text: "npm install && npm run dev", type: "str" },
       ],
     ],
-    rawString: `# Rajat's Interactive VS Code Portfolio
+    rawString: `# Rajat Sharma | Interactive VS Code Portfolio
 
-An authentic, interactive developer workspace built for Rajat Sharma.
+> Full Stack Developer & B.Tech Student at Kanpur Institute of Technology
 
 ## Key Features
-- VS Code-style workspace layout with activity bar, tabs, and terminal
-- Dual View Mode ([Preview] / [Code] / [Split View])
-- Live GitHub API stats and language usage donut chart
-- LeetCode DSA problem solver pulse (500+ solved)
-- Built-in Copilot assistant with conversational streaming
+- Dual View Engine: [Preview], [Code], and [Split View] modes
+- LeetCode Pulse: Concentric SVG difficulty rings for 500+ solved problems
+- Multi-View Sidebar: File Explorer, Global Search, Git Source Control & Extensions Store
+- 5-Tab Bottom Console: Terminal (neofetch, matrix, git), Problems, Output, Debug, Ports
+- 8 Visual Themes: Dracula, Dark+, Monokai, One Dark, Solarized, SynthWave, Tokyo Night, GitHub Dark
+- Web Audio API Haptics: Synthesized mechanical clicks and harmonic chimes
 
 ## Tech Stack
-Next.js 16 · React 19 · TypeScript 5 · Tailwind CSS v4 · Framer Motion`,
+Next.js 16.2.3 · React 19.2.4 · TypeScript 5.0 · Tailwind CSS v4 · Framer Motion 12
+
+## Getting Started
+npm install && npm run dev`,
   },
   package: {
     id: "package",
