@@ -1,11 +1,18 @@
 "use client";
 
 import React from "react";
-import { AlertTriangle, Check, GitBranch } from "lucide-react";
+import { AlertTriangle, Check, GitBranch, Volume2, VolumeX } from "lucide-react";
 import { useWorkspace, files } from "@/context/workspace-context";
 
 export function StatusBar() {
-  const { activeFile, currentLine, setTerminalOpen } = useWorkspace();
+  const {
+    activeFile,
+    currentLine,
+    setTerminalOpen,
+    setActiveBottomTab,
+    soundEnabled,
+    toggleSound,
+  } = useWorkspace();
   const currentFileNode = files.find((f) => f.id === activeFile);
 
   const getLanguageLabel = (ext?: string) => {
@@ -19,13 +26,18 @@ export function StatusBar() {
     return "Plain Text";
   };
 
+  const handleProblemsClick = () => {
+    setTerminalOpen(true);
+    setActiveBottomTab("problems");
+  };
+
   return (
     <footer
-      className="flex items-center justify-between bg-(--statusbar) px-3 py-0.5 text-[11px] text-white/90 select-none border-t border-black/20 z-20"
+      className="flex items-center justify-between bg-(--statusbar) px-3 py-0.5 text-[11px] text-white/90 select-none border-t border-black/20 z-20 font-mono"
       aria-label="Status Bar"
     >
       {/* Left side */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
         {/* Branch */}
         <a
           href="https://github.com/RajatSharma404/Portfolio"
@@ -38,11 +50,11 @@ export function StatusBar() {
           <span>main</span>
         </a>
 
-        {/* Problems */}
+        {/* Problems Diagnostics */}
         <button
-          onClick={() => setTerminalOpen((prev) => !prev)}
+          onClick={handleProblemsClick}
           className="flex items-center gap-1 hover:bg-white/20 px-1.5 py-0.5 rounded transition-colors"
-          title="0 Errors, 0 Warnings"
+          title="0 Errors, 0 Warnings (Click to open diagnostics)"
         >
           <AlertTriangle size={12} className="text-yellow-300" />
           <span>0</span>
@@ -57,7 +69,26 @@ export function StatusBar() {
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-2.5 sm:gap-3.5">
+        {/* Sound Haptics Toggle */}
+        <button
+          onClick={toggleSound}
+          className="flex items-center gap-1 hover:bg-white/20 px-1.5 py-0.5 rounded transition-colors"
+          title={soundEnabled ? "Sound Effects: ON (Click to mute)" : "Sound Effects: OFF (Click to unmute)"}
+        >
+          {soundEnabled ? (
+            <>
+              <Volume2 size={12} className="text-cyan-200" />
+              <span className="hidden md:inline text-[10px]">Sound: ON</span>
+            </>
+          ) : (
+            <>
+              <VolumeX size={12} className="text-white/50" />
+              <span className="hidden md:inline text-[10px] text-white/50">Sound: OFF</span>
+            </>
+          )}
+        </button>
+
         <span className="text-white/80">
           Ln {currentLine}, Col 1
         </span>

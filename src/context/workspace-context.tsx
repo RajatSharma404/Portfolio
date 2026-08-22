@@ -26,6 +26,11 @@ import type {
   ViewMode,
 } from "@/types/vscode";
 import type { ProjectLanguageRepoStats } from "@/components/language-skill-chart";
+import {
+  playClickSound,
+  playPopSound,
+  playSuccessSound,
+} from "@/lib/sound-effects";
 
 export const files: FileNode[] = [
   {
@@ -99,6 +104,9 @@ export const themes: { value: ThemeName; label: string; dot: string }[] = [
   { value: "monokai", label: "Monokai", dot: "#fd971f" },
   { value: "onedark", label: "One Dark Pro", dot: "#61afef" },
   { value: "solarized", label: "Solarized", dot: "#2aa198" },
+  { value: "synthwave", label: "SynthWave '84", dot: "#ff7edb" },
+  { value: "tokyonight", label: "Tokyo Night", dot: "#7aa2f7" },
+  { value: "githubdark", label: "GitHub Dark", dot: "#58a6ff" },
 ];
 
 export const menuItems: Record<MenuName, MenuItem[]> = {
@@ -288,6 +296,10 @@ interface WorkspaceContextType {
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   toggleViewMode: () => void;
+  soundEnabled: boolean;
+  setSoundEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleSound: () => void;
+  playSound: (type: "click" | "success" | "pop") => void;
   editorRef: React.RefObject<HTMLDivElement | null>;
   menuRef: React.RefObject<HTMLDivElement | null>;
 }
@@ -418,19 +430,44 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     [projectFilter],
   );
 
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  const playSound = useCallback(
+    (type: "click" | "success" | "pop") => {
+      if (type === "click") playClickSound(soundEnabled);
+      else if (type === "success") playSuccessSound(soundEnabled);
+      else if (type === "pop") playPopSound(soundEnabled);
+    },
+    [soundEnabled],
+  );
+
+  const toggleSound = useCallback(() => {
+    setSoundEnabled((prev) => {
+      const next = !prev;
+      if (next) playClickSound(true);
+      return next;
+    });
+  }, []);
+
   const copyEmailAddress = useCallback(() => {
     navigator.clipboard.writeText("rajat.sharma.myid1@gmail.com");
     setEmailCopied(true);
+    playSuccessSound(soundEnabled);
     setTimeout(() => setEmailCopied(false), 2000);
-  }, []);
+  }, [soundEnabled]);
 
-  const openFile = useCallback((id: string) => {
-    setActiveFile(id);
-    setOpenTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
-  }, []);
+  const openFile = useCallback(
+    (id: string) => {
+      setActiveFile(id);
+      setOpenTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
+      playClickSound(soundEnabled);
+    },
+    [soundEnabled],
+  );
 
   const closeTab = useCallback(
     (id: string) => {
+      playClickSound(soundEnabled);
       setOpenTabs((prev) => {
         const next = prev.filter((t) => t !== id);
         if (next.length === 0) return ["home"];
@@ -441,7 +478,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         return next;
       });
     },
-    [activeFile],
+    [activeFile, soundEnabled],
   );
 
   const openPalette = useCallback(() => {
@@ -1210,6 +1247,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     viewMode,
     setViewMode,
     toggleViewMode,
+    soundEnabled,
+    setSoundEnabled,
+    toggleSound,
+    playSound,
     editorRef,
     menuRef,
   };

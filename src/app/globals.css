@@ -100,6 +100,66 @@
   --border: #245662;
 }
 
+[data-theme="synthwave"] {
+  --bg-main: #262335;
+  --bg-sidebar: #241b2f;
+  --bg-tabbar: #1a1626;
+  --bg-tab-active: #262335;
+  --titlebar: #1a1626;
+  --menubar: #1a1626;
+  --statusbar: #ff7edb;
+  --text-main: #fede5d;
+  --text-muted: #b69fe0;
+  --keyword: #f92aad;
+  --string: #ff7edb;
+  --comment: #614d85;
+  --function: #36f9f6;
+  --number: #fe4450;
+  --accent: #f92aad;
+  --line-highlight: rgba(249, 42, 173, 0.16);
+  --border: #493c66;
+}
+
+[data-theme="tokyonight"] {
+  --bg-main: #1a1b26;
+  --bg-sidebar: #16161e;
+  --bg-tabbar: #1f2335;
+  --bg-tab-active: #1a1b26;
+  --titlebar: #1f2335;
+  --menubar: #1f2335;
+  --statusbar: #7aa2f7;
+  --text-main: #c0caf5;
+  --text-muted: #787c99;
+  --keyword: #bb9af7;
+  --string: #9ece6a;
+  --comment: #565f89;
+  --function: #7aa2f7;
+  --number: #ff9e64;
+  --accent: #7aa2f7;
+  --line-highlight: rgba(122, 162, 247, 0.15);
+  --border: #292e42;
+}
+
+[data-theme="githubdark"] {
+  --bg-main: #0d1117;
+  --bg-sidebar: #010409;
+  --bg-tabbar: #161b22;
+  --bg-tab-active: #0d1117;
+  --titlebar: #161b22;
+  --menubar: #161b22;
+  --statusbar: #1f6feb;
+  --text-main: #e6edf3;
+  --text-muted: #7d8590;
+  --keyword: #ff7b72;
+  --string: #a5d6ff;
+  --comment: #8b949e;
+  --function: #d2a8ff;
+  --number: #79c0ff;
+  --accent: #58a6ff;
+  --line-highlight: rgba(56, 139, 253, 0.15);
+  --border: #30363d;
+}
+
 * {
   box-sizing: border-box;
 }

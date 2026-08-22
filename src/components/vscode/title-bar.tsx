@@ -15,6 +15,7 @@ export function TitleBar() {
     themeDotColor,
     activeThemeLabel,
     setTheme,
+    playSound,
   } = useWorkspace();
 
   return (
@@ -106,6 +107,7 @@ export function TitleBar() {
                   className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-xs text-white hover:bg-[#007acc] transition-colors"
                   onClick={() => {
                     setTheme(item.value);
+                    playSound("click");
                     setThemePickerOpen(false);
                   }}
                 >
