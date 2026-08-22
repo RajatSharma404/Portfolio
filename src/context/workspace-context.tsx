@@ -927,6 +927,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     if (storedTheme && themes.some((t) => t.value === storedTheme)) {
       setTheme(storedTheme);
     }
+    const storedSound = window.localStorage.getItem("portfolio-sound");
+    if (storedSound !== null) {
+      setSoundEnabled(storedSound === "true");
+    }
   }, []);
 
   useEffect(() => {
@@ -936,6 +940,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       theme === "darkplus" ? "" : theme,
     );
   }, [theme]);
+
+  useEffect(() => {
+    window.localStorage.setItem("portfolio-sound", String(soundEnabled));
+  }, [soundEnabled]);
 
   useEffect(() => {
     if (terminalOpen && !terminalBooted) {
@@ -969,27 +977,35 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const keyListener = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key.toLowerCase() === "p" && !event.shiftKey) {
+      const isModifier = event.ctrlKey || event.metaKey;
+      const targetTag = (event.target as HTMLElement)?.tagName;
+      const isInputFocused =
+        targetTag === "INPUT" ||
+        targetTag === "TEXTAREA" ||
+        targetTag === "SELECT" ||
+        (event.target as HTMLElement)?.isContentEditable;
+
+      if (isModifier && event.key.toLowerCase() === "p" && !event.shiftKey) {
         event.preventDefault();
         togglePalette();
         return;
       }
-      if (event.ctrlKey && event.key === "`") {
+      if (isModifier && event.key === "`") {
         event.preventDefault();
         setTerminalOpen((prev) => !prev);
         return;
       }
-      if (event.ctrlKey && event.key.toLowerCase() === "b") {
+      if (isModifier && event.key.toLowerCase() === "b") {
         event.preventDefault();
         setSidebarOpen((prev) => !prev);
         return;
       }
-      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "p") {
+      if (isModifier && event.shiftKey && event.key.toLowerCase() === "p") {
         event.preventDefault();
         setThemePickerOpen((prev) => !prev);
         return;
       }
-      if (event.key === "?" && !paletteOpen) {
+      if (event.key === "?" && !paletteOpen && !isInputFocused) {
         event.preventDefault();
         setShortcutHelpOpen(true);
         return;
