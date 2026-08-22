@@ -22,6 +22,7 @@ import type {
   MenuName,
   SidebarTab,
   ThemeName,
+  ViewMode,
 } from "@/types/vscode";
 import type { ProjectLanguageRepoStats } from "@/components/language-skill-chart";
 
@@ -279,6 +280,9 @@ interface WorkspaceContextType {
   contactSubmitting: boolean;
   contactFeedback: string | null;
   submitContactForm: (event: FormEvent<HTMLFormElement>) => Promise<void>;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
+  toggleViewMode: () => void;
   editorRef: React.RefObject<HTMLDivElement | null>;
   menuRef: React.RefObject<HTMLDivElement | null>;
 }
@@ -358,6 +362,14 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   });
   const [contactSubmitting, setContactSubmitting] = useState(false);
   const [contactFeedback, setContactFeedback] = useState<string | null>(null);
+
+  const [viewMode, setViewMode] = useState<ViewMode>("preview");
+
+  const toggleViewMode = useCallback(() => {
+    setViewMode((prev) =>
+      prev === "preview" ? "code" : prev === "code" ? "split" : "preview",
+    );
+  }, []);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -1051,6 +1063,9 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     contactSubmitting,
     contactFeedback,
     submitContactForm,
+    viewMode,
+    setViewMode,
+    toggleViewMode,
     editorRef,
     menuRef,
   };

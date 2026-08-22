@@ -13,6 +13,8 @@ import { MenuBar } from "@/components/vscode/menu-bar";
 import { ActivityBar } from "@/components/vscode/activity-bar";
 import { ExplorerPanel } from "@/components/vscode/sidebar/explorer-panel";
 import { TabBar } from "@/components/vscode/editor/tab-bar";
+import { Breadcrumbs } from "@/components/vscode/editor/breadcrumbs";
+import { CodeViewer } from "@/components/vscode/editor/code-viewer";
 import { StatusBar } from "@/components/vscode/status-bar";
 import { TerminalPanel } from "@/components/vscode/terminal/terminal-panel";
 import { CopilotChat } from "@/components/vscode/copilot/copilot-chat";
@@ -37,6 +39,7 @@ function PortfolioIDE() {
     windowState,
     handleWindowControl,
     editorRef,
+    viewMode,
   } = useWorkspace();
 
   // Closed window state
@@ -136,28 +139,61 @@ function PortfolioIDE() {
             aria-label="Editor content"
             className="flex min-w-0 flex-1 flex-col overflow-hidden bg-(--bg-main)"
           >
-            {/* Editor Tabs */}
+            {/* Editor Tabs with View Mode Switcher */}
             <TabBar />
 
-            {/* Scrollable Editor Viewport */}
+            {/* Breadcrumb path */}
+            <Breadcrumbs />
+
+            {/* Editor Viewport based on ViewMode */}
             <div
               ref={editorRef}
               className="scroll-thin relative flex-1 overflow-y-auto overflow-x-hidden bg-(--bg-main)"
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeFile}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 8 }}
-                  transition={{
-                    duration: prefersReducedMotion ? 0 : 0.15,
-                  }}
-                  className="min-h-full"
-                >
-                  {renderSection()}
-                </motion.div>
-              </AnimatePresence>
+              {viewMode === "preview" && (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`prev-${activeFile}`}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 8 }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0 : 0.15,
+                    }}
+                    className="min-h-full"
+                  >
+                    {renderSection()}
+                  </motion.div>
+                </AnimatePresence>
+              )}
+
+              {viewMode === "code" && (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`code-${activeFile}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0 : 0.15,
+                    }}
+                    className="h-full"
+                  >
+                    <CodeViewer fileId={activeFile} />
+                  </motion.div>
+                </AnimatePresence>
+              )}
+
+              {viewMode === "split" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-(--border) h-full">
+                  <div className="h-full overflow-hidden">
+                    <CodeViewer fileId={activeFile} />
+                  </div>
+                  <div className="h-full overflow-y-auto scroll-thin">
+                    {renderSection()}
+                  </div>
+                </div>
+              )}
             </div>
           </main>
         </div>
