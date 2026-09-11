@@ -23,15 +23,7 @@ function ProjectCard({
   return (
     <motion.article
       className="glass-card will-transform cursor-pointer rounded-xl p-4.5 border border-white/10 hover:border-cyan-400/40 transition-colors"
-      role="button"
-      tabIndex={0}
       onClick={() => onOpenDetails(project)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onOpenDetails(project);
-        }
-      }}
       whileHover={
         reduceMotion
           ? undefined
@@ -44,9 +36,9 @@ function ProjectCard({
       transition={{ duration: reduceMotion ? 0 : 0.16 }}
     >
       <div className="flex items-center justify-between">
-        <h4 className="display-font bg-linear-to-r from-violet-400 to-cyan-300 bg-clip-text text-lg font-bold text-transparent">
+        <h3 className="display-font bg-linear-to-r from-violet-400 to-cyan-300 bg-clip-text text-lg font-bold text-transparent">
           {project.title}
-        </h4>
+        </h3>
         {isLoading ? (
           <span className="h-5 w-12 animate-pulse rounded-full bg-white/10" />
         ) : typeof stars === "number" ? (
@@ -150,9 +142,9 @@ export function ProjectsSection() {
           Selected Work
         </p>
         <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
-          <h3 className="display-font text-3xl text-white md:text-4xl">
+          <h2 className="display-font text-3xl text-white md:text-4xl">
             Featured Projects
-          </h3>
+          </h2>
           <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-3 py-1 text-xs text-fuchsia-200">
             {filteredProjects.length} projects in focus
           </span>
