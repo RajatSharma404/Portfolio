@@ -26,11 +26,10 @@ import type {
   ViewMode,
 } from "@/types/vscode";
 import type { ProjectLanguageRepoStats } from "@/components/language-skill-chart";
-import {
-  playClickSound,
-  playPopSound,
-  playSuccessSound,
-} from "@/lib/sound-effects";
+import type { SoundPreset } from "@/lib/sound-effects";
+import { useGitHubData } from "@/hooks/use-github-data";
+import { useSoundEffects } from "@/hooks/use-sound-effects";
+import { executeTerminalCommand } from "@/lib/terminal-commands";
 
 export const files: FileNode[] = [
   {
@@ -299,6 +298,11 @@ interface WorkspaceContextType {
   soundEnabled: boolean;
   setSoundEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   toggleSound: () => void;
+  soundPreset: SoundPreset;
+  setSoundPreset: (preset: SoundPreset) => void;
+  cycleSoundPreset: () => void;
+  volume: number;
+  setVolume: (vol: number) => void;
   playSound: (type: "click" | "success" | "pop") => void;
   editorRef: React.RefObject<HTMLDivElement | null>;
   menuRef: React.RefObject<HTMLDivElement | null>;
@@ -365,13 +369,27 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [projectFilter, setProjectFilter] = useState<ProjectCategory | "All">("All");
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
-  const [recentCommits, setRecentCommits] = useState<GitHubCommit[]>([]);
-  const [recentCommitsLoading, setRecentCommitsLoading] = useState(true);
-  const [githubRepoStars, setGithubRepoStars] = useState<Record<string, number>>({});
-  const [githubOverview, setGithubOverview] = useState<GitHubOverview | null>(null);
-  const [githubStatsLoading, setGithubStatsLoading] = useState(true);
-  const [projectLanguageStats, setProjectLanguageStats] = useState<ProjectLanguageRepoStats[]>([]);
-  const [projectLanguageLoading, setProjectLanguageLoading] = useState(true);
+  const {
+    recentCommits,
+    recentCommitsLoading,
+    githubRepoStars,
+    githubOverview,
+    githubStatsLoading,
+    projectLanguageStats,
+    projectLanguageLoading,
+  } = useGitHubData();
+
+  const {
+    soundEnabled,
+    setSoundEnabled,
+    toggleSound,
+    soundPreset,
+    setSoundPreset,
+    cycleSoundPreset,
+    volume,
+    setVolume,
+    playSound,
+  } = useSoundEffects();
 
   const [contactForm, setContactForm] = useState<ContactFormState>({
     name: "",
@@ -430,44 +448,31 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     [projectFilter],
   );
 
-  const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const playSound = useCallback(
-    (type: "click" | "success" | "pop") => {
-      if (type === "click") playClickSound(soundEnabled);
-      else if (type === "success") playSuccessSound(soundEnabled);
-      else if (type === "pop") playPopSound(soundEnabled);
-    },
-    [soundEnabled],
-  );
 
-  const toggleSound = useCallback(() => {
-    setSoundEnabled((prev) => {
-      const next = !prev;
-      if (next) playClickSound(true);
-      return next;
-    });
-  }, []);
-
-  const copyEmailAddress = useCallback(() => {
-    navigator.clipboard.writeText("rajat.sharma.myid1@gmail.com");
-    setEmailCopied(true);
-    playSuccessSound(soundEnabled);
-    setTimeout(() => setEmailCopied(false), 2000);
-  }, [soundEnabled]);
+  const copyEmailAddress = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText("rajat.sharma.myid1@gmail.com");
+      setEmailCopied(true);
+      playSound("success");
+      setTimeout(() => setEmailCopied(false), 2000);
+    } catch {
+      // Gracefully ignore in restricted environments
+    }
+  }, [playSound]);
 
   const openFile = useCallback(
     (id: string) => {
       setActiveFile(id);
       setOpenTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
-      playClickSound(soundEnabled);
+      playSound("click");
     },
-    [soundEnabled],
+    [playSound],
   );
 
   const closeTab = useCallback(
     (id: string) => {
-      playClickSound(soundEnabled);
+      playSound("click");
       setOpenTabs((prev) => {
         const next = prev.filter((t) => t !== id);
         if (next.length === 0) return ["home"];
@@ -478,7 +483,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         return next;
       });
     },
-    [activeFile, soundEnabled],
+    [activeFile, playSound],
   );
 
   const openPalette = useCallback(() => {
@@ -534,258 +539,65 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     [closePalette, runPaletteSelection],
   );
 
-  const handleWindowControl = (action: "close" | "minimize" | "maximize") => {
-    if (action === "close") {
-      setWindowState("closed");
-      return;
-    }
-    if (action === "minimize") {
-      setWindowState("minimized");
-      return;
-    }
-    setWindowState((prev) => (prev === "maximized" ? "normal" : "maximized"));
-  };
+  const handleWindowControl = useCallback(
+    (action: "close" | "minimize" | "maximize") => {
+      if (action === "close") {
+        setWindowState("closed");
+        return;
+      }
+      if (action === "minimize") {
+        setWindowState("minimized");
+        return;
+      }
+      setWindowState((prev) => (prev === "maximized" ? "normal" : "maximized"));
+    },
+    [],
+  );
 
   const runTerminalCommand = useCallback(
     (raw: string) => {
       const command = raw.trim();
-      const lower = command.toLowerCase();
       if (!command) return;
 
       setTerminalHistory((prev) => [...prev, raw]);
       setLastTerminalCommand(raw);
       setTerminalLines((prev) => [...prev, `$ ${raw}`]);
 
-      if (lower === "help") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "Available Commands:",
-          "  neofetch      - Display system & developer specifications",
-          "  matrix        - Toggle digital matrix rain effect",
-          "  dsa / leetcode- Print 500+ LeetCode problem breakdown",
-          "  skills        - Print technical competency matrix",
-          "  theme <name>  - Switch theme (e.g. dracula, monokai, onedark, synthwave)",
-          "  git <status|log|branch> - Git commands",
-          "  whoami        - About developer",
-          "  ls / cd / cat - File system navigation",
-          "  contact       - Developer reach-out links",
-          "  play          - Launch dino runner easter egg",
-          "  clear         - Clear terminal buffer",
-        ]);
-      } else if (lower === "neofetch") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "        /\\          rajat@portfolio",
-          "       /  \\         ---------------",
-          "      / /\\ \\        OS: Next.js 16.2.3 (Turbopack App Router)",
-          "     / /  \\ \\       Host: Vercel Cloud Serverless (Edge Runtime)",
-          "    / / /\\ \\ \\      Uptime: 24/7 Always Active",
-          "   / / /  \\ \\ \\     Shell: zsh 5.9 (x86_64-portfolio)",
-          "  /_/ /    \\ \\_\\    Editor: VS Code Web IDE v1.98.0",
-          "    \\ \\    / /      Languages: C++, TypeScript, Python, JavaScript",
-          "     \\ \\  / /       LeetCode: 500+ Solved (Top 10% Global Rank)",
-          "      \\ \\/ /        Primary Focus: Full-Stack Web & AI Tooling",
-          `       \\  /         Theme: ${activeThemeLabel}`,
-          "        \\/          Memory: 4096MB / 8192MB Allocated",
-        ]);
-      } else if (lower === "matrix") {
-        setShowMatrix((prev) => !prev);
-        setTerminalLines((prev) => [
-          ...prev,
-          "Toggling digital matrix stream... (type 'matrix' again to exit)",
-        ]);
-      } else if (lower.startsWith("theme ")) {
-        const themeArg = lower.replace("theme ", "").trim().toLowerCase();
-        const validThemes: ThemeName[] = [
-          "dracula",
-          "darkplus",
-          "monokai",
-          "onedark",
-          "solarized",
-          "synthwave",
-          "tokyonight",
-          "githubdark",
-        ];
-        if (validThemes.includes(themeArg as ThemeName)) {
-          setTheme(themeArg as ThemeName);
-          setTerminalLines((prev) => [
-            ...prev,
-            `✓ Theme switched to "${themeArg}"`,
-          ]);
-        } else {
-          setTerminalLines((prev) => [
-            ...prev,
-            `Unknown theme: "${themeArg}". Valid options: ${validThemes.join(", ")}`,
-          ]);
-        }
-      } else if (lower === "dsa" || lower === "leetcode") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "=========================================",
-          "  LEETCODE PULSE: @RajatSharma404",
-          "=========================================",
-          "  Total Problems Solved : 500+",
-          "  Easy                  : 220",
-          "  Medium                : 250",
-          "  Hard                  : 30+",
-          "  Primary Language      : C++",
-          "  Global Percentile     : Top 10%",
-          "  Active Streak         : 100+ Days Badge Unlocked",
-          "  Core Patterns         : DP, Graphs, Trees, Sliding Window",
-          "=========================================",
-        ]);
-      } else if (lower === "skills") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "Core Languages : C++, TypeScript, JavaScript, Python, HTML5, CSS3",
-          "Frameworks     : React 19, Next.js 16, FastAPI, Node.js, Express",
-          "Databases      : PostgreSQL, SQLite, Prisma ORM",
-          "AI & Tooling   : Stockfish 16 Engine, Google Gemini AI, Git",
-          "Design Systems : Tailwind CSS v4, Framer Motion, Vanilla CSS",
-        ]);
-      } else if (lower === "contact") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "Email    : rajat.sharma.myid1@gmail.com",
-          "LinkedIn : https://linkedin.com/in/rajat-sharma-9a053128b/",
-          "GitHub   : https://github.com/RajatSharma404",
-          "LeetCode : https://leetcode.com/u/RajatSharma404/",
-        ]);
-      } else if (lower === "git status") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "On branch main",
-          "Your branch is up to date with 'origin/main'.",
-          "",
-          "Changes to be committed:",
-          "  modified:   src/projects/chess-engine.ts",
-          "  modified:   src/skills/leetcode-pulse.json",
-          "  new file:   src/components/vscode/terminal-panel.tsx",
-        ]);
-      } else if (lower === "git log") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "commit e7a31b4 (HEAD -> main, origin/main)",
-          "Author: Rajat Sharma <rajat.sharma.myid1@gmail.com>",
-          "Date:   Sat Aug 22 2026",
-          "",
-          "    feat: add multi-tab bottom panel & interactive CLI",
-          "",
-          "commit a9f20c1",
-          "Author: Rajat Sharma <rajat.sharma.myid1@gmail.com>",
-          "Date:   Sat Aug 22 2026",
-          "",
-          "    feat: add LeetCode Pulse & DSA Mastery showcase",
-        ]);
-      } else if (lower === "git branch") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "* main",
-          "  feature/ai-copilot",
-          "  hotfix/dsa-grind",
-          "  chore/clean-architecture",
-        ]);
-      } else if (lower.startsWith("sudo")) {
-        setTerminalLines((prev) => [
-          ...prev,
-          "[sudo] password for rajat: **********",
-          "Permission denied: Rajat is the only root administrator.",
-        ]);
-      } else if (lower.startsWith("curl ")) {
-        const url = command.replace(/curl /i, "").trim();
-        setTerminalLines((prev) => [
-          ...prev,
-          `HTTP/1.1 200 OK`,
-          `Content-Type: application/json`,
-          `Server: Next.js/16.2.3`,
-          `{"status":"success","url":"${url}","data":{"author":"Rajat Sharma"}}`,
-        ]);
-      } else if (lower.startsWith("echo ")) {
-        setTerminalLines((prev) => [...prev, command.replace(/echo /i, "")]);
-      } else if (lower === "whoami") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "Rajat Sharma - Full Stack Developer | B.Tech student at Kanpur Institute of Technology.",
-        ]);
-      } else if (lower === "pwd") {
-        setTerminalLines((prev) => [...prev, terminalPath]);
-      } else if (lower === "date") {
-        setTerminalLines((prev) => [...prev, new Date().toString()]);
-      } else if (lower === "ls") {
-        const listing: Record<string, string[]> = {
-          "~/home": ["src", "public", "config", "README.md"],
-          "~/home/src": [
-            "home.tsx",
-            "about.html",
-            "projects.js",
-            "skills.json",
-            "experience.ts",
-            "contact.css",
-          ],
-          "~/home/public": ["resume.pdf", "README.md"],
-          "~/home/config": ["package.json", ".env"],
-        };
-        setTerminalLines((prev) => [
-          ...prev,
-          ...(listing[terminalPath] ?? listing["~/home"]),
-        ]);
-      } else if (lower.startsWith("cd ")) {
-        const target = lower.replace("cd ", "").trim();
-        const paths = ["~/home", "~/home/src", "~/home/public", "~/home/config"];
-        const resolved =
-          target === ".."
-            ? terminalPath.split("/").slice(0, -1).join("/") || "~/home"
-            : target.startsWith("~/")
-              ? target
-              : terminalPath === "~/home"
-                ? `~/home/${target}`
-                : `${terminalPath}/${target}`;
-        if (paths.includes(resolved)) {
-          setTerminalPath(resolved);
-        } else {
-          setTerminalLines((prev) => [
-            ...prev,
-            `cd: no such file or directory: ${target}`,
-          ]);
-        }
-      } else if (lower === "ls projects") {
-        setTerminalLines((prev) => [
-          ...prev,
-          ...projectItems.map((p) => `- ${p.title}`),
-        ]);
-      } else if (lower === "cat resume.pdf" || lower === "cat readme.md") {
-        setTerminalLines((prev) => [
-          ...prev,
-          "Resume Summary: Web development, AI projects, 500+ DSA problems solved, internship-ready.",
-        ]);
-      } else if (lower === "cat package.json") {
-        setTerminalLines((prev) => [
-          ...prev,
-          '{ "name": "rajat-portfolio", "version": "2.0.0", "framework": "Next.js 16" }',
-        ]);
-      } else if (lower.startsWith("open ")) {
-        const target = lower.replace("open ", "").trim();
-        const mapped = files.find((f) => f.name.toLowerCase() === target);
-        if (mapped) {
-          openFile(mapped.id);
-        } else {
-          setTerminalLines((prev) => [...prev, `open: cannot find ${target}`]);
-        }
-      } else if (lower === "history") {
-        setTerminalLines((prev) => [
-          ...prev,
-          ...terminalHistory.map((entry, idx) => `${idx + 1}  ${entry}`),
-        ]);
-      } else if (lower === "play") {
-        setShowDino(true);
-        setTerminalLines((prev) => [...prev, "Launching dino game..."]);
-      } else if (lower === "clear") {
+      const result = executeTerminalCommand(raw, {
+        activeThemeLabel,
+        terminalPath,
+        terminalHistory,
+        availableFiles: files,
+        projectTitles: projectItems.map((p) => p.title),
+      });
+
+      if (result.clear) {
         setTerminalLines([]);
-      } else {
-        setTerminalLines((prev) => [
-          ...prev,
-          `Command not found: "${command}". Type "help" for a list of commands.`,
-        ]);
+        return;
+      }
+
+      if (result.newPath) {
+        setTerminalPath(result.newPath);
+      }
+
+      if (result.newTheme) {
+        setTheme(result.newTheme);
+      }
+
+      if (result.toggleMatrix) {
+        setShowMatrix((prev) => !prev);
+      }
+
+      if (result.openDino) {
+        setShowDino(true);
+      }
+
+      if (result.openFileId) {
+        openFile(result.openFileId);
+      }
+
+      if (result.lines && result.lines.length > 0) {
+        setTerminalLines((prev) => [...prev, ...result.lines!]);
       }
     },
     [activeThemeLabel, openFile, setTheme, terminalHistory, terminalPath],
@@ -805,7 +617,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       setChatInput("");
       setChatLoading(true);
 
-      let assembled = "";
       try {
         const res = await fetch("/api/copilot", {
           method: "POST",
@@ -813,23 +624,33 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           body: JSON.stringify({ question }),
         });
 
-        if (!res.ok) throw new Error(`API error: ${res.status}`);
-        if (!res.body) throw new Error("No stream");
-
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
+        const fullAnswer = await res.text();
         setChatMessages((prev) => [...prev, { role: "assistant", text: "" }]);
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          assembled += decoder.decode(value, { stream: true });
-          setChatMessages((prev) => {
-            const next = [...prev];
-            next[next.length - 1] = { role: "assistant", text: assembled };
-            return next;
-          });
-        }
+        // Smooth client-side typewriter effect (zero serverless hold time)
+        let index = 0;
+        const stepSize = Math.max(3, Math.floor(fullAnswer.length / 28));
+        await new Promise<void>((resolve) => {
+          const timer = setInterval(() => {
+            index += stepSize;
+            if (index >= fullAnswer.length) {
+              clearInterval(timer);
+              setChatMessages((prev) => {
+                const next = [...prev];
+                next[next.length - 1] = { role: "assistant", text: fullAnswer };
+                return next;
+              });
+              resolve();
+            } else {
+              const currentSlice = fullAnswer.slice(0, index);
+              setChatMessages((prev) => {
+                const next = [...prev];
+                next[next.length - 1] = { role: "assistant", text: currentSlice };
+                return next;
+              });
+            }
+          }, 18);
+        });
       } catch {
         const fallback = question.toLowerCase().includes("tech")
           ? "Stack: React, Next.js, Tailwind, Node.js, Flask, PostgreSQL, Prisma, AI/ML tooling."
@@ -887,38 +708,41 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     ],
   );
 
-  const submitContactForm = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (contactSubmitting) return;
+  const submitContactForm = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (contactSubmitting) return;
 
-    setContactSubmitting(true);
-    setContactFeedback(null);
+      setContactSubmitting(true);
+      setContactFeedback(null);
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contactForm),
-      });
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(contactForm),
+        });
 
-      const payload = (await res.json()) as {
-        ok?: boolean;
-        message?: string;
-        error?: string;
-      };
-      if (!res.ok || !payload.ok) {
-        setContactFeedback(payload.error ?? "Unable to send message right now.");
-        return;
+        const payload = (await res.json()) as {
+          ok?: boolean;
+          message?: string;
+          error?: string;
+        };
+        if (!res.ok || !payload.ok) {
+          setContactFeedback(payload.error ?? "Unable to send message right now.");
+          return;
+        }
+
+        setContactFeedback(payload.message ?? "Message sent successfully.");
+        setContactForm({ name: "", email: "", message: "", website: "" });
+      } catch {
+        setContactFeedback("Network error. Please try again in a moment.");
+      } finally {
+        setContactSubmitting(false);
       }
-
-      setContactFeedback(payload.message ?? "Message sent successfully.");
-      setContactForm({ name: "", email: "", message: "", website: "" });
-    } catch {
-      setContactFeedback("Network error. Please try again in a moment.");
-    } finally {
-      setContactSubmitting(false);
-    }
-  };
+    },
+    [contactForm, contactSubmitting],
+  );
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem(
@@ -926,10 +750,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     ) as ThemeName | null;
     if (storedTheme && themes.some((t) => t.value === storedTheme)) {
       setTheme(storedTheme);
-    }
-    const storedSound = window.localStorage.getItem("portfolio-sound");
-    if (storedSound !== null) {
-      setSoundEnabled(storedSound === "true");
     }
   }, []);
 
@@ -940,10 +760,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       theme === "darkplus" ? "" : theme,
     );
   }, [theme]);
-
-  useEffect(() => {
-    window.localStorage.setItem("portfolio-sound", String(soundEnabled));
-  }, [soundEnabled]);
 
   useEffect(() => {
     if (terminalOpen && !terminalBooted) {
@@ -1057,219 +873,185 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  useEffect(() => {
-    const fetchRecentCommits = async () => {
-      setRecentCommitsLoading(true);
-      try {
-        const res = await fetch(
-          "https://api.github.com/repos/RajatSharma404/Portfolio/commits?per_page=5",
-        );
-        if (!res.ok) return;
-        const data = (await res.json()) as Array<{
-          commit: { message: string; author: { date: string } };
-          sha: string;
-        }>;
-        setRecentCommits(
-          data.map((commit) => ({
-            message: commit.commit.message.split("\n")[0],
-            date: new Date(commit.commit.author.date).toLocaleDateString(),
-            sha: commit.sha.slice(0, 7),
-          })),
-        );
-      } catch {
-        console.log("Failed to fetch commits");
-      } finally {
-        setRecentCommitsLoading(false);
-      }
-    };
 
-    const fetchGithubOverview = async () => {
-      setGithubStatsLoading(true);
-      try {
-        const [profileRes, reposRes] = await Promise.all([
-          fetch("https://api.github.com/users/RajatSharma404"),
-          fetch(
-            "https://api.github.com/users/RajatSharma404/repos?per_page=100&sort=updated",
-          ),
-        ]);
 
-        if (!profileRes.ok || !reposRes.ok) return;
-        const profile = (await profileRes.json()) as {
-          followers: number;
-          public_repos: number;
-          following: number;
-        };
-        const repos = (await reposRes.json()) as Array<{
-          name: string;
-          stargazers_count: number;
-        }>;
-        const starsByRepo: Record<string, number> = {};
-
-        repos.forEach((repo) => {
-          starsByRepo[repo.name.toLowerCase()] = repo.stargazers_count;
-        });
-
-        const featuredStars = projectItems.reduce((total, project) => {
-          const repoName = project.github.split("/").pop()?.toLowerCase() ?? "";
-          return total + (starsByRepo[repoName] ?? 0);
-        }, 0);
-
-        setGithubRepoStars(starsByRepo);
-        setGithubOverview({
-          followers: profile.followers,
-          publicRepos: profile.public_repos,
-          following: profile.following,
-          totalStars: featuredStars,
-        });
-      } catch {
-        console.log("Failed to fetch GitHub overview");
-      } finally {
-        setGithubStatsLoading(false);
-      }
-    };
-
-    const fetchProjectLanguageStats = async () => {
-      setProjectLanguageLoading(true);
-      try {
-        const stats = await Promise.all(
-          projectItems.map(async (project) => {
-            const repoName = project.github.split("/").pop();
-            if (!repoName) {
-              return {
-                slug: project.slug,
-                title: project.title,
-                github: project.github,
-                languages: {},
-              };
-            }
-
-            const response = await fetch(
-              `https://api.github.com/repos/RajatSharma404/${repoName}/languages`,
-            );
-            if (!response.ok) {
-              return {
-                slug: project.slug,
-                title: project.title,
-                github: project.github,
-                languages: {},
-              };
-            }
-
-            const languages = await response.json();
-            return {
-              slug: project.slug,
-              title: project.title,
-              github: project.github,
-              languages,
-            };
-          }),
-        );
-        setProjectLanguageStats(stats);
-      } catch {
-        console.log("Failed to fetch GitHub language stats");
-      } finally {
-        setProjectLanguageLoading(false);
-      }
-    };
-
-    fetchRecentCommits();
-    fetchGithubOverview();
-    fetchProjectLanguageStats();
-  }, []);
-
-  const value = {
-    theme,
-    setTheme,
-    activeThemeLabel,
-    themeDotColor,
-    themePickerOpen,
-    setThemePickerOpen,
-    activeFile,
-    setActiveFile,
-    openTabs,
-    openFile,
-    closeTab,
-    sidebarOpen,
-    setSidebarOpen,
-    mobileSidebar,
-    setMobileSidebar,
-    activeSidebarTab,
-    setActiveSidebarTab,
-    folderOpen,
-    setFolderOpen,
-    currentLine,
-    setCurrentLine,
-    paletteOpen,
-    setPaletteOpen,
-    paletteQuery,
-    setPaletteQuery,
-    paletteIndex,
-    setPaletteIndex,
-    filteredPalette,
-    openPalette,
-    closePalette,
-    togglePalette,
-    handlePaletteSelect,
-    menuOpen,
-    setMenuOpen,
-    executeMenuAction,
-    terminalOpen,
-    setTerminalOpen,
-    terminalInput,
-    setTerminalInput,
-    terminalPath,
-    terminalLines,
-    terminalHistory,
-    lastTerminalCommand,
-    runTerminalCommand,
-    showDino,
-    setShowDino,
-    showMatrix,
-    setShowMatrix,
-    activeBottomTab,
-    setActiveBottomTab,
-    chatOpen,
-    setChatOpen,
-    chatInput,
-    setChatInput,
-    chatLoading,
-    chatMessages,
-    chatBoost,
-    setChatBoost,
-    askCopilot,
-    shortcutHelpOpen,
-    setShortcutHelpOpen,
-    windowState,
-    handleWindowControl,
-    emailCopied,
-    copyEmailAddress,
-    projectFilter,
-    setProjectFilter,
-    filteredProjects,
-    selectedProject,
-    setSelectedProject,
-    recentCommits,
-    recentCommitsLoading,
-    githubRepoStars,
-    githubOverview,
-    githubStatsLoading,
-    projectLanguageStats,
-    projectLanguageLoading,
-    contactForm,
-    setContactForm,
-    contactSubmitting,
-    contactFeedback,
-    submitContactForm,
-    viewMode,
-    setViewMode,
-    toggleViewMode,
-    soundEnabled,
-    setSoundEnabled,
-    toggleSound,
-    playSound,
-    editorRef,
-    menuRef,
-  };
+  const value = useMemo(
+    () => ({
+      theme,
+      setTheme,
+      activeThemeLabel,
+      themeDotColor,
+      themePickerOpen,
+      setThemePickerOpen,
+      activeFile,
+      setActiveFile,
+      openTabs,
+      openFile,
+      closeTab,
+      sidebarOpen,
+      setSidebarOpen,
+      mobileSidebar,
+      setMobileSidebar,
+      activeSidebarTab,
+      setActiveSidebarTab,
+      folderOpen,
+      setFolderOpen,
+      currentLine,
+      setCurrentLine,
+      paletteOpen,
+      setPaletteOpen,
+      paletteQuery,
+      setPaletteQuery,
+      paletteIndex,
+      setPaletteIndex,
+      filteredPalette,
+      openPalette,
+      closePalette,
+      togglePalette,
+      handlePaletteSelect,
+      menuOpen,
+      setMenuOpen,
+      executeMenuAction,
+      terminalOpen,
+      setTerminalOpen,
+      terminalInput,
+      setTerminalInput,
+      terminalPath,
+      terminalLines,
+      terminalHistory,
+      lastTerminalCommand,
+      runTerminalCommand,
+      showDino,
+      setShowDino,
+      showMatrix,
+      setShowMatrix,
+      activeBottomTab,
+      setActiveBottomTab,
+      chatOpen,
+      setChatOpen,
+      chatInput,
+      setChatInput,
+      chatLoading,
+      chatMessages,
+      chatBoost,
+      setChatBoost,
+      askCopilot,
+      shortcutHelpOpen,
+      setShortcutHelpOpen,
+      windowState,
+      handleWindowControl,
+      emailCopied,
+      copyEmailAddress,
+      projectFilter,
+      setProjectFilter,
+      filteredProjects,
+      selectedProject,
+      setSelectedProject,
+      recentCommits,
+      recentCommitsLoading,
+      githubRepoStars,
+      githubOverview,
+      githubStatsLoading,
+      projectLanguageStats,
+      projectLanguageLoading,
+      contactForm,
+      setContactForm,
+      contactSubmitting,
+      contactFeedback,
+      submitContactForm,
+      viewMode,
+      setViewMode,
+      toggleViewMode,
+      soundEnabled,
+      setSoundEnabled,
+      toggleSound,
+      soundPreset,
+      setSoundPreset,
+      cycleSoundPreset,
+      volume,
+      setVolume,
+      playSound,
+      editorRef,
+      menuRef,
+    }),
+    [
+      theme,
+      setTheme,
+      activeThemeLabel,
+      themeDotColor,
+      themePickerOpen,
+      activeFile,
+      setActiveFile,
+      openTabs,
+      openFile,
+      closeTab,
+      sidebarOpen,
+      setSidebarOpen,
+      mobileSidebar,
+      setMobileSidebar,
+      activeSidebarTab,
+      setActiveSidebarTab,
+      folderOpen,
+      currentLine,
+      paletteOpen,
+      paletteQuery,
+      paletteIndex,
+      filteredPalette,
+      openPalette,
+      closePalette,
+      togglePalette,
+      handlePaletteSelect,
+      menuOpen,
+      executeMenuAction,
+      terminalOpen,
+      terminalInput,
+      terminalPath,
+      terminalLines,
+      terminalHistory,
+      lastTerminalCommand,
+      runTerminalCommand,
+      showDino,
+      showMatrix,
+      activeBottomTab,
+      chatOpen,
+      chatInput,
+      chatLoading,
+      chatMessages,
+      chatBoost,
+      askCopilot,
+      shortcutHelpOpen,
+      windowState,
+      handleWindowControl,
+      emailCopied,
+      copyEmailAddress,
+      projectFilter,
+      filteredProjects,
+      selectedProject,
+      recentCommits,
+      recentCommitsLoading,
+      githubRepoStars,
+      githubOverview,
+      githubStatsLoading,
+      projectLanguageStats,
+      projectLanguageLoading,
+      contactForm,
+      contactSubmitting,
+      contactFeedback,
+      submitContactForm,
+      viewMode,
+      setViewMode,
+      toggleViewMode,
+      soundEnabled,
+      setSoundEnabled,
+      toggleSound,
+      soundPreset,
+      setSoundPreset,
+      cycleSoundPreset,
+      volume,
+      setVolume,
+      playSound,
+    ],
+  );
 
   return (
     <WorkspaceContext.Provider value={value}>
