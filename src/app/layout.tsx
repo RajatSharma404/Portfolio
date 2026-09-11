@@ -68,7 +68,7 @@ export default function RootLayout({
     "@type": "Person",
     name: "Rajat Sharma",
     url: "https://rajat-portfolio.vercel.app",
-    image: "https://rajat-portfolio.vercel.app/og-image.png",
+    image: "https://rajat-portfolio.vercel.app/opengraph-image",
     jobTitle: "Full Stack Developer",
     worksFor: {
       "@type": "Organization",
