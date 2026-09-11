@@ -62,6 +62,12 @@ export function GitPanel() {
         <textarea
           value={commitMsg}
           onChange={(e) => setCommitMsg(e.target.value)}
+          onKeyDown={(e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+              e.preventDefault();
+              handleCommit(e);
+            }
+          }}
           placeholder="Message (Ctrl+Enter to commit)"
           className="w-full h-16 rounded-lg border border-white/15 bg-black/40 p-2 text-xs text-white placeholder:text-white/40 outline-none focus:border-cyan-400/60 resize-none font-sans"
         />
