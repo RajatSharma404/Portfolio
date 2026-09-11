@@ -17,6 +17,15 @@ export function CommandPalette() {
     handlePaletteSelect,
   } = useWorkspace();
 
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (listRef.current && filteredPalette.length > 0) {
+      const activeEl = listRef.current.querySelector<HTMLElement>('[data-active="true"]');
+      activeEl?.scrollIntoView({ block: "nearest" });
+    }
+  }, [paletteIndex, filteredPalette.length]);
+
   return (
     <AnimatePresence>
       {paletteOpen && (
@@ -55,7 +64,7 @@ export function CommandPalette() {
             </div>
 
             {/* Results list */}
-            <div className="max-h-72 overflow-y-auto p-2 text-sm scroll-thin">
+            <div ref={listRef} className="max-h-72 overflow-y-auto p-2 text-sm scroll-thin">
               {filteredPalette.length === 0 ? (
                 <p className="px-3 py-4 text-center text-xs text-(--text-muted)">
                   No matches found. Try typing a filename, section, or action.
@@ -64,6 +73,7 @@ export function CommandPalette() {
                 filteredPalette.map((item, index) => (
                   <button
                     key={item.id}
+                    data-active={index === paletteIndex}
                     className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs transition-colors ${
                       index === paletteIndex
                         ? "bg-[#007acc] text-white font-medium"
