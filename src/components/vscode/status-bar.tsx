@@ -12,6 +12,8 @@ export function StatusBar() {
     setActiveBottomTab,
     soundEnabled,
     toggleSound,
+    soundPreset,
+    cycleSoundPreset,
   } = useWorkspace();
   const currentFileNode = files.find((f) => f.id === activeFile);
 
@@ -70,24 +72,43 @@ export function StatusBar() {
 
       {/* Right side */}
       <div className="flex items-center gap-2.5 sm:gap-3.5">
-        {/* Sound Haptics Toggle */}
-        <button
-          onClick={toggleSound}
-          className="flex items-center gap-1 hover:bg-white/20 px-1.5 py-0.5 rounded transition-colors"
-          title={soundEnabled ? "Sound Effects: ON (Click to mute)" : "Sound Effects: OFF (Click to unmute)"}
-        >
-          {soundEnabled ? (
-            <>
-              <Volume2 size={12} className="text-cyan-200" />
-              <span className="hidden md:inline text-[10px]">Sound: ON</span>
-            </>
-          ) : (
-            <>
-              <VolumeX size={12} className="text-white/50" />
-              <span className="hidden md:inline text-[10px] text-white/50">Sound: OFF</span>
-            </>
+        {/* Sound Haptics Toggle & Switch Preset */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={toggleSound}
+            className="flex items-center gap-1 hover:bg-white/20 px-1.5 py-0.5 rounded transition-colors"
+            title={
+              soundEnabled
+                ? `Sound Effects: ON (${soundPreset.toUpperCase()}) - Click to mute`
+                : "Sound Effects: OFF - Click to unmute"
+            }
+          >
+            {soundEnabled ? (
+              <>
+                <Volume2 size={12} className="text-cyan-200" />
+                <span className="hidden md:inline text-[10px]">Sound: ON</span>
+              </>
+            ) : (
+              <>
+                <VolumeX size={12} className="text-white/50" />
+                <span className="hidden md:inline text-[10px] text-white/50">Sound: OFF</span>
+              </>
+            )}
+          </button>
+          {soundEnabled && (
+            <button
+              onClick={cycleSoundPreset}
+              className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 text-cyan-200 transition-colors cursor-pointer"
+              title="Click to cycle mechanical switch preset: Cherry MX Blue, MX Brown, Classic"
+            >
+              {soundPreset === "mx-blue"
+                ? "MX-Blue"
+                : soundPreset === "mx-brown"
+                  ? "MX-Brown"
+                  : "Classic"}
+            </button>
           )}
-        </button>
+        </div>
 
         <span className="text-white/80">
           Ln {currentLine}, Col 1
