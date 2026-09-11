@@ -14,7 +14,7 @@ export function MenuBar() {
   return (
     <nav
       ref={menuRef}
-      className="flex gap-5 bg-(--menubar) px-4 py-1 text-xs select-none border-b border-black/10"
+      className="flex gap-5 bg-(--menubar) px-4 py-1 text-xs select-none border-b border-black/10 overflow-x-auto scroll-thin"
       aria-label="Window Menu"
     >
       {topMenus.map((menu) => (
