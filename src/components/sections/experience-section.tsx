@@ -23,9 +23,9 @@ export function ExperienceSection() {
   return (
     <div className="px-5 py-5 md:px-8">
       <section className="section-card rounded-3xl p-6">
-        <h3 className="display-font text-3xl text-white">
+        <h2 className="display-font text-3xl text-white">
           Experience Timeline
-        </h3>
+        </h2>
         <p className="mt-2 text-sm text-(--text-muted)">
           Learning by building real-world projects, systems, and product-like workflows.
         </p>
@@ -41,9 +41,9 @@ export function ExperienceSection() {
             <p className="text-xs uppercase tracking-[0.2em] text-[#8e8e8e] font-mono">
               {item.period}
             </p>
-            <h4 className="mt-1 text-lg font-bold text-[#f0f0f0]">
+            <h3 className="mt-1 text-lg font-bold text-[#f0f0f0]">
               {item.role}
-            </h4>
+            </h3>
             <p className="text-sm font-medium text-cyan-200">{item.org}</p>
             <p className="mt-2 text-xs md:text-sm text-[#a8a8a8] leading-relaxed">
               {item.desc}
