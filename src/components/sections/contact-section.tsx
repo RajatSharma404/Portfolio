@@ -45,7 +45,7 @@ export function ContactSection() {
   return (
     <div className="px-5 py-5 md:px-8">
       <section className="section-card rounded-[28px] p-6">
-        <h3 className="display-font text-3xl text-white">Contact</h3>
+        <h2 className="display-font text-3xl text-white">Contact</h2>
         <p className="mt-2 text-sm text-(--text-muted)">
           Open for collaboration, internships, and interesting engineering
           problems.
@@ -59,7 +59,11 @@ export function ContactSection() {
               key={card.title}
               className="section-card rounded-2xl p-4 transition-transform hover:-translate-y-0.5"
             >
-              <a href={card.link} target="_blank" rel="noreferrer">
+              <a
+                href={card.link}
+                target={card.link.startsWith("mailto:") ? undefined : "_blank"}
+                rel={card.link.startsWith("mailto:") ? undefined : "noreferrer"}
+              >
                 <p className="text-xs uppercase tracking-[0.2em] text-[#8f8f8f] font-mono">
                   {card.title}
                 </p>
