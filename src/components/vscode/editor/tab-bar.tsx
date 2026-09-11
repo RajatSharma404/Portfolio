@@ -71,7 +71,7 @@ export function TabBar() {
               {/* Tab Close Button */}
               <button
                 aria-label={`Close tab ${file.name}`}
-                className="ml-2 rounded p-0.5 opacity-0 group-hover:opacity-100 hover:bg-white/15 transition-opacity text-white/70 hover:text-white"
+                className="ml-2 rounded p-0.5 opacity-60 md:opacity-0 md:group-hover:opacity-100 hover:bg-white/15 transition-opacity text-white/70 hover:text-white"
                 onClick={(e) => {
                   e.stopPropagation();
                   closeTab(tab);
