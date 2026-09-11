@@ -106,7 +106,7 @@ function PortfolioIDE() {
 
   return (
     <div
-      className={`ide-ui relative h-screen w-full select-text ${
+      className={`ide-ui relative h-screen w-full select-text overflow-hidden ${
         isMaximized ? "p-0" : "p-2 md:p-4"
       }`}
     >
