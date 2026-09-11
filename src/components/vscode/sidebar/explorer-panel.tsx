@@ -18,6 +18,7 @@ export function ExplorerPanel() {
     sidebarOpen,
     setSidebarOpen,
     mobileSidebar,
+    setMobileSidebar,
     activeSidebarTab,
     folderOpen,
     setFolderOpen,
@@ -54,7 +55,10 @@ export function ExplorerPanel() {
             <span className="font-semibold text-white/90">{getTitle()}</span>
             <button
               aria-label="Close sidebar"
-              onClick={() => setSidebarOpen(false)}
+              onClick={() => {
+                setSidebarOpen(false);
+                setMobileSidebar(false);
+              }}
               className="p-0.5 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors"
             >
               <X size={14} />
