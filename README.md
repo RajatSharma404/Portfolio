@@ -5,10 +5,11 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.38-FF0055?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
+[![Google Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5_Flash-8E75B2?style=for-the-badge&logo=google)](https://deepmind.google/technologies/gemini/)
 [![LeetCode](https://img.shields.io/badge/LeetCode-500+_Solved-FFA116?style=for-the-badge&logo=leetcode)](https://leetcode.com/u/RajatSharma404/)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-success?style=for-the-badge&logo=vercel)](https://portfolio-chi-self-31.vercel.app/)
 
-> An authentic, feature-packed **VS Code IDE-themed developer portfolio** engineered with Next.js 16, React 19, and Tailwind CSS v4. It features a complete desktop workspace layout with multi-panel sidebars, a dual code/preview split engine, an interactive terminal CLI with easter eggs, real-time GitHub & LeetCode telemetry, and Web Audio API haptics.
+> An authentic, feature-packed **VS Code IDE-themed developer portfolio** engineered with Next.js 16, React 19, and Tailwind CSS v4. It features a complete desktop workspace layout with multi-panel sidebars, a dual code/preview split engine, an interactive terminal CLI with easter eggs, real-time GitHub & LeetCode telemetry, Google Gemini-powered Copilot AI, Cherry MX mechanical sound haptics, and rate-limited secure APIs.
 
 ---
 
@@ -24,21 +25,29 @@
 
 ### 1. 🖥️ Dual View Engine & Split Mode
 * **`[ 👁️ Preview ]`**: High-engagement interactive UI views (Hero, About, Projects Grid, Skills, Experience, Contact Form).
-* **`[ </> Code ]`**: Syntax-highlighted source code with real line numbers, hover illumination, and a 1-click **"Copy Code"** button.
+* **`[ </> Code ]`**: Syntax-highlighted source code with real line numbers, dynamic zero-dependency tokenizer, hover illumination, and a 1-click **"Copy Code"** button with error handling.
 * **`[ ◫ Split View ]`**: Side-by-side view (screens ≥ 1024px) presenting the raw TypeScript/React source on the left and the rendered interactive UI on the right simultaneously.
 * **🧭 Breadcrumbs Bar**: Displays hierarchical file structure (`portfolio > src > [file] > [exported symbol]`) with custom extension badges.
 
 ---
 
-### 2. 📂 Interactive Multi-Panel Sidebar & Activity Bar
-* **📁 File Explorer**: Accordion tree (`src/`, `public/`, `config/`) with accurate color-coded badges (`TSX`, `HTML`, `JS`, `JSON`, `TS`, `CSS`, `MD`, `{}`).
+### 2. 🤖 Dual-Provider Copilot AI (Google Gemini 2.5 Flash + Claude)
+* **Google Gemini 2.5 Flash**: Primary AI provider via `GEMINI_API_KEY` for lightning-fast responses matching Rajat's AI development stack.
+* **Anthropic Claude 3.5 Sonnet**: Secondary AI provider via `ANTHROPIC_API_KEY`.
+* **Dynamic Contextual Engine**: Smart offline fallback system providing instant, witty answers regarding Rajat's 500+ LeetCode milestones, tech stack, featured projects, and internship availability even without external API credentials.
+* **Rate-Limited Stream**: Sliding-window throttling (8 req/min per IP) via [`src/lib/rate-limit.ts`](src/lib/rate-limit.ts) with zero serverless holding latency.
+
+---
+
+### 3. 📂 Interactive Multi-Panel Sidebar & Activity Bar
+* **📁 File Explorer**: Accordion tree (`src/`, `public/`, `config/`) with accurate color-coded badges (`TSX`, `HTML`, `JS`, `JSON`, `TS`, `CSS`, `MD`, `{}`). Mobile-responsive with dedicated tap-to-close handling.
 * **🔍 Global Workspace Search**: Instant full-text search across all 8 files with match counts, collapsible file groups, and click-to-line navigation.
-* **🌿 Source Control (Git)**: Branch switcher (`main`, `feature/ai-copilot`, `hotfix/dsa-grind`), staged changes list, simulated "Commit & Push", and live GitHub commit history.
+* **🌿 Source Control (Git)**: Branch switcher (`main`, `feature/ai-copilot`, `hotfix/dsa-grind`), staged changes list, simulated commit execution with <kbd>Ctrl</kbd> + <kbd>Enter</kbd> shortcut, and live GitHub commit history.
 * **🧩 Extensions Marketplace**: Rajat's core proficiencies packaged as VS Code extensions (React 19, Next.js 16, C++ DSA, Stockfish AI, Tailwind, Gemini AI) with ratings, downloads, and search.
 
 ---
 
-### 3. ⚡ LeetCode Pulse & DSA Mastery Card
+### 4. ⚡ LeetCode Pulse & DSA Mastery Card
 * **Concentric SVG Donut Rings**: Visual circular difficulty rings for Easy (220 solved), Medium (250 solved), and Hard (30+ solved).
 * **500+ Solved Center**: Glowing focal point displaying Top 10% global ranking and C++ primary badge.
 * **Topic Mastery Clusters**: Problem counts and progress meters for:
@@ -52,11 +61,11 @@
 
 ---
 
-### 4. 💻 5-Tab Integrated Bottom Panel & Interactive CLI
-* **`TERMINAL`**: Rich shell emulator with command history traversal (`ArrowUp` / `ArrowDown`) and tab auto-completion (`Tab`).
+### 5. 💻 5-Tab Integrated Bottom Panel & Interactive CLI
+* **`TERMINAL`**: Decoupled pure command runner engine ([`src/lib/terminal-commands.ts`](src/lib/terminal-commands.ts)) with history traversal (`ArrowUp` / `ArrowDown`) and auto-completion (`Tab`).
 * **`PROBLEMS (0)`**: Diagnostic health view confirming 0 TypeScript errors, 0 ESLint warnings, and WCAG AA accessibility compliance.
 * **`OUTPUT`**: Next.js 16 Turbopack live stream and fast-refresh logs.
-* **`DEBUG CONSOLE`**: Live JavaScript REPL evaluator for testing code snippets and expressions directly in the browser.
+* **`DEBUG CONSOLE`**: Sandboxed expression evaluator blocking DOM access, storage, and network APIs to prevent arbitrary client-side code execution.
 * **`PORTS (1)`**: Forwarded ports table displaying active `localhost:3000` listener and production `portfolio-chi-self-31.vercel.app` target.
 
 #### ⌨️ Terminal Command Suite
@@ -82,8 +91,8 @@
 
 ---
 
-### 5. 🎨 8 Iconic Visual Themes
-Switch themes anytime via the TitleBar dropdown, command palette (`Ctrl+Shift+P`), or terminal CLI:
+### 6. 🎨 8 Iconic Visual Themes
+Switch themes anytime via the TitleBar dropdown, command palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>), or terminal CLI:
 1. **Dracula** (`#bd93f9` accent)
 2. **Dark+** (Classic VS Code Dark `#007acc`)
 3. **Monokai** (`#fd971f` vibrant amber)
@@ -95,17 +104,21 @@ Switch themes anytime via the TitleBar dropdown, command palette (`Ctrl+Shift+P`
 
 ---
 
-### 6. 🔊 Web Audio API Haptics Engine
-* Pure zero-latency browser-synthesized audio:
-  - Mechanical switch click on tab, file, or theme changes.
-  - Ascending 3-tone harmonic chime (`C5` → `E5` → `G5`) on contact submission or code copy.
-* **Status Bar Toggle**: `🔊 Sound: ON` / `🔇 Sound: OFF` quick toggle with `localStorage` persistence.
+### 7. 🔊 Cherry MX Mechanical Switch Audio Haptics
+* Pure zero-latency Web Audio API synthesis:
+  - **Cherry MX Blue**: Sharp, high-frequency tactile click with a dual-transient release tick.
+  - **Cherry MX Brown**: Warm, dampened tactile bump for subtle typing acoustics.
+  - **Classic**: Smooth, focused sine wave click.
+  - Ascending 3-tone harmonic chime (`C5` → `E5` → `G5`) on contact submission and clipboard actions.
+* **Status Bar Controls**: 1-click switch preset badge (`[MX-Blue]` / `[MX-Brown]` / `[Classic]`) with instant audio preview and multi-tab synchronization via React 19's `useSyncExternalStore`.
 
 ---
 
-### 7. 🤖 Portfolio-Aware Copilot AI
-* Built-in streaming conversational drawer powered by Next.js API routes (`/api/copilot`).
-* Recruiter-focused prompt engineering for instant answers regarding Rajat's stack, projects, internship availability, and DSA accomplishments.
+### 8. 🛡️ Security & Performance Hardening
+* **Server-Side GitHub Aggregator (`/api/github`)**: 1-hour Incremental Static Regeneration (ISR) endpoint preventing GitHub unauthenticated client rate limit exhaustion.
+* **Sliding-Window Rate Limiting (`src/lib/rate-limit.ts`)**: Automatic IP resolution (`cf-connecting-ip`, `x-real-ip`, `x-forwarded-for`) and memory cleanup protecting `/api/copilot` and `/api/contact`.
+* **Sandboxed Debug REPL**: Blocks `eval`, `Function`, `window`, `document`, `localStorage`, `cookie`, and `fetch` to eliminate client-side code execution risks.
+* **WCAG 2.1 AA Compliance**: Fixed nested interactive ARIA violations, standardized heading hierarchy (`h1` → `h2` → `h3`), and added touch-device support for closing editor tabs.
 
 ---
 
@@ -113,23 +126,29 @@ Switch themes anytime via the TitleBar dropdown, command palette (`Ctrl+Shift+P`
 
 ```
 d:\Portfolio/
+├── .agents/
+│   └── skills/
+│       └── improvement/              # Antigravity project review & improvement skill
+│
 ├── src/
 │   ├── app/
 │   │   ├── api/
-│   │   │   ├── contact/route.ts      # Contact form submission API with anti-spam
-│   │   │   └── copilot/route.ts      # Streaming Copilot assistant API
+│   │   │   ├── contact/route.ts      # Rate-limited contact form API with anti-spam honeypot
+│   │   │   ├── copilot/route.ts      # Gemini 2.5 Flash + Claude streaming assistant
+│   │   │   └── github/route.ts       # Server-cached ISR GitHub telemetry aggregator
 │   │   ├── projects/
 │   │   │   ├── page.tsx              # Standalone projects index route
 │   │   │   └── [slug]/page.tsx       # Dynamic project detail routes with SSG
+│   │   ├── opengraph-image.tsx       # Dynamic social OpenGraph card generator
 │   │   ├── globals.css               # Design tokens, themes & typography
-│   │   ├── layout.tsx                # Root layout, fonts & metadata
+│   │   ├── layout.tsx                # Root layout, fonts, SEO & JSON-LD schema
 │   │   └── page.tsx                  # Modular IDE shell orchestrator
 │   │
 │   ├── components/
 │   │   ├── sections/                 # Content views for workspace files
-│   │   │   ├── home-section.tsx      # home.tsx view (Hero & metrics)
+│   │   │   ├── home-section.tsx      # home.tsx view (Hero, single h1 & metrics)
 │   │   │   ├── about-section.tsx     # about.html view (Bio & GitHub pulse)
-│   │   │   ├── projects-section.tsx  # projects.js view (Category filter & cards)
+│   │   │   ├── projects-section.tsx  # projects.js view (Category filter & accessible cards)
 │   │   │   ├── skills-section.tsx    # skills.json view (Dual-tab DSA + Language map)
 │   │   │   ├── leetcode-pulse.tsx    # LeetCode 500+ concentric rings & clusters
 │   │   │   ├── experience-section.tsx# experience.ts view (Timeline nodes)
@@ -139,45 +158,52 @@ d:\Portfolio/
 │   │   │
 │   │   ├── vscode/                   # VS Code IDE Shell Components
 │   │   │   ├── title-bar.tsx         # Traffic lights, search bar & theme dropdown
-│   │   │   ├── menu-bar.tsx          # Top desktop menu strip
+│   │   │   ├── menu-bar.tsx          # Top desktop menu strip with horizontal scroll
 │   │   │   ├── activity-bar.tsx      # Left vertical tool strip
-│   │   │   ├── status-bar.tsx        # Bottom branch, diagnostics & sound toggle
-│   │   │   ├── command-palette.tsx   # Fuzzy file & action search overlay
+│   │   │   ├── status-bar.tsx        # Bottom branch, sound preset switch & diagnostics
+│   │   │   ├── command-palette.tsx   # Auto-scrolling fuzzy file & action search overlay
 │   │   │   ├── shortcuts-modal.tsx   # Keyboard shortcuts cheat sheet
-│   │   │   ├── project-modal.tsx     # Project detail modal dialog
+│   │   │   ├── project-modal.tsx     # Project detail modal with Framer Motion exit transitions
 │   │   │   ├── sidebar/
-│   │   │   │   ├── explorer-panel.tsx# Unified sidebar container
+│   │   │   │   ├── explorer-panel.tsx# Unified sidebar container with mobile close fix
 │   │   │   │   ├── search-panel.tsx  # Global full-text search
-│   │   │   │   ├── git-panel.tsx     # Branch selector & live GitHub commits
+│   │   │   │   ├── git-panel.tsx     # Branch selector & Ctrl+Enter commit shortcut
 │   │   │   │   └── extensions-panel.tsx # Extensions marketplace
 │   │   │   ├── editor/
-│   │   │   │   ├── tab-bar.tsx       # File tabs & View Mode switcher
+│   │   │   │   ├── tab-bar.tsx       # File tabs with touch-device close & View Mode switcher
 │   │   │   │   ├── breadcrumbs.tsx   # Hierarchical path bar
-│   │   │   │   └── code-viewer.tsx   # Syntax-highlighted code inspector
+│   │   │   │   └── code-viewer.tsx   # Syntax-highlighted code inspector with clipboard safety
 │   │   │   ├── terminal/
-│   │   │   │   └── terminal-panel.tsx# 5-tab bottom developer drawer
+│   │   │   │   └── terminal-panel.tsx# 5-tab bottom panel with sandboxed debug REPL
 │   │   │   └── copilot/
-│   │   │       └── copilot-chat.tsx  # Streaming AI assistant drawer
+│   │   │       └── copilot-chat.tsx  # Isolated chat state Copilot assistant drawer
 │   │   │
-│   │   ├── dino-game.tsx             # Dino runner game easter egg
+│   │   ├── dino-game.tsx             # Dino runner game easter egg (scroll-prevented)
 │   │   └── language-skill-chart.tsx  # Interactive SVG donut language chart
 │   │
 │   ├── context/
-│   │   └── workspace-context.tsx     # Centralized React Context state management
+│   │   └── workspace-context.tsx     # Decomposed React Context state orchestrator
+│   │
+│   ├── hooks/
+│   │   ├── use-github-data.ts        # GitHub telemetry and stats hook
+│   │   └── use-sound-effects.ts      # Audio triggers & useSyncExternalStore persistence
 │   │
 │   ├── content/
 │   │   ├── site-data.ts              # CMS-like data model for projects & profile
 │   │   └── code-raw-content.ts       # Raw source code schemas for Code View
 │   │
 │   ├── lib/
-│   │   └── sound-effects.ts          # Web Audio API sound synthesis engine
+│   │   ├── code-tokenizer.ts         # Real-time lexical code tokenizer
+│   │   ├── rate-limit.ts             # Sliding-window IP rate limiting utility
+│   │   ├── sound-effects.ts          # Cherry MX mechanical switch sound synthesizer
+│   │   └── terminal-commands.ts      # Decoupled CLI command executor engine
 │   │
 │   └── types/
 │       └── vscode.ts                 # Shared TypeScript interfaces & types
 │
 ├── public/
 │   ├── resume.pdf                    # Downloadable PDF resume
-│   └── og-image.png                  # Social share card
+│   └── icon.svg                      # Workspace favicon
 │
 ├── package.json                      # Project manifest & dependencies
 └── README.md                         # Project documentation
@@ -193,9 +219,10 @@ d:\Portfolio/
 | <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>B</kbd> | Toggle Left Sidebar |
 | <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>`</kbd> | Toggle Bottom Terminal Drawer |
 | <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> | Open Color Theme Dropdown |
+| <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> + <kbd>Enter</kbd> | Execute Git Commit in Source Control Panel |
 | <kbd>?</kbd> | Show Keyboard Shortcuts Cheat Sheet (when not in inputs) |
 | <kbd>Esc</kbd> | Close any active modal, palette, or menu overlay |
-| <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd> | Cycle through terminal command history |
+| <kbd>ArrowUp</kbd> / <kbd>ArrowDown</kbd> | Cycle through terminal command history / Command palette results |
 | <kbd>Tab</kbd> | Auto-complete command name in terminal |
 
 ---
@@ -205,6 +232,17 @@ d:\Portfolio/
 ### Prerequisites
 * **Node.js**: `v20.0.0` or higher
 * **npm**: `v10.0.0` or higher
+
+### Environment Variables (Optional)
+To enable real-time AI generation in Copilot, create a `.env.local` file:
+```env
+# Google Gemini API (Primary AI provider)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Anthropic Claude API (Secondary AI provider)
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+```
+*(Note: If no keys are provided, Copilot automatically falls back to built-in contextual knowledge responses seamlessly).*
 
 ### Installation
 
@@ -225,7 +263,7 @@ d:\Portfolio/
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-4. **Build for production:**
+4. **Build for production with Turbopack:**
    ```bash
    npm run build
    npm run start
