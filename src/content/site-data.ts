@@ -96,8 +96,8 @@ export const projectItems: ProjectItem[] = [
     impact:
       "Helps players analyze their games with engine-level precision and intuitive visual feedback.",
     stack: ["FastAPI", "Python", "Stockfish", "React", "TypeScript"],
-    github: "https://github.com/RajatSharma404",
-    live: "https://github.com/RajatSharma404",
+    github: "https://github.com/RajatSharma404/chess-engine-evaluator",
+    live: "https://github.com/RajatSharma404/chess-engine-evaluator",
     category: "AI",
     highlights: [
       "Integrated Stockfish 16 engine",
@@ -114,8 +114,8 @@ export const projectItems: ProjectItem[] = [
     impact:
       "Automates workout planning with intelligent adaptations, making personalized fitness accessible.",
     stack: ["Next.js", "Prisma", "Gemini AI", "Tailwind", "TypeScript"],
-    github: "https://github.com/RajatSharma404",
-    live: "https://github.com/RajatSharma404",
+    github: "https://github.com/RajatSharma404/adaptive-fitness-planner",
+    live: "https://github.com/RajatSharma404/adaptive-fitness-planner",
     category: "AI",
     highlights: [
       "Gemini AI integration for dynamic planning",
