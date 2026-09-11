@@ -75,6 +75,111 @@ function MatrixRain({ onExit }: { onExit: () => void }) {
   );
 }
 
+function evaluateDebugExpression(expr: string): string {
+  const trimmed = expr.trim();
+  if (!trimmed) return "";
+
+  // Mock inspectable properties
+  if (trimmed === "portfolio.developer" || trimmed === "developer") {
+    return JSON.stringify(
+      {
+        name: "Rajat Sharma",
+        role: "Full Stack Developer & AI Tooling",
+        leetcode: 500,
+        status: "Open to internships",
+      },
+      null,
+      2,
+    );
+  }
+  if (trimmed === "portfolio.projects") {
+    return JSON.stringify(
+      [
+        "DSA Tracker",
+        "Expense Tracker",
+        "Weather Forecast App",
+        "Finance Track",
+        "Chess Engine Evaluator",
+        "Adaptive Fitness Planner",
+      ],
+      null,
+      2,
+    );
+  }
+  if (trimmed === "typeof window") {
+    return '"object"';
+  }
+
+  // Blacklist dangerous properties and globals
+  const hazardousKeywords = [
+    "window",
+    "document",
+    "localstorage",
+    "sessionstorage",
+    "cookie",
+    "fetch",
+    "xmlhttprequest",
+    "eval",
+    "function",
+    "constructor",
+    "prototype",
+    "__proto__",
+    "globalthis",
+    "location",
+    "navigator",
+    "indexeddb",
+    "open",
+    "alert",
+    "prompt",
+    "confirm",
+    "import",
+    "require",
+    "process",
+  ];
+
+  const lower = trimmed.toLowerCase();
+  for (const keyword of hazardousKeywords) {
+    const regex = new RegExp(`\\b${keyword}\\b`, "i");
+    if (regex.test(lower)) {
+      throw new Error(
+        "SecurityError: Access to browser globals, storage, DOM, and network APIs is restricted.",
+      );
+    }
+  }
+
+  // Validate math/expression characters
+  const safeMathPattern =
+    /^[\d\s+\-*/%().,<>!=&|?:MathPIEsqrtabsroundfloorceilpowsincominax]+$/;
+  if (!safeMathPattern.test(trimmed)) {
+    throw new Error(
+      "SyntaxError: Only safe math expressions and supported inspectables are allowed.",
+    );
+  }
+
+  // Sterile evaluation with shadowed browser globals
+  const sandbox = new Function(
+    "window",
+    "document",
+    "localStorage",
+    "sessionStorage",
+    "fetch",
+    "globalThis",
+    `'use strict'; return (${trimmed});`,
+  );
+  const result = sandbox(
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+  );
+
+  return typeof result === "object"
+    ? JSON.stringify(result, null, 2)
+    : String(result);
+}
+
 export function TerminalPanel() {
   const {
     terminalOpen,
@@ -83,8 +188,6 @@ export function TerminalPanel() {
     setActiveBottomTab,
     terminalLines,
     terminalPath,
-    terminalInput,
-    setTerminalInput,
     terminalHistory,
     runTerminalCommand,
     showDino,
@@ -94,6 +197,7 @@ export function TerminalPanel() {
     setChatBoost,
   } = useWorkspace();
 
+  const [terminalInput, setTerminalInput] = useState("");
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [debugLogs, setDebugLogs] = useState<
@@ -190,12 +294,8 @@ export function TerminalPanel() {
         setDebugInput("");
         return;
       }
-      // Safe evaluation for basic math/literals
-      const result = Function(`'use strict'; return (${debugInput})`)();
-      output =
-        typeof result === "object"
-          ? JSON.stringify(result, null, 2)
-          : String(result);
+
+      output = evaluateDebugExpression(debugInput);
     } catch (err: unknown) {
       output = err instanceof Error ? err.message : String(err);
       isError = true;
