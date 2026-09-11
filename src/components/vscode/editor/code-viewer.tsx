@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Check, Copy, FileCode } from "lucide-react";
 import { useWorkspace } from "@/context/workspace-context";
 import { rawCodeRegistry } from "@/content/code-raw-content";
+import { tokenizeCode } from "@/lib/code-tokenizer";
 import type { Token } from "@/types/vscode";
 
 export function CodeViewer({ fileId }: { fileId?: string }) {
@@ -11,6 +12,12 @@ export function CodeViewer({ fileId }: { fileId?: string }) {
   const targetId = fileId ?? activeFile;
   const rawData = rawCodeRegistry[targetId] ?? rawCodeRegistry.home;
   const [copied, setCopied] = useState(false);
+
+  const lines = useMemo(() => {
+    if (!rawData) return [];
+    if (rawData.lines && rawData.lines.length > 0) return rawData.lines;
+    return tokenizeCode(rawData.rawString, rawData.language);
+  }, [rawData]);
 
   const tokenClass: Record<Token["type"], string> = {
     kw: "text-(--keyword)",
@@ -21,11 +28,15 @@ export function CodeViewer({ fileId }: { fileId?: string }) {
     plain: "text-(--text-main)",
   };
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (!rawData) return;
-    navigator.clipboard.writeText(rawData.rawString);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(rawData.rawString);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Gracefully ignore or fallback in restricted iframe/non-HTTPS environments
+    }
   };
 
   return (
@@ -41,7 +52,7 @@ export function CodeViewer({ fileId }: { fileId?: string }) {
             {rawData.language}
           </span>
           <span className="hidden sm:inline text-[11px] text-(--text-muted)">
-            {rawData.lines.length} lines
+            {lines.length} lines
           </span>
         </div>
 
@@ -67,7 +78,7 @@ export function CodeViewer({ fileId }: { fileId?: string }) {
       {/* Code Lines Container */}
       <div className="scroll-thin flex-1 overflow-auto p-3 md:p-4">
         <div className="min-w-fit space-y-0.5">
-          {rawData.lines.map((lineTokens, lineIdx) => {
+          {lines.map((lineTokens, lineIdx) => {
             const lineNum = lineIdx + 1;
             const isHighlighted = currentLine === lineNum;
 
