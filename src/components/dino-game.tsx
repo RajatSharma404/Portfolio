@@ -28,8 +28,11 @@ export default function DinoGame({ onScoreUnlock, onStop }: DinoGameProps) {
     ];
 
     const keyHandler = (e: KeyboardEvent) => {
-      if ((e.key === " " || e.key === "ArrowUp") && dinoY === 0) {
-        velocityY = jump;
+      if (e.key === " " || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (dinoY === 0) {
+          velocityY = jump;
+        }
       }
       if (e.key === "Escape") onStop();
     };
