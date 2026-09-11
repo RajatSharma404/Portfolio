@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getClientKey, isRateLimited } from "@/lib/rate-limit";
 
 type ContactPayload = {
   name?: string;
@@ -12,29 +13,6 @@ const isValidEmail = (value: string) =>
 
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 5;
-const requestBuckets = new Map<string, number[]>();
-
-const getClientKey = (req: NextRequest) => {
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0]?.trim() ?? "unknown";
-  return req.headers.get("x-real-ip") ?? "unknown";
-};
-
-const isRateLimited = (clientKey: string) => {
-  const now = Date.now();
-  const recent = (requestBuckets.get(clientKey) ?? []).filter(
-    (ts) => now - ts < RATE_WINDOW_MS,
-  );
-
-  if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
-    requestBuckets.set(clientKey, recent);
-    return true;
-  }
-
-  recent.push(now);
-  requestBuckets.set(clientKey, recent);
-  return false;
-};
 
 const sendViaResend = async ({
   name,
@@ -94,7 +72,7 @@ export async function POST(req: NextRequest) {
   }
 
   const clientKey = getClientKey(req);
-  if (isRateLimited(clientKey)) {
+  if (isRateLimited(clientKey, MAX_REQUESTS_PER_WINDOW, RATE_WINDOW_MS)) {
     return Response.json(
       {
         ok: false,
