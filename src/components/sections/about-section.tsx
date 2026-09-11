@@ -30,9 +30,9 @@ export function AboutSection() {
           <p className="text-xs uppercase tracking-[0.3em] text-[#8f8f8f]">
             Developer Profile
           </p>
-          <h3 className="display-font mt-3 text-3xl text-white md:text-4xl">
+          <h2 className="display-font mt-3 text-3xl text-white md:text-4xl">
             Building reliable products at speed.
-          </h3>
+          </h2>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-[#aeb3c1] md:text-base">
             Full-stack developer and AI enthusiast currently pursuing B.Tech in
             Computer Science at Kanpur Institute of Technology. I enjoy turning
@@ -54,9 +54,9 @@ export function AboutSection() {
 
         <div className="space-y-4">
           <section className="section-card rounded-3xl p-5">
-            <h4 className="text-xs uppercase tracking-[0.28em] text-[#8f8f8f]">
+            <h3 className="text-xs uppercase tracking-[0.28em] text-[#8f8f8f]">
               What I Build
-            </h4>
+            </h3>
             <div className="mt-3 space-y-2">
               {aboutFocusRight.map((item) => (
                 <div
