@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot, Send, X, Sparkles } from "lucide-react";
 import { useWorkspace } from "@/context/workspace-context";
@@ -9,13 +9,13 @@ export function CopilotChat() {
   const {
     chatOpen,
     setChatOpen,
-    chatInput,
-    setChatInput,
     chatLoading,
     chatMessages,
     askCopilot,
     chatBoost,
   } = useWorkspace();
+
+  const [chatInput, setChatInput] = useState("");
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const maxMessages = 15 + chatBoost;
@@ -158,7 +158,9 @@ export function CopilotChat() {
               onSubmit={(e) => {
                 e.preventDefault();
                 if (userMessageCount < maxMessages && chatInput.trim()) {
-                  askCopilot(chatInput);
+                  const q = chatInput;
+                  setChatInput("");
+                  askCopilot(q);
                 }
               }}
             >
