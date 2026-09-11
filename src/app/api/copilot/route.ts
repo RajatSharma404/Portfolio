@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getClientKey, isRateLimited } from "@/lib/rate-limit";
 
 const profileContext = `
 Name: Rajat Sharma
@@ -46,11 +47,24 @@ const promptReply = (rawPrompt: string) => {
 };
 
 export async function POST(req: NextRequest) {
-  const { question } = (await req.json()) as { question?: string };
-  const prompt = question?.trim() ?? "";
+  let body: { question?: string };
+  try {
+    body = (await req.json()) as { question?: string };
+  } catch {
+    return new Response("Invalid JSON request body.", { status: 400 });
+  }
+  const prompt = body.question?.trim() ?? "";
 
   if (!prompt) {
     return new Response("Please provide a question.", { status: 400 });
+  }
+
+  const clientKey = getClientKey(req);
+  if (isRateLimited(clientKey, 8, 60 * 1000)) {
+    return new Response(
+      "Too many questions in a short period. Please wait a minute before asking Copilot again.",
+      { status: 429, headers: { "Content-Type": "text/plain; charset=utf-8" } },
+    );
   }
 
   const directReply = promptReply(prompt);
@@ -60,75 +74,130 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const key = process.env.ANTHROPIC_API_KEY;
-
-  if (!key) {
-    const fallback =
-      promptReply(prompt) ??
-      "Rajat is a full-stack developer, AI/ML learner, and DSA enthusiast. Check README.md or experience.ts for the detailed breakdown, and contact.css for the reach-out path.";
-
-    return new Response(fallback, {
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
-    });
+  function getContextualFallback(rawPrompt: string): string {
+    const p = rawPrompt.toLowerCase();
+    if (p.includes("dsa") || p.includes("leetcode") || p.includes("problem")) {
+      return "Rajat has solved 500+ LeetCode problems primarily in C++, with an active 100+ day streak and top 10% global ranking. Check skills.json in the sidebar to explore his topic mastery clusters!";
+    }
+    if (p.includes("project") || p.includes("build") || p.includes("portfolio")) {
+      return "Rajat has built 15+ full-stack and AI applications including DSA Tracker, Expense Tracker, and Weather Forecast App. Head over to projects.js to inspect the source code and live demos.";
+    }
+    if (p.includes("stack") || p.includes("tech") || p.includes("language") || p.includes("framework")) {
+      return "Rajat's core stack spans C++, TypeScript, React 19, Next.js 16, Node.js, FastAPI, PostgreSQL, and Google Gemini AI. Open package.json or skills.json for the full breakdown.";
+    }
+    if (p.includes("intern") || p.includes("hire") || p.includes("job") || p.includes("work") || p.includes("available")) {
+      return "Yes! Rajat is actively seeking software engineering internships and collaborative full-stack opportunities. Drop him a message via contact.css or LinkedIn!";
+    }
+    if (p.includes("education") || p.includes("college") || p.includes("degree") || p.includes("university")) {
+      return "Rajat is currently pursuing his B.Tech in Computer Science & Engineering (2023-2027) at Kanpur Institute of Technology. Check experience.ts for details!";
+    }
+    return "I'm Rajat's Portfolio Copilot! You can ask me about his 500+ LeetCode milestones, full-stack projects, tech stack, or engineering internship availability. Or type /projects, /contact, or /resume to navigate.";
   }
 
-  const anthropicResponse = await fetch(
-    "https://api.anthropic.com/v1/messages",
-    {
-      method: "POST",
-      headers: {
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-3-5-sonnet-20241022",
-        max_tokens: 500,
-        system: `${systemPrompt}\n\nProfile context:\n${profileContext}`,
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      }),
-    },
-  );
+  // 1. Google Gemini 2.5 Flash (Primary AI Provider)
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (geminiKey) {
+    try {
+      const geminiRes = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [
+                {
+                  text: `${systemPrompt}\n\nProfile context:\n${profileContext}`,
+                },
+              ],
+            },
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: prompt }],
+              },
+            ],
+            generationConfig: {
+              maxOutputTokens: 350,
+              temperature: 0.7,
+            },
+          }),
+        },
+      );
 
-  if (!anthropicResponse.ok) {
-    const errorMsg = `Sorry, the Copilot API encountered an error. Try refreshing your browser or ask again in a moment. (${anthropicResponse.status})`;
-    return new Response(errorMsg, { status: 500 });
-  }
-
-  const data = (await anthropicResponse.json()) as {
-    content?: Array<{ type: string; text?: string }>;
-  };
-
-  const answer =
-    data.content
-      ?.filter((chunk) => chunk.type === "text")
-      .map((chunk) => chunk.text ?? "")
-      .join("") ?? "No response.";
-
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream<Uint8Array>({
-    start(controller) {
-      let i = 0;
-      const step = () => {
-        const part = answer.slice(i, i + 3);
-        if (!part) {
-          controller.close();
-          return;
+      if (geminiRes.ok) {
+        const data = (await geminiRes.json()) as {
+          candidates?: Array<{
+            content?: {
+              parts?: Array<{ text?: string }>;
+            };
+          }>;
+        };
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (text) {
+          return new Response(text, {
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+          });
         }
-        controller.enqueue(encoder.encode(part));
-        i += 3;
-        setTimeout(step, 24);
-      };
-      step();
-    },
-  });
+      }
+    } catch {
+      // Fall through to secondary provider or fallback
+    }
+  }
 
-  return new Response(stream, {
+  // 2. Anthropic Claude (Secondary AI Provider)
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  if (anthropicKey) {
+    try {
+      const anthropicResponse = await fetch(
+        "https://api.anthropic.com/v1/messages",
+        {
+          method: "POST",
+          headers: {
+            "x-api-key": anthropicKey,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "claude-3-5-sonnet-20241022",
+            max_tokens: 400,
+            system: `${systemPrompt}\n\nProfile context:\n${profileContext}`,
+            messages: [
+              {
+                role: "user",
+                content: prompt,
+              },
+            ],
+          }),
+        },
+      );
+
+      if (anthropicResponse.ok) {
+        const data = (await anthropicResponse.json()) as {
+          content?: Array<{ type: string; text?: string }>;
+        };
+
+        const answer =
+          data.content
+            ?.filter((chunk) => chunk.type === "text")
+            .map((chunk) => chunk.text ?? "")
+            .join("")
+            .trim();
+
+        if (answer) {
+          return new Response(answer, {
+            headers: { "Content-Type": "text/plain; charset=utf-8" },
+          });
+        }
+      }
+    } catch {
+      // Fall through to fallback
+    }
+  }
+
+  // 3. Dynamic Contextual Fallback (always works offline/demo)
+  const fallback = getContextualFallback(prompt);
+  return new Response(fallback, {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
 }
