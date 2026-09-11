@@ -62,23 +62,14 @@ export function HomeSection() {
             {"// hello world !! welcome to my portfolio"}
           </p>
 
-          <div className="mt-3 leading-[0.86]">
-            <motion.h1
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="display-font text-[clamp(3.4rem,10vw,7rem)] text-[#f4f4f4]"
-            >
-              Rajat
-            </motion.h1>
-            <motion.h1
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
-              className="display-font text-[clamp(3.4rem,10vw,7rem)] text-(--accent)"
-            >
-              Sharma
-            </motion.h1>
-          </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-3 display-font text-[clamp(3.4rem,10vw,7rem)] leading-[0.86]"
+          >
+            <span className="block text-[#f4f4f4]">Rajat</span>
+            <span className="block text-(--accent)">Sharma</span>
+          </motion.h1>
 
           <div className="mt-4 flex flex-wrap gap-2 text-xs md:text-sm">
             {roleChips.map((chip, index) => (
@@ -188,8 +179,8 @@ export function HomeSection() {
               <a
                 key={social.label}
                 href={social.href}
-                target="_blank"
-                rel="noreferrer"
+                target={social.href.startsWith("mailto:") ? undefined : "_blank"}
+                rel={social.href.startsWith("mailto:") ? undefined : "noreferrer"}
                 className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[#d8d8d8] transition-colors hover:border-cyan-400/40 hover:bg-cyan-400/10 hover:text-white"
               >
                 {social.label}
