@@ -182,8 +182,6 @@ body {
     linear-gradient(180deg, #252526 0%, var(--bg-main) 24%, #1b1b1c 100%);
   color: var(--text-main);
   font-family: var(--font-ui), "Segoe UI", sans-serif;
-  overflow: hidden;
-  cursor: text;
   transition:
     background 0.3s ease,
     color 0.3s ease;
