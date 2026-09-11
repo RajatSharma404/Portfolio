@@ -9,10 +9,8 @@ import { useWorkspace } from "@/context/workspace-context";
 export function ProjectModal() {
   const { selectedProject, setSelectedProject } = useWorkspace();
 
-  if (!selectedProject) return null;
-
   const demoLink =
-    selectedProject.live && selectedProject.live !== selectedProject.github
+    selectedProject?.live && selectedProject.live !== selectedProject.github
       ? selectedProject.live
       : null;
 
