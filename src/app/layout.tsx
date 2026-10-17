@@ -26,35 +26,43 @@ const uiDisplay = League_Spartan({
 });
 
 export const metadata: Metadata = {
-  title: "Rajat Sharma | Full Stack Developer",
+  metadataBase: new URL("https://portfolio-chi-self-31.vercel.app"),
+  title: "Rajat Sharma | Co-Founder @ Pradite & Full-Stack Systems Engineer",
   description:
-    "Interactive VS Code-themed portfolio of Rajat Sharma, a Full Stack Developer and B.Tech student from Kanpur Institute of Technology.",
+    "Interactive VS Code developer operating system of Rajat Sharma — Co-Founder @ Pradite, full-stack systems engineer, 500+ LeetCode problems solved, and creator of Ghost AI & NotebookLM-lite.",
   keywords: [
-    "full stack developer",
-    "kanpur institute of technology",
-    "portfolio",
-    "next.js",
-    "react",
-    "vs code theme",
-    "ai learning",
+    "Rajat Sharma",
+    "Pradite",
+    "Full Stack Developer",
+    "Systems Engineer",
+    "Ghost AI",
+    "NotebookLM-lite",
+    "DSA Tracker",
+    "LeetCode 500",
+    "Kanpur Institute of Technology",
+    "Next.js 16",
+    "React 19",
+    "WebAssembly",
+    "FastAPI",
+    "VS Code Portfolio",
   ],
   icons: {
     icon: "/file.svg",
     apple: "/file.svg",
   },
   openGraph: {
-    title: "Rajat Sharma | Portfolio",
+    title: "Rajat Sharma | Co-Founder @ Pradite & Systems Engineer",
     description:
-      "Browse files to explore Rajat's projects, skills, education, and contact details.",
+      "Interactive VS Code portfolio: explore Rajat's flagship ventures, local-first AI systems, 500+ LeetCode DSA pulse, and terminal CLI.",
     type: "website",
     siteName: "Rajat Sharma Portfolio",
-    url: "https://rajat-portfolio.vercel.app",
+    url: "https://portfolio-chi-self-31.vercel.app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rajat Sharma | Portfolio",
+    title: "Rajat Sharma | Co-Founder @ Pradite & Systems Engineer",
     description:
-      "Interactive VS Code-themed portfolio of Rajat Sharma, a Full Stack Developer and B.Tech student from Kanpur Institute of Technology.",
+      "Interactive VS Code developer operating system of Rajat Sharma — Co-Founder @ Pradite, full-stack systems engineer, and creator of Ghost AI & NotebookLM-lite.",
   },
 };
 
