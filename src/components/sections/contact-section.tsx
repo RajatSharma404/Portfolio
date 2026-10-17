@@ -16,6 +16,11 @@ export function ContactSection() {
 
   const contactCards = [
     {
+      title: "VENTURE",
+      value: "pradite.com (Co-Founder)",
+      link: "https://pradite.com",
+    },
+    {
       title: "EMAIL",
       value: "rajat.sharma.myid1@gmail.com",
       link: "mailto:rajat.sharma.myid1@gmail.com",
