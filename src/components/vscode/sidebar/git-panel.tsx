@@ -18,10 +18,10 @@ export function GitPanel() {
   ];
 
   const stagedChanges = [
-    { file: "src/projects/chess-engine.ts", status: "M", color: "text-amber-400" },
+    { file: "src/content/site-data.ts", status: "M", color: "text-amber-400" },
+    { file: "src/projects/pradite.ts", status: "A", color: "text-emerald-400" },
+    { file: "src/projects/ghost-ai.ts", status: "A", color: "text-emerald-400" },
     { file: "src/skills/leetcode-pulse.json", status: "M", color: "text-amber-400" },
-    { file: "src/components/code-viewer.tsx", status: "A", color: "text-emerald-400" },
-    { file: "src/context/workspace-context.tsx", status: "M", color: "text-amber-400" },
   ];
 
   const handleCommit = (e: React.FormEvent) => {
