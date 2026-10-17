@@ -36,19 +36,22 @@ export const rawCodeRegistry: Record<string, RawFileContent> = {
         { text: '    name: "Rajat Sharma",', type: "str" },
       ],
       [
-        { text: '    role: "Full Stack Developer & AI Enthusiast",', type: "str" },
+        { text: '    role: "Co-Founder @ Pradite | Full-Stack Systems Engineer",', type: "str" },
+      ],
+      [
+        { text: '    venture: "Pradite (https://pradite.com)",', type: "str" },
       ],
       [
         { text: '    university: "Kanpur Institute of Technology",', type: "str" },
       ],
       [
-        { text: '    dsaStatus: "500+ LeetCode Problems Solved",', type: "str" },
+        { text: '    dsaStatus: "500+ LeetCode Solved (Top 10% Global Rank)",', type: "str" },
       ],
       [
-        { text: "    availableFor: [", type: "plain" },
-        { text: '"Internships", ', type: "str" },
-        { text: '"Engineering Roles", ', type: "str" },
-        { text: '"AI Tooling"]', type: "str" },
+        { text: "    focusAreas: [", type: "plain" },
+        { text: '"Local-First AI", ', type: "str" },
+        { text: '"Web Systems", ', type: "str" },
+        { text: '"Algorithmic Workstations"]', type: "str" },
       ],
       [
         { text: "  };", type: "plain" },
@@ -73,16 +76,16 @@ export const rawCodeRegistry: Record<string, RawFileContent> = {
         { text: '      <p className="hero-bio text-muted">', type: "plain" },
       ],
       [
-        { text: "        I build portfolio-grade full-stack apps, AI utilities, and DSA tools.", type: "str" },
+        { text: "        Co-Founder @ Pradite. Designing privacy-first AI developer tools and real-time systems.", type: "str" },
       ],
       [
         { text: "      </p>", type: "plain" },
       ],
       [
-        { text: "      <div className=\"stats-grid\">", type: "plain" },
+        { text: '      <div className="stats-grid">', type: "plain" },
       ],
       [
-        { text: "        {projectItems.length} Featured Projects · Response Time < 24h", type: "str" },
+        { text: "        {projectItems.length} Flagship Projects · 500+ LeetCode Solved · Response < 24h", type: "str" },
       ],
       [
         { text: "      </div>", type: "plain" },
@@ -104,10 +107,11 @@ import { projectItems } from "@/content/site-data";
 export default function HomeHero() {
   const developer = {
     name: "Rajat Sharma",
-    role: "Full Stack Developer & AI Enthusiast",
+    role: "Co-Founder @ Pradite | Full-Stack Systems Engineer",
+    venture: "Pradite (https://pradite.com)",
     university: "Kanpur Institute of Technology",
-    dsaStatus: "500+ LeetCode Problems Solved",
-    availableFor: ["Internships", "Engineering Roles", "AI Tooling"]
+    dsaStatus: "500+ LeetCode Solved (Top 10% Global Rank)",
+    focusAreas: ["Local-First AI", "Web Systems", "Algorithmic Workstations"]
   };
 
   return (
@@ -116,10 +120,10 @@ export default function HomeHero() {
         {developer.name}
       </motion.h1>
       <p className="hero-bio text-muted">
-        I build portfolio-grade full-stack apps, AI utilities, and DSA tools.
+        Co-Founder @ Pradite. Designing privacy-first AI developer tools and real-time systems.
       </p>
       <div className="stats-grid">
-        {projectItems.length} Featured Projects · Response Time < 24h
+        {projectItems.length} Flagship Projects · 500+ LeetCode Solved · Response < 24h
       </div>
     </section>
   );
@@ -141,39 +145,37 @@ export default function HomeHero() {
         { text: '  <header class="section-title">', type: "plain" },
       ],
       [
-        { text: "    <h2>Building reliable products at speed.</h2>", type: "str" },
+        { text: "    <h2>Engineering real systems, not just pretty screens.</h2>", type: "str" },
       ],
       [
-        { text: "    <p>Full-stack developer and AI learner at Kanpur Institute of Technology (2023-2027).</p>", type: "str" },
+        { text: "    <p>Co-Founder at Pradite & Computer Science student at Kanpur Institute of Technology (2023-2027).</p>", type: "str" },
       ],
       [
         { text: "  </header>", type: "plain" },
       ],
-      [],
       [
-        { text: '  <div class="focus-areas">', type: "plain" },
+        { text: '  <article class="bio-content">', type: "kw" },
       ],
       [
-        { text: '    <article class="focus-card">Building scalable web projects with Next.js 16 & React 19</article>', type: "str" },
+        { text: "    <p>", type: "plain" },
       ],
       [
-        { text: '    <article class="focus-card">Practicing daily Data Structures & Algorithms in C++</article>', type: "str" },
+        { text: "      Building privacy-first AI developer tools with WebAssembly and local-first memory.", type: "str" },
       ],
       [
-        { text: '    <article class="focus-card">Designing AI-powered workflows with Stockfish & Gemini APIs</article>', type: "str" },
+        { text: "      Specialized in real-time collaboration with Liveblocks, hybrid vector search (SQLite FTS5), and C++ algorithms.", type: "str" },
       ],
       [
-        { text: "  </div>", type: "plain" },
-      ],
-      [],
-      [
-        { text: '  <!-- GitHub Pulse Stats -->', type: "com" },
+        { text: "    </p>", type: "plain" },
       ],
       [
-        { text: '  <aside class="github-pulse-widget" data-live-api="https://api.github.com/users/RajatSharma404">', type: "kw" },
+        { text: "  </article>", type: "kw" },
       ],
       [
-        { text: "    <span>Followers: Live</span> | <span>Public Repos: Live</span> | <span>Featured Stars: Live</span>", type: "str" },
+        { text: '  <aside class="github-stats">', type: "plain" },
+      ],
+      [
+        { text: "    <span>Followers: Live</span> | <span>Public Repos: 20</span> | <span>DSA Stars: 17+</span>", type: "str" },
       ],
       [
         { text: "  </aside>", type: "plain" },
@@ -185,19 +187,17 @@ export default function HomeHero() {
     rawString: `<!DOCTYPE html>
 <section id="about-developer" class="developer-profile">
   <header class="section-title">
-    <h2>Building reliable products at speed.</h2>
-    <p>Full-stack developer and AI learner at Kanpur Institute of Technology (2023-2027).</p>
+    <h2>Engineering real systems, not just pretty screens.</h2>
+    <p>Co-Founder at Pradite & Computer Science student at Kanpur Institute of Technology (2023-2027).</p>
   </header>
-
-  <div class="focus-areas">
-    <article class="focus-card">Building scalable web projects with Next.js 16 & React 19</article>
-    <article class="focus-card">Practicing daily Data Structures & Algorithms in C++</article>
-    <article class="focus-card">Designing AI-powered workflows with Stockfish & Gemini APIs</article>
-  </div>
-
-  <!-- GitHub Pulse Stats -->
-  <aside class="github-pulse-widget" data-live-api="https://api.github.com/users/RajatSharma404">
-    <span>Followers: Live</span> | <span>Public Repos: Live</span> | <span>Featured Stars: Live</span>
+  <article class="bio-content">
+    <p>
+      Building privacy-first AI developer tools with WebAssembly and local-first memory.
+      Specialized in real-time collaboration with Liveblocks, hybrid vector search (SQLite FTS5), and C++ algorithms.
+    </p>
+  </article>
+  <aside class="github-stats">
+    <span>Followers: Live</span> | <span>Public Repos: 20</span> | <span>DSA Stars: 17+</span>
   </aside>
 </section>`,
   },
@@ -208,7 +208,7 @@ export default function HomeHero() {
     symbol: "export const projectItems",
     lines: [
       [
-        { text: "// Selected featured engineering projects", type: "com" },
+        { text: "// Flagship engineering projects & ventures", type: "com" },
       ],
       [
         { text: "export const projectItems = [", type: "kw" },
@@ -217,16 +217,82 @@ export default function HomeHero() {
         { text: "  {", type: "plain" },
       ],
       [
+        { text: '    slug: "pradite",', type: "str" },
+      ],
+      [
+        { text: '    title: "Pradite (Venture)",', type: "str" },
+      ],
+      [
+        { text: '    category: "Venture",', type: "str" },
+      ],
+      [
+        { text: '    stack: ["React", "TypeScript", "WASM", "Local-First", "Encryption"],', type: "str" },
+      ],
+      [
+        { text: '    live: "https://pradite.com"', type: "str" },
+      ],
+      [
+        { text: "  },", type: "plain" },
+      ],
+      [
+        { text: "  {", type: "plain" },
+      ],
+      [
+        { text: '    slug: "ghost-ai",', type: "str" },
+      ],
+      [
+        { text: '    title: "Ghost AI",', type: "str" },
+      ],
+      [
+        { text: '    category: "AI",', type: "str" },
+      ],
+      [
+        { text: '    stack: ["Next.js 16", "React 19", "Liveblocks", "Gemini API"],', type: "str" },
+      ],
+      [
+        { text: '    github: "https://github.com/RajatSharma404/ghost-ai",', type: "str" },
+      ],
+      [
+        { text: '    live: "https://ghost-ai-omega-ten.vercel.app"', type: "str" },
+      ],
+      [
+        { text: "  },", type: "plain" },
+      ],
+      [
+        { text: "  {", type: "plain" },
+      ],
+      [
+        { text: '    slug: "notebooklm-lite",', type: "str" },
+      ],
+      [
+        { text: '    title: "NotebookLM-lite",', type: "str" },
+      ],
+      [
+        { text: '    category: "AI",', type: "str" },
+      ],
+      [
+        { text: '    stack: ["Python", "FastAPI", "SQLite FTS5", "Cross-Encoder"],', type: "str" },
+      ],
+      [
+        { text: '    github: "https://github.com/RajatSharma404/NotebookLM-lite"', type: "str" },
+      ],
+      [
+        { text: "  },", type: "plain" },
+      ],
+      [
+        { text: "  {", type: "plain" },
+      ],
+      [
         { text: '    slug: "dsa-tracker",', type: "str" },
       ],
       [
-        { text: '    title: "DSA Tracker",', type: "str" },
+        { text: '    title: "DSA Tracker Mastery",', type: "str" },
       ],
       [
         { text: '    category: "Productivity",', type: "str" },
       ],
       [
-        { text: '    stack: ["TypeScript", "React", "Tracking"],', type: "str" },
+        { text: '    stack: ["TypeScript", "React", "Chart.js", "DSA Patterns"],', type: "str" },
       ],
       [
         { text: '    github: "https://github.com/RajatSharma404/DSA-Tracker"', type: "str" },
@@ -238,40 +304,19 @@ export default function HomeHero() {
         { text: "  {", type: "plain" },
       ],
       [
-        { text: '    slug: "chess-engine",', type: "str" },
+        { text: '    slug: "chess-eval",', type: "str" },
       ],
       [
-        { text: '    title: "Chess Engine Evaluator",', type: "str" },
-      ],
-      [
-        { text: '    category: "AI",', type: "str" },
-      ],
-      [
-        { text: '    stack: ["FastAPI", "Python", "Stockfish", "React", "TypeScript"],', type: "str" },
-      ],
-      [
-        { text: '    github: "https://github.com/RajatSharma404"', type: "str" },
-      ],
-      [
-        { text: "  },", type: "plain" },
-      ],
-      [
-        { text: "  {", type: "plain" },
-      ],
-      [
-        { text: '    slug: "adaptive-fitness",', type: "str" },
-      ],
-      [
-        { text: '    title: "Adaptive Fitness Planner",', type: "str" },
+        { text: '    title: "ChessEval",', type: "str" },
       ],
       [
         { text: '    category: "AI",', type: "str" },
       ],
       [
-        { text: '    stack: ["Next.js", "Prisma", "Gemini AI", "Tailwind", "TypeScript"],', type: "str" },
+        { text: '    stack: ["TypeScript", "Stockfish 17 WASM", "Web Workers"],', type: "str" },
       ],
       [
-        { text: '    github: "https://github.com/RajatSharma404"', type: "str" },
+        { text: '    github: "https://github.com/RajatSharma404/Chess-Eval"', type: "str" },
       ],
       [
         { text: "  }", type: "plain" },
@@ -280,28 +325,43 @@ export default function HomeHero() {
         { text: "];", type: "kw" },
       ],
     ],
-    rawString: `// Selected featured engineering projects
+    rawString: `// Flagship engineering projects & ventures
 export const projectItems = [
   {
+    slug: "pradite",
+    title: "Pradite (Venture)",
+    category: "Venture",
+    stack: ["React", "TypeScript", "WASM", "Local-First", "Encryption"],
+    live: "https://pradite.com"
+  },
+  {
+    slug: "ghost-ai",
+    title: "Ghost AI",
+    category: "AI",
+    stack: ["Next.js 16", "React 19", "Liveblocks", "Gemini API"],
+    github: "https://github.com/RajatSharma404/ghost-ai",
+    live: "https://ghost-ai-omega-ten.vercel.app"
+  },
+  {
+    slug: "notebooklm-lite",
+    title: "NotebookLM-lite",
+    category: "AI",
+    stack: ["Python", "FastAPI", "SQLite FTS5", "Cross-Encoder"],
+    github: "https://github.com/RajatSharma404/NotebookLM-lite"
+  },
+  {
     slug: "dsa-tracker",
-    title: "DSA Tracker",
+    title: "DSA Tracker Mastery",
     category: "Productivity",
-    stack: ["TypeScript", "React", "Tracking"],
+    stack: ["TypeScript", "React", "Chart.js", "DSA Patterns"],
     github: "https://github.com/RajatSharma404/DSA-Tracker"
   },
   {
-    slug: "chess-engine",
-    title: "Chess Engine Evaluator",
+    slug: "chess-eval",
+    title: "ChessEval",
     category: "AI",
-    stack: ["FastAPI", "Python", "Stockfish", "React", "TypeScript"],
-    github: "https://github.com/RajatSharma404"
-  },
-  {
-    slug: "adaptive-fitness",
-    title: "Adaptive Fitness Planner",
-    category: "AI",
-    stack: ["Next.js", "Prisma", "Gemini AI", "Tailwind", "TypeScript"],
-    github: "https://github.com/RajatSharma404"
+    stack: ["TypeScript", "Stockfish 17 WASM", "Web Workers"],
+    github: "https://github.com/RajatSharma404/Chess-Eval"
   }
 ];`,
   },
@@ -321,19 +381,34 @@ export const projectItems = [
         { text: '  "core_competencies": {', type: "str" },
       ],
       [
-        { text: '    "languages": ["TypeScript", "JavaScript", "C++", "Python", "HTML", "CSS"],', type: "str" },
+        { text: '    "languages": ["C++", "TypeScript", "JavaScript", "Python", "SQL", "HTML5", "CSS3"],', type: "str" },
       ],
       [
-        { text: '    "frameworks": ["React 19", "Next.js 16", "FastAPI", "Node.js", "Express"],', type: "str" },
+        { text: '    "frameworks": ["Next.js 16 (App Router)", "React 19", "FastAPI", "Node.js", "Express"],', type: "str" },
       ],
       [
-        { text: '    "databases": ["PostgreSQL", "SQLite", "Prisma ORM"],', type: "str" },
+        { text: '    "systems_and_db": ["WebAssembly (WASM)", "Web Workers", "SQLite FTS5", "PostgreSQL", "Prisma ORM"],', type: "str" },
       ],
       [
-        { text: '    "ai_tooling": ["Gemini AI API", "Stockfish 16 Engine", "Agentic Workflows"],', type: "str" },
+        { text: '    "ai_and_realtime": ["Google Gemini API", "Ollama Local Agents", "Stockfish 17 WASM", "Liveblocks Sync"],', type: "str" },
       ],
       [
-        { text: '    "styling_and_motion": ["Tailwind CSS v4", "Framer Motion", "Vanilla CSS"]', type: "str" },
+        { text: '    "styling_and_motion": ["Tailwind CSS v4", "Framer Motion", "Vanilla CSS Design Tokens"]', type: "str" },
+      ],
+      [
+        { text: "  },", type: "plain" },
+      ],
+      [
+        { text: '  "ventures": {', type: "str" },
+      ],
+      [
+        { text: '    "company": "Pradite",', type: "str" },
+      ],
+      [
+        { text: '    "url": "https://pradite.com",', type: "str" },
+      ],
+      [
+        { text: '    "focus": "Privacy-first AI developer tools with client-side execution"', type: "str" },
       ],
       [
         { text: "  },", type: "plain" },
@@ -384,11 +459,16 @@ export const projectItems = [
     rawString: `{
   "name": "Rajat Sharma - Skills Matrix",
   "core_competencies": {
-    "languages": ["TypeScript", "JavaScript", "C++", "Python", "HTML", "CSS"],
-    "frameworks": ["React 19", "Next.js 16", "FastAPI", "Node.js", "Express"],
-    "databases": ["PostgreSQL", "SQLite", "Prisma ORM"],
-    "ai_tooling": ["Gemini AI API", "Stockfish 16 Engine", "Agentic Workflows"],
-    "styling_and_motion": ["Tailwind CSS v4", "Framer Motion", "Vanilla CSS"]
+    "languages": ["C++", "TypeScript", "JavaScript", "Python", "SQL", "HTML5", "CSS3"],
+    "frameworks": ["Next.js 16 (App Router)", "React 19", "FastAPI", "Node.js", "Express"],
+    "systems_and_db": ["WebAssembly (WASM)", "Web Workers", "SQLite FTS5", "PostgreSQL", "Prisma ORM"],
+    "ai_and_realtime": ["Google Gemini API", "Ollama Local Agents", "Stockfish 17 WASM", "Liveblocks Sync"],
+    "styling_and_motion": ["Tailwind CSS v4", "Framer Motion", "Vanilla CSS Design Tokens"]
+  },
+  "ventures": {
+    "company": "Pradite",
+    "url": "https://pradite.com",
+    "focus": "Privacy-first AI developer tools with client-side execution"
   },
   "dsa_mastery": {
     "leetcode_handle": "RajatSharma404",
@@ -440,19 +520,19 @@ export const projectItems = [
         { text: "  {", type: "plain" },
       ],
       [
-        { text: '    period: "2023 - Present",', type: "str" },
+        { text: '    period: "2025 - Present",', type: "str" },
       ],
       [
-        { text: '    role: "B.Tech Student Developer",', type: "str" },
+        { text: '    role: "Co-Founder & Systems Architect",', type: "str" },
       ],
       [
-        { text: '    organization: "Kanpur Institute of Technology",', type: "str" },
+        { text: '    organization: "Pradite (https://pradite.com)",', type: "str" },
       ],
       [
-        { text: '    description: "Solved 500+ LeetCode problems, built 15+ full-stack and AI apps.",', type: "str" },
+        { text: '    description: "Architecting privacy-first developer tools with zero-telemetry client execution and local vector memory.",', type: "str" },
       ],
       [
-        { text: '    tags: ["C++", "DSA", "TypeScript", "Node.js", "React", "AI"]', type: "str" },
+        { text: '    tags: ["WASM", "React", "TypeScript", "Local-First", "Encryption"]', type: "str" },
       ],
       [
         { text: "  },", type: "plain" },
@@ -461,19 +541,40 @@ export const projectItems = [
         { text: "  {", type: "plain" },
       ],
       [
-        { text: '    period: "Current Focus",', type: "str" },
+        { text: '    period: "2024 - Present",', type: "str" },
       ],
       [
-        { text: '    role: "Project Builder",', type: "str" },
+        { text: '    role: "Open-Source Creator & Systems Engineer",', type: "str" },
       ],
       [
-        { text: '    organization: "Personal Portfolio Projects",', type: "str" },
+        { text: '    organization: "Ghost AI, NotebookLM-lite & DSA-Tracker",', type: "str" },
       ],
       [
-        { text: '    description: "Engineering scalable web apps, AI workflows, and productivity trackers.",', type: "str" },
+        { text: '    description: "Designed sub-3s real-time architecture platforms and local RAG with SQLite FTS5.",', type: "str" },
       ],
       [
-        { text: '    tags: ["Next.js", "AI Workflows", "FastAPI", "System Design"]', type: "str" },
+        { text: '    tags: ["Next.js 16", "React 19", "FastAPI", "Python", "SQLite FTS5", "Liveblocks"]', type: "str" },
+      ],
+      [
+        { text: "  },", type: "plain" },
+      ],
+      [
+        { text: "  {", type: "plain" },
+      ],
+      [
+        { text: '    period: "2023 - 2027",', type: "str" },
+      ],
+      [
+        { text: '    role: "B.Tech in Computer Science & Engineering",', type: "str" },
+      ],
+      [
+        { text: '    organization: "Kanpur Institute of Technology",', type: "str" },
+      ],
+      [
+        { text: '    description: "500+ LeetCode problems solved in C++ with top 10% global ranking. DP, Graphs, and Trees.",', type: "str" },
+      ],
+      [
+        { text: '    tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms"]', type: "str" },
       ],
       [
         { text: "  }", type: "plain" },
@@ -492,18 +593,25 @@ export const projectItems = [
 
 export const experienceTimeline: ExperienceItem[] = [
   {
-    period: "2023 - Present",
-    role: "B.Tech Student Developer",
-    organization: "Kanpur Institute of Technology",
-    description: "Solved 500+ LeetCode problems, built 15+ full-stack and AI apps.",
-    tags: ["C++", "DSA", "TypeScript", "Node.js", "React", "AI"]
+    period: "2025 - Present",
+    role: "Co-Founder & Systems Architect",
+    organization: "Pradite (https://pradite.com)",
+    description: "Architecting privacy-first developer tools with zero-telemetry client execution and local vector memory.",
+    tags: ["WASM", "React", "TypeScript", "Local-First", "Encryption"]
   },
   {
-    period: "Current Focus",
-    role: "Project Builder",
-    organization: "Personal Portfolio Projects",
-    description: "Engineering scalable web apps, AI workflows, and productivity trackers.",
-    tags: ["Next.js", "AI Workflows", "FastAPI", "System Design"]
+    period: "2024 - Present",
+    role: "Open-Source Creator & Systems Engineer",
+    organization: "Ghost AI, NotebookLM-lite & DSA-Tracker",
+    description: "Designed sub-3s real-time architecture platforms and local RAG with SQLite FTS5.",
+    tags: ["Next.js 16", "React 19", "FastAPI", "Python", "SQLite FTS5", "Liveblocks"]
+  },
+  {
+    period: "2023 - 2027",
+    role: "B.Tech in Computer Science & Engineering",
+    organization: "Kanpur Institute of Technology",
+    description: "500+ LeetCode problems solved in C++ with top 10% global ranking. DP, Graphs, and Trees.",
+    tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms"]
   }
 ];`,
   },
@@ -511,187 +619,130 @@ export const experienceTimeline: ExperienceItem[] = [
     id: "contact",
     filename: "contact.css",
     language: "CSS",
-    symbol: ".contact-form-container",
+    symbol: ".reach-out-container",
     lines: [
       [
-        { text: "/* Rajat Sharma Contact Styling & Reach-Out Tokens */", type: "com" },
+        { text: "/* Connect with Rajat Sharma */", type: "com" },
       ],
       [
-        { text: ".contact-form-container {", type: "kw" },
+        { text: ".reach-out-container {", type: "plain" },
       ],
       [
-        { text: "  display: grid;", type: "fn" },
+        { text: "  --developer-email: 'rajat.sharma.myid1@gmail.com';", type: "str" },
       ],
       [
-        { text: "  grid-template-columns: 1fr 1.2fr;", type: "fn" },
+        { text: "  --venture-url: 'https://pradite.com';", type: "str" },
       ],
       [
-        { text: "  gap: 1.5rem;", type: "fn" },
+        { text: "  --github-profile: 'https://github.com/RajatSharma404';", type: "str" },
       ],
       [
-        { text: "  background: var(--bg-sidebar);", type: "fn" },
+        { text: "  --linkedin-url: 'https://linkedin.com/in/rajat-sharma-9a053128b/';", type: "str" },
       ],
       [
-        { text: "  border-radius: 1.5rem;", type: "fn" },
+        { text: "  --leetcode-pulse: 'https://leetcode.com/u/RajatSharma404/';", type: "str" },
       ],
       [
-        { text: "}", type: "kw" },
-      ],
-      [],
-      [
-        { text: ".reach-out-direct {", type: "kw" },
+        { text: "  --response-window: '< 24h';", type: "str" },
       ],
       [
-        { text: "  color: var(--keyword);", type: "fn" },
+        { text: "  --preferred-inquiries: 'Ventures, Engineering Roles, Systems Architecture';", type: "str" },
       ],
       [
-        { text: '  email: "rajat.sharma.myid1@gmail.com";', type: "str" },
-      ],
-      [
-        { text: '  linkedin: "https://linkedin.com/in/rajat-sharma-9a053128b";', type: "str" },
-      ],
-      [
-        { text: '  github: "https://github.com/RajatSharma404";', type: "str" },
-      ],
-      [
-        { text: "  response-time: immediate-within-24h;", type: "fn" },
-      ],
-      [
-        { text: "}", type: "kw" },
+        { text: "}", type: "plain" },
       ],
     ],
-    rawString: `/* Rajat Sharma Contact Styling & Reach-Out Tokens */
-.contact-form-container {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 1.5rem;
-  background: var(--bg-sidebar);
-  border-radius: 1.5rem;
-}
-
-.reach-out-direct {
-  color: var(--keyword);
-  email: "rajat.sharma.myid1@gmail.com";
-  linkedin: "https://linkedin.com/in/rajat-sharma-9a053128b";
-  github: "https://github.com/RajatSharma404";
-  response-time: immediate-within-24h;
+    rawString: `/* Connect with Rajat Sharma */
+.reach-out-container {
+  --developer-email: 'rajat.sharma.myid1@gmail.com';
+  --venture-url: 'https://pradite.com';
+  --github-profile: 'https://github.com/RajatSharma404';
+  --linkedin-url: 'https://linkedin.com/in/rajat-sharma-9a053128b/';
+  --leetcode-pulse: 'https://leetcode.com/u/RajatSharma404/';
+  --response-window: '< 24h';
+  --preferred-inquiries: 'Ventures, Engineering Roles, Systems Architecture';
 }`,
   },
   readme: {
     id: "readme",
     filename: "README.md",
     language: "Markdown",
-    symbol: "# Rajat's VS Code Portfolio",
+    symbol: "# Rajat Sharma — Portfolio OS",
     lines: [
       [
-        { text: "# Rajat Sharma | Interactive VS Code Portfolio", type: "kw" },
+        { text: "# Rajat Sharma — Portfolio OS", type: "kw" },
       ],
       [],
       [
-        { text: "> Full Stack Developer & B.Tech Student at Kanpur Institute of Technology", type: "str" },
+        { text: "> Co-Founder @ Pradite | Full-Stack Systems Engineer", type: "str" },
       ],
       [],
       [
-        { text: "## Key Features", type: "kw" },
+        { text: "### Stack & Architecture", type: "kw" },
       ],
       [
-        { text: "- Dual View Engine: [Preview], [Code], and [Split View] modes", type: "plain" },
+        { text: "- **Framework**: Next.js 16.2.3 (App Router with Turbopack)", type: "plain" },
       ],
       [
-        { text: "- LeetCode Pulse: Concentric SVG difficulty rings for 500+ solved problems", type: "plain" },
+        { text: "- **UI Engine**: React 19, Tailwind CSS v4, Framer Motion", type: "plain" },
       ],
       [
-        { text: "- Multi-View Sidebar: File Explorer, Global Search, Git Source Control & Extensions Store", type: "plain" },
+        { text: "- **Audio Synthesis**: Web Audio API synthesized mechanical switch haptics", type: "plain" },
       ],
       [
-        { text: "- 5-Tab Bottom Console: Terminal (neofetch, matrix, git), Problems, Output, Debug, Ports", type: "plain" },
+        { text: "- **Telemetry**: Real-time GitHub REST API integration & LeetCode Pulse", type: "plain" },
       ],
       [
-        { text: "- 8 Visual Themes: Dracula, Dark+, Monokai, One Dark, Solarized, SynthWave, Tokyo Night, GitHub Dark", type: "plain" },
+        { text: "- **Dual-View**: Instant switching between Live Preview, Syntax-Highlighted Code, and Split View", type: "plain" },
       ],
       [
-        { text: "- Web Audio API Haptics: Synthesized mechanical clicks and harmonic chimes", type: "plain" },
-      ],
-      [],
-      [
-        { text: "## Tech Stack", type: "kw" },
-      ],
-      [
-        { text: "Next.js 16.2.3 · React 19.2.4 · TypeScript 5.0 · Tailwind CSS v4 · Framer Motion 12", type: "fn" },
-      ],
-      [],
-      [
-        { text: "## Getting Started", type: "kw" },
-      ],
-      [
-        { text: "npm install && npm run dev", type: "str" },
+        { text: "- **Terminal**: 5-Tab Developer Console with Neofetch, Matrix, Git, and Dino Runner", type: "plain" },
       ],
     ],
-    rawString: `# Rajat Sharma | Interactive VS Code Portfolio
+    rawString: `# Rajat Sharma — Portfolio OS
 
-> Full Stack Developer & B.Tech Student at Kanpur Institute of Technology
+> Co-Founder @ Pradite | Full-Stack Systems Engineer
 
-## Key Features
-- Dual View Engine: [Preview], [Code], and [Split View] modes
-- LeetCode Pulse: Concentric SVG difficulty rings for 500+ solved problems
-- Multi-View Sidebar: File Explorer, Global Search, Git Source Control & Extensions Store
-- 5-Tab Bottom Console: Terminal (neofetch, matrix, git), Problems, Output, Debug, Ports
-- 8 Visual Themes: Dracula, Dark+, Monokai, One Dark, Solarized, SynthWave, Tokyo Night, GitHub Dark
-- Web Audio API Haptics: Synthesized mechanical clicks and harmonic chimes
-
-## Tech Stack
-Next.js 16.2.3 · React 19.2.4 · TypeScript 5.0 · Tailwind CSS v4 · Framer Motion 12
-
-## Getting Started
-npm install && npm run dev`,
+### Stack & Architecture
+- **Framework**: Next.js 16.2.3 (App Router with Turbopack)
+- **UI Engine**: React 19, Tailwind CSS v4, Framer Motion
+- **Audio Synthesis**: Web Audio API synthesized mechanical switch haptics
+- **Telemetry**: Real-time GitHub REST API integration & LeetCode Pulse
+- **Dual-View**: Instant switching between Live Preview, Syntax-Highlighted Code, and Split View
+- **Terminal**: 5-Tab Developer Console with Neofetch, Matrix, Git, and Dino Runner`,
   },
   package: {
     id: "package",
     filename: "package.json",
     language: "JSON",
-    symbol: '"dependencies"',
+    symbol: '"portfolio-site"',
     lines: [
       [
         { text: "{", type: "plain" },
       ],
       [
-        { text: '  "name": "rajat-portfolio",', type: "str" },
+        { text: '  "name": "portfolio-site",', type: "str" },
       ],
       [
-        { text: '  "version": "2.0.0",', type: "str" },
+        { text: '  "version": "2.1.0",', type: "str" },
       ],
       [
         { text: '  "private": true,', type: "kw" },
       ],
       [
-        { text: '  "scripts": {', type: "str" },
-      ],
-      [
-        { text: '    "dev": "next dev",', type: "str" },
-      ],
-      [
-        { text: '    "build": "next build",', type: "str" },
-      ],
-      [
-        { text: '    "start": "next start"', type: "str" },
-      ],
-      [
-        { text: "  },", type: "plain" },
+        { text: '  "author": "Rajat Sharma <rajat.sharma.myid1@gmail.com>",', type: "str" },
       ],
       [
         { text: '  "dependencies": {', type: "str" },
       ],
       [
-        { text: '    "next": "^16.2.3",', type: "str" },
+        { text: '    "next": "16.2.3",', type: "str" },
       ],
       [
-        { text: '    "react": "^19.2.4",', type: "str" },
+        { text: '    "react": "19.2.4",', type: "str" },
       ],
       [
         { text: '    "framer-motion": "^12.38.0",', type: "str" },
-      ],
-      [
-        { text: '    "lucide-react": "^1.8.0",', type: "str" },
       ],
       [
         { text: '    "tailwindcss": "^4.0.0"', type: "str" },
@@ -704,19 +755,14 @@ npm install && npm run dev`,
       ],
     ],
     rawString: `{
-  "name": "rajat-portfolio",
-  "version": "2.0.0",
+  "name": "portfolio-site",
+  "version": "2.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
+  "author": "Rajat Sharma <rajat.sharma.myid1@gmail.com>",
   "dependencies": {
-    "next": "^16.2.3",
-    "react": "^19.2.4",
+    "next": "16.2.3",
+    "react": "19.2.4",
     "framer-motion": "^12.38.0",
-    "lucide-react": "^1.8.0",
     "tailwindcss": "^4.0.0"
   }
 }`,
