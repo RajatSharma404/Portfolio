@@ -6,7 +6,8 @@
     "dev": "node scripts/dev.mjs",
     "build": "next build",
     "start": "next start -p 3002",
-    "lint": "eslint"
+    "lint": "eslint",
+    "commit:each": "node .agents/skills/commit/scripts/commit_one_by_one.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
