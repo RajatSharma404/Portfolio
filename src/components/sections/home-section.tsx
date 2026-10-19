@@ -59,7 +59,7 @@ export function HomeSection() {
     },
     { label: "GitHub", href: "https://github.com/RajatSharma404" },
     { label: "LeetCode", href: "https://leetcode.com/u/RajatSharma404/" },
-    { label: "X / Twitter", href: "https://x.com/RajatSharma404" },
+    { label: "Resume (PDF)", href: "/resume.pdf" },
     { label: "Email", href: "mailto:rajat.sharma.myid1@gmail.com" },
   ];
 

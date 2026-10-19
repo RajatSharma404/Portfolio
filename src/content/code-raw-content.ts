@@ -593,25 +593,32 @@ export const projectItems = [
 
 export const experienceTimeline: ExperienceItem[] = [
   {
-    period: "2025 - Present",
-    role: "Co-Founder & Systems Architect",
-    organization: "Pradite (https://pradite.com)",
-    description: "Architecting privacy-first developer tools with zero-telemetry client execution and local vector memory.",
-    tags: ["WASM", "React", "TypeScript", "Local-First", "Encryption"]
+    period: "June 2026 - Present",
+    role: "Co-Founder & Frontend Engineer",
+    organization: "Pradite (Kanpur / New Delhi, India)",
+    description: "Co-founded an in-browser code editor; engineered Monaco Editor with token-stream parsing in React 19 and client-side cancellation tokens.",
+    tags: ["React 19", "TypeScript", "Monaco Editor", "WebSockets", "Vitest"]
   },
   {
-    period: "2024 - Present",
-    role: "Open-Source Creator & Systems Engineer",
-    organization: "Ghost AI, NotebookLM-lite & DSA-Tracker",
-    description: "Designed sub-3s real-time architecture platforms and local RAG with SQLite FTS5.",
-    tags: ["Next.js 16", "React 19", "FastAPI", "Python", "SQLite FTS5", "Liveblocks"]
+    period: "May 2026 - July 2026",
+    role: "Software Engineer Intern",
+    organization: "Sparqor Technologies (Remote)",
+    description: "Shipped responsive client interfaces with automated session handling and Gemini AI integrations; patched critical runtime crashes.",
+    tags: ["TypeScript", "React", "Gemini AI", "Session Handling", "Code Review"]
+  },
+  {
+    period: "2025 - 2026",
+    role: "Full-Stack Systems Creator",
+    organization: "Ghost AI, FitFlow & 3D Portfolio",
+    description: "Built Ghost AI (Liveblocks collaborative DAG canvas), FitFlow (Monaco Editor with Vim keybindings), and Interactive 3D Portfolio.",
+    tags: ["Next.js 16", "React 19", "Three.js", "Monaco Editor", "Docker", "Prisma"]
   },
   {
     period: "2023 - 2027",
     role: "B.Tech in Computer Science & Engineering",
-    organization: "Kanpur Institute of Technology",
-    description: "160+ algorithmic problems solved in C++ on GitHub & LeetCode. DP, Graphs, and Trees.",
-    tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms"]
+    organization: "Kanpur Institute of Technology (CGPA: 7.2 / 10.0)",
+    description: "Solved 160+ algorithmic challenges across LeetCode & Codeforces. Authored DSA-Tracker Pro (17 organic stars) and National Hackathon Finalist.",
+    tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms", "CGPA 7.2"]
   }
 ];`,
   },
@@ -765,6 +772,105 @@ export const experienceTimeline: ExperienceItem[] = [
     "framer-motion": "^12.38.0",
     "tailwindcss": "^4.0.0"
   }
+}`,
+  },
+  resume: {
+    id: "resume",
+    filename: "resume.pdf",
+    language: "JSON",
+    symbol: "Rajat_Sharma_Resume",
+    lines: [
+      [{ text: "{", type: "plain" }],
+      [{ text: '  "candidate": "Rajat Sharma",', type: "str" }],
+      [{ text: '  "title": "Co-Founder @ Pradite | Frontend & Systems Engineer",', type: "str" }],
+      [{ text: '  "education": {', type: "str" }],
+      [{ text: '    "institution": "Kanpur Institute of Technology (AKTU)",', type: "str" }],
+      [{ text: '    "degree": "B.Tech in Computer Science & Engineering",', type: "str" }],
+      [{ text: '    "cgpa": "7.2 / 10.0",', type: "str" }],
+      [{ text: '    "period": "2023 - 2027"', type: "str" }],
+      [{ text: "  },", type: "plain" }],
+      [{ text: '  "experience": [', type: "str" }],
+      [{ text: '    { "company": "Pradite", "role": "Co-Founder & Frontend Engineer", "period": "June 2026 - Present" },', type: "str" }],
+      [{ text: '    { "company": "Sparqor Technologies", "role": "Software Engineer Intern", "period": "May 2026 - July 2026" }', type: "str" }],
+      [{ text: "  ],", type: "plain" }],
+      [{ text: '  "projects": ["Ghost AI", "FitFlow", "Interactive 3D Portfolio"],', type: "str" }],
+      [{ text: '  "skills": ["React 19", "Next.js 16", "TypeScript", "Monaco Editor", "Liveblocks", "Vitest", "Docker"],', type: "str" }],
+      [{ text: '  "achievements": ["160+ DSA Solved", "DSA-Tracker Pro (17 stars)", "National Hackathon Finalist"]', type: "str" }],
+      [{ text: "}", type: "plain" }],
+    ],
+    rawString: `{
+  "name": "Rajat Sharma",
+  "contact": {
+    "location": "Kanpur, UP, India",
+    "email": "rajat.sharma.myid1@gmail.com",
+    "phone": "+91 9810895404",
+    "linkedin": "https://linkedin.com/in/rajat-sharma-9a053128b",
+    "github": "https://github.com/RajatSharma404",
+    "leetcode": "https://leetcode.com/u/RajatSharma404",
+    "portfolio": "https://portfolio-chi-self-31.vercel.app"
+  },
+  "education": {
+    "institution": "Kanpur Institute of Technology (AKTU)",
+    "degree": "B.Tech in Computer Science & Engineering",
+    "cgpa": "7.2 / 10.0",
+    "period": "2023 - 2027"
+  },
+  "work_experience": [
+    {
+      "company": "Pradite",
+      "role": "Co-Founder & Frontend Engineer",
+      "period": "June 2026 - Present",
+      "location": "Kanpur / New Delhi, India",
+      "highlights": [
+        "In-browser Monaco Editor integration with token-stream parsing in React 19 and TypeScript",
+        "Client-side cancellation tokens severing WebSockets on user interrupt",
+        "Diagnosed and resolved UI memory leaks, eliminating frame drops during multi-file tab switching",
+        "Authored automated Vitest test suites enforcing modular component contracts"
+      ]
+    },
+    {
+      "company": "Sparqor Technologies",
+      "role": "Software Engineer Intern",
+      "period": "May 2026 - July 2026",
+      "location": "Remote",
+      "highlights": [
+        "Shipped responsive client interfaces with automated session handling and Gemini AI",
+        "Patched critical client runtime crashes and asynchronous data-fetch exceptions",
+        "Participated in system design reviews and strict TypeScript typing standards"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Ghost AI: Collaborative Visual Cloud Architecture Canvas",
+      "year": 2025,
+      "stack": ["Next.js 16", "React 19", "TypeScript", "Liveblocks WebSockets", "React Flow"],
+      "github": "https://github.com/RajatSharma404/ghost-ai"
+    },
+    {
+      "name": "FitFlow: Progression & Embedded Code Editor Platform",
+      "year": 2026,
+      "stack": ["Next.js 16", "React 19", "TypeScript", "Monaco Editor", "Prisma", "PostgreSQL", "Docker"],
+      "github": "https://github.com/RajatSharma404/Fitness-Roadmap"
+    },
+    {
+      "name": "Interactive 3D Portfolio: WebGL & Systems Showcase",
+      "year": 2026,
+      "stack": ["Next.js 16", "React 19", "TypeScript", "Three.js", "GSAP", "Tailwind CSS"],
+      "github": "https://github.com/RajatSharma404/Portfolio"
+    }
+  ],
+  "technical_skills": {
+    "languages": ["TypeScript", "JavaScript (ES6+)", "Python", "HTML5", "CSS3", "SQL"],
+    "frontend_ui": ["React 19", "Next.js 16", "Tailwind CSS", "Monaco Editor", "React Flow", "Zustand"],
+    "state_telemetry": ["WebSockets (Liveblocks)", "Recharts", "Server-Sent Events", "Fetch API"],
+    "developer_tools": ["Vitest", "Docker", "Git", "GitHub Actions", "Postman", "Linux"]
+  },
+  "key_achievements": [
+    "Algorithmic Problem Solving: 160+ DSA challenges solved on LeetCode & Codeforces (DP, Graphs, Trees, Sliding Window)",
+    "Open-Source Repository Adoption: Authored DSA-Tracker Pro with 17 organic GitHub stars",
+    "National Hackathon Finalist: Chandigarh University National Hackathon"
+  ]
 }`,
   },
 };

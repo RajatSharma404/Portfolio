@@ -147,7 +147,7 @@ export const menuItems: Record<MenuName, MenuItem[]> = {
     { label: "experience.ts", action: "open-education" },
     { label: "contact.css", action: "open-contact" },
     { label: "README.md", action: "open-readme" },
-    { label: "resume.pdf", action: "download-resume" },
+    { label: "resume.pdf", action: "open-resume" },
   ],
   Run: [{ label: "Start Terminal", hint: "Ctrl+`", action: "toggle-terminal" }],
   Terminal: [

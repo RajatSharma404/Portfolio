@@ -6,31 +6,40 @@ import { Sparkles, GraduationCap, Code } from "lucide-react";
 export function ExperienceSection() {
   const experienceItems = [
     {
-      period: "2025 - Present",
-      role: "Co-Founder & Systems Architect",
-      org: "Pradite (pradite.com)",
+      period: "June 2026 - Present",
+      role: "Co-Founder & Frontend Engineer",
+      org: "Pradite (Kanpur / New Delhi, India)",
       icon: <Sparkles size={14} className="text-amber-300" />,
-      badge: "Venture",
-      desc: "Architecting next-generation privacy-first developer tools where code execution remains strictly local and vector memory is client-encrypted. Leading client-side WebAssembly runtimes, zero-telemetry pipelines, and sub-10ms vector retrieval.",
-      tags: ["WASM", "React", "TypeScript", "Local-First", "AES-256", "Web Architecture"],
+      badge: "Co-Founder",
+      desc: "Co-founded an in-browser code editor; engineered the core editor interface integrating Monaco Editor with token-stream parsing in React 19 and TypeScript. Built client-side cancellation tokens so user interrupts sever the WebSocket, preventing redundant model API consumption. Diagnosed and resolved UI memory leaks, eliminating frame drops during multi-file tab switching. Authored automated Vitest unit/integration test suites to enforce modular component contracts.",
+      tags: ["React 19", "TypeScript", "Monaco Editor", "WebSockets", "Vitest", "In-Browser IDE"],
     },
     {
-      period: "2024 - Present",
-      role: "Open-Source Creator & AI Systems Engineer",
-      org: "Independent Products & GitHub",
+      period: "May 2026 - July 2026",
+      role: "Software Engineer Intern",
+      org: "Sparqor Technologies (Remote)",
       icon: <Code size={14} className="text-cyan-300" />,
-      badge: "Open-Source",
-      desc: "Designed and shipped high-performance AI and developer platforms including Ghost AI (sub-3s fast-path architecture generator with real-time Liveblocks sync), NotebookLM-lite (local-first RAG with SQLite FTS5 BM25 + dense vector search), and DSA-Tracker Mastery (17+ stars).",
-      tags: ["Next.js 16", "React 19", "FastAPI", "Python", "SQLite FTS5", "Liveblocks", "Gemini API"],
+      badge: "Internship",
+      desc: "Shipped responsive client interfaces with automated session handling and Gemini AI integrations across production web platforms. Diagnosed and patched critical client runtime crashes, resolving asynchronous data-fetch exceptions to improve platform stability. Participated in system design and peer code reviews, ensuring strict TypeScript typing standards and clean component architecture.",
+      tags: ["TypeScript", "React", "Gemini AI", "Session Handling", "Architecture", "Code Review"],
+    },
+    {
+      period: "2025 - 2026",
+      role: "Full-Stack Systems Creator",
+      org: "Ghost AI, FitFlow & 3D Portfolio",
+      icon: <Sparkles size={14} className="text-emerald-300" />,
+      badge: "Flagship Projects",
+      desc: "Engineered Ghost AI (real-time collaborative DAG canvas using Next.js 16, React Flow, and Liveblocks WebSockets), FitFlow (progression platform with Monaco Editor custom Vim keybindings, Prisma, and Docker Compose), and Interactive 3D Portfolio with Three.js WebGL and GSAP.",
+      tags: ["Next.js 16", "React 19", "Three.js", "Monaco Editor", "Liveblocks", "Prisma", "Docker"],
     },
     {
       period: "2023 - 2027",
       role: "B.Tech in Computer Science & Engineering",
-      org: "Kanpur Institute of Technology",
+      org: "Kanpur Institute of Technology (CGPA: 7.2 / 10.0)",
       icon: <GraduationCap size={14} className="text-purple-300" />,
       badge: "Academics & DSA",
-      desc: "160+ algorithmic problems solved in C++ on GitHub & LeetCode. Specialized in Dynamic Programming, Graph Theory, Binary Search trees, and Sliding Window algorithms.",
-      tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms", "Complexity Auditing"],
+      desc: "Solved 160+ data structures and algorithms challenges across LeetCode and Codeforces focusing on Dynamic Programming, Graphs, Trees, and Sliding Window techniques. Authored DSA-Tracker Pro on GitHub (17 organic stars) and National Hackathon Finalist.",
+      tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms", "CGPA 7.2"],
     },
   ];
 
@@ -45,7 +54,7 @@ export function ExperienceSection() {
             Experience Timeline
           </h2>
           <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-200 font-mono">
-            3 Active Tracks
+            4 Verified Milestones
           </span>
         </div>
         <p className="mt-3 max-w-3xl text-sm text-(--text-muted) leading-relaxed">

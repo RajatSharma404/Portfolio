@@ -152,7 +152,7 @@ export function executeTerminalCommand(
         "LinkedIn : https://linkedin.com/in/rajat-sharma-9a053128b/",
         "GitHub   : https://github.com/RajatSharma404",
         "LeetCode : https://leetcode.com/u/RajatSharma404/",
-        "X/Twitter: https://x.com/RajatSharma404",
+        "Resume   : https://portfolio-chi-self-31.vercel.app/resume.pdf",
       ],
     };
   }

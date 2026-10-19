@@ -31,6 +31,7 @@ import { ExperienceSection } from "@/components/sections/experience-section";
 import { ContactSection } from "@/components/sections/contact-section";
 import { ReadmeSection } from "@/components/sections/readme-section";
 import { PackageSection } from "@/components/sections/package-section";
+import { ResumeSection } from "@/components/sections/resume-section";
 
 function PortfolioIDE() {
   const prefersReducedMotion = useReducedMotion();
@@ -95,6 +96,8 @@ function PortfolioIDE() {
         return <ReadmeSection />;
       case "package":
         return <PackageSection />;
+      case "resume":
+        return <ResumeSection />;
       default:
         return (
           <div className="p-8 text-center text-sm text-(--text-muted)">

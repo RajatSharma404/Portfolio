@@ -41,9 +41,9 @@ export function ContactSection() {
       link: "https://leetcode.com/u/RajatSharma404/",
     },
     {
-      title: "X / TWITTER",
-      value: "x.com/RajatSharma404",
-      link: "https://x.com/RajatSharma404",
+      title: "RESUME (PDF)",
+      value: "Download Rajat_Sharma_Resume.pdf",
+      link: "/resume.pdf",
     },
   ];
 
