@@ -12,8 +12,8 @@ export function ReadmeSection() {
     },
     {
       icon: <Sparkles size={16} className="text-amber-400" />,
-      title: "LeetCode Pulse & 500+ Solved",
-      desc: "Concentric SVG circular difficulty rings (Easy 220, Medium 250, Hard 30+) and 6 algorithmic topic mastery clusters.",
+      title: "LeetCode Pulse & 160+ Solved",
+      desc: "Concentric SVG circular difficulty rings (Easy 85, Medium 65, Hard 10+) and 6 algorithmic topic mastery clusters.",
     },
     {
       icon: <Terminal size={16} className="text-emerald-400" />,
@@ -40,7 +40,7 @@ export function ReadmeSection() {
   const terminalCommands = [
     { cmd: "neofetch", desc: "Display ASCII developer & system specs" },
     { cmd: "matrix", desc: "Toggle animated digital green matrix stream" },
-    { cmd: "dsa", desc: "Print 500+ LeetCode breakdown and patterns" },
+    { cmd: "dsa", desc: "Print 160+ algorithmic problem breakdown and patterns" },
     { cmd: "skills", desc: "Print full-stack technical competencies" },
     { cmd: "theme <name>", desc: "Switch theme (e.g. synthwave, tokyonight)" },
     { cmd: "git status", desc: "Check staged files and branch status" },
@@ -61,7 +61,7 @@ export function ReadmeSection() {
               React 19
             </span>
             <span className="rounded-full bg-amber-400/10 border border-amber-400/30 px-2.5 py-0.5 text-amber-200">
-              500+ LeetCode Solved
+              160+ Questions Solved
             </span>
           </div>
           <h1 className="display-font mt-2 text-3xl text-[#f2f2f2] md:text-5xl font-bold">
