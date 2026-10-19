@@ -6,7 +6,7 @@
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.38-FF0055?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
 [![Google Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5_Flash-8E75B2?style=for-the-badge&logo=google)](https://deepmind.google/technologies/gemini/)
-[![LeetCode](https://img.shields.io/badge/LeetCode-500+_Solved-FFA116?style=for-the-badge&logo=leetcode)](https://leetcode.com/u/RajatSharma404/)
+[![LeetCode](https://img.shields.io/badge/LeetCode-160+_Solved-FFA116?style=for-the-badge&logo=leetcode)](https://leetcode.com/u/RajatSharma404/)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-success?style=for-the-badge&logo=vercel)](https://portfolio-chi-self-31.vercel.app/)
 
 > An authentic, feature-packed **VS Code IDE-themed developer portfolio** engineered with Next.js 16, React 19, and Tailwind CSS v4. It features a complete desktop workspace layout with multi-panel sidebars, a dual code/preview split engine, an interactive terminal CLI with easter eggs, real-time GitHub & LeetCode telemetry, Google Gemini-powered Copilot AI, Cherry MX mechanical sound haptics, and rate-limited secure APIs.
@@ -34,7 +34,7 @@
 ### 2. 🤖 Dual-Provider Copilot AI (Google Gemini 2.5 Flash + Claude)
 * **Google Gemini 2.5 Flash**: Primary AI provider via `GEMINI_API_KEY` for lightning-fast responses matching Rajat's AI development stack.
 * **Anthropic Claude 3.5 Sonnet**: Secondary AI provider via `ANTHROPIC_API_KEY`.
-* **Dynamic Contextual Engine**: Smart offline fallback system providing instant, witty answers regarding Rajat's 500+ LeetCode milestones, tech stack, featured projects, and internship availability even without external API credentials.
+* **Dynamic Contextual Engine**: Smart offline fallback system providing instant, witty answers regarding Rajat's 160+ solved questions milestones, tech stack, featured projects, and internship availability even without external API credentials.
 * **Rate-Limited Stream**: Sliding-window throttling (8 req/min per IP) via [`src/lib/rate-limit.ts`](src/lib/rate-limit.ts) with zero serverless holding latency.
 
 ---
@@ -48,16 +48,16 @@
 ---
 
 ### 4. ⚡ LeetCode Pulse & DSA Mastery Card
-* **Concentric SVG Donut Rings**: Visual circular difficulty rings for Easy (220 solved), Medium (250 solved), and Hard (30+ solved).
-* **500+ Solved Center**: Glowing focal point displaying Top 10% global ranking and C++ primary badge.
+* **Concentric SVG Donut Rings**: Visual circular difficulty rings for Easy (85 solved), Medium (65 solved), and Hard (10+ solved).
+* **160+ Solved Center**: Glowing focal point displaying C++ primary badge.
 * **Topic Mastery Clusters**: Problem counts and progress meters for:
-  - *Dynamic Programming & Recursion* (90+ solved · 0/1 Knapsack, LCS, Grid DP)
-  - *Trees & Binary Search* (80+ solved · Segment Trees, Trie, LCA)
-  - *Graphs & BFS/DFS* (75+ solved · Dijkstra, Topological Sort, Union-Find)
-  - *Arrays & Sliding Window* (120+ solved · Two Pointers, Kadane's)
-  - *Heaps & Monotonic Queues* (50+ solved)
-  - *Backtracking & Greedy* (45+ solved)
-* **Skills Sub-Tabs**: Instant toggling between the **LeetCode & DSA Pulse (500+)** and the live **GitHub Code Language Map** SVG donut.
+  - *Dynamic Programming & Recursion* (36+ solved · 0/1 Knapsack, LCS, Grid DP)
+  - *Trees & Binary Search* (30+ solved · Segment Trees, Trie, LCA)
+  - *Graphs & BFS/DFS* (22+ solved · Dijkstra, Topological Sort, Union-Find)
+  - *Arrays & Sliding Window* (48+ solved · Two Pointers, Kadane's)
+  - *Heaps & Monotonic Queues* (14+ solved)
+  - *Backtracking & Greedy* (10+ solved)
+* **Skills Sub-Tabs**: Instant toggling between the **LeetCode & DSA Pulse (160+)** and the live **GitHub Code Language Map** SVG donut.
 
 ---
 
@@ -73,7 +73,7 @@
 | :--- | :--- |
 | `neofetch` | Displays ASCII developer specs (OS, Host, Shell, LeetCode, Theme, Memory) |
 | `matrix` | Toggles animated raining digital green matrix stream |
-| `dsa` / `leetcode` | Prints formatted 500+ problem difficulty and pattern metrics |
+| `dsa` / `leetcode` | Prints formatted 160+ problem difficulty and pattern metrics |
 | `skills` | Prints full-stack competency matrix |
 | `theme <name>` | Switches theme directly from the CLI (`theme synthwave`, `theme monokai`, etc.) |
 | `git status` | Displays working tree & staged changes status |
@@ -150,7 +150,7 @@ d:\Portfolio/
 │   │   │   ├── about-section.tsx     # about.html view (Bio & GitHub pulse)
 │   │   │   ├── projects-section.tsx  # projects.js view (Category filter & accessible cards)
 │   │   │   ├── skills-section.tsx    # skills.json view (Dual-tab DSA + Language map)
-│   │   │   ├── leetcode-pulse.tsx    # LeetCode 500+ concentric rings & clusters
+│   │   │   ├── leetcode-pulse.tsx    # LeetCode 160+ concentric rings & clusters
 │   │   │   ├── experience-section.tsx# experience.ts view (Timeline nodes)
 │   │   │   ├── contact-section.tsx   # contact.css view (Direct message API form)
 │   │   │   ├── readme-section.tsx    # README.md formatted documentation view
