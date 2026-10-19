@@ -12,7 +12,7 @@ export function HomeSection() {
   const roleChips = [
     "Co-Founder @ Pradite",
     "Full Stack & Systems Engineer",
-    "500+ LeetCode Solved",
+    "160+ Questions Solved",
     "Kanpur Institute of Technology",
   ];
 
@@ -37,13 +37,13 @@ export function HomeSection() {
     },
     {
       label: "ALGORITHMIC DISCIPLINE",
-      value: "500+ LeetCode problems solved (DP, Graphs, Trees)",
+      value: "160+ algorithmic questions solved (DP, Graphs, Trees)",
     },
   ];
 
   const heroStats = [
     { label: "Flagship Projects", value: String(projectItems.length) },
-    { label: "LeetCode Solved", value: "500+" },
+    { label: "Questions Solved", value: "160+" },
     { label: "Public Repositories", value: "20" },
     { label: "Response Window", value: "< 24h" },
   ];
