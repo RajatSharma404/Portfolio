@@ -85,7 +85,7 @@ function evaluateDebugExpression(expr: string): string {
       {
         name: "Rajat Sharma",
         role: "Full Stack Developer & AI Tooling",
-        leetcode: 500,
+        questionsSolved: "160+",
         status: "Open to internships",
       },
       null,
@@ -209,7 +209,7 @@ export function TerminalPanel() {
     },
     {
       input: "portfolio.developer",
-      output: '{\n  name: "Rajat Sharma",\n  role: "Full Stack & AI",\n  leetcode: 500\n}',
+      output: '{\n  name: "Rajat Sharma",\n  role: "Full Stack & AI",\n  questionsSolved: "160+"\n}',
     },
   ]);
   const [debugInput, setDebugInput] = useState("");
