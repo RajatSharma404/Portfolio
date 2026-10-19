@@ -81,7 +81,7 @@ export const projectItems: ProjectItem[] = [
     description:
       "Algorithmic problem-solving workstation with spaced repetition, velocity analytics, pattern clusters, and time/space complexity audits.",
     impact:
-      "Engineered to overcome problem-solving plateaus, tracking 500+ LeetCode problems across 18 algorithmic patterns with automated revision intervals.",
+      "Engineered to overcome problem-solving plateaus, tracking 160+ algorithmic problems across 18 algorithmic patterns with automated revision intervals.",
     stack: ["TypeScript", "React", "Node.js", "Chart.js", "Tailwind CSS", "DSA Patterns"],
     github: "https://github.com/RajatSharma404/DSA-Tracker",
     live: "https://github.com/RajatSharma404/DSA-Tracker",
@@ -91,7 +91,7 @@ export const projectItems: ProjectItem[] = [
       "17+ GitHub stars from competitive programmers",
       "Spaced repetition scheduling based on difficulty and review velocity",
       "Topic-wise mastery breakdown covering DP, Graphs, Trees, and Sliding Window",
-      "Built and tested with 500+ solved algorithmic solutions in C++"
+      "Built and tested with 160+ solved algorithmic solutions in C++"
     ],
     featured: true,
   },
@@ -196,5 +196,5 @@ export const projectItems: ProjectItem[] = [
 
 export const siteMeta = {
   deployedOn: "Vercel",
-  lastUpdated: "2026-10-17",
+  lastUpdated: "2026-10-19",
 };
