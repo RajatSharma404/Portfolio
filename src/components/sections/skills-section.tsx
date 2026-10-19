@@ -23,7 +23,7 @@ export function SkillsSection() {
           }`}
         >
           <Flame size={13} className={activeTab === "leetcode" ? "text-amber-400 fill-amber-400" : ""} />
-          <span>LeetCode & DSA Pulse (500+)</span>
+          <span>LeetCode & DSA Pulse (160+)</span>
         </button>
 
         <button
