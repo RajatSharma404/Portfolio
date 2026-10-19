@@ -16,7 +16,7 @@ export function AboutSection() {
     "Co-Founding Pradite: Privacy-first developer tools with zero-telemetry client execution",
     "Real-time architecture design & fast-path streaming (Ghost AI)",
     "Local-first RAG systems with dense-sparse hybrid search & SQLite FTS5 (NotebookLM-lite)",
-    "Rigorous algorithmic problem solving in C++ (500+ LeetCode problems solved)",
+    "Rigorous algorithmic problem solving in C++ (160+ questions solved on GitHub & LeetCode)",
   ];
 
   const aboutFocusRight = [
@@ -82,7 +82,7 @@ export function AboutSection() {
             </p>
             <div className="mt-3.5 flex items-center gap-2 text-xs text-[#94d2ff] font-mono">
               <span className="h-2 w-2 rounded-full bg-[#4fb3ff] animate-ping" />
-              <span>500+ LeetCode problems solved · Top 10% global ranking</span>
+              <span>160+ algorithmic questions solved · C++ & DSA</span>
             </div>
           </section>
 
