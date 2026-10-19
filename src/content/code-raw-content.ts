@@ -45,7 +45,7 @@ export const rawCodeRegistry: Record<string, RawFileContent> = {
         { text: '    university: "Kanpur Institute of Technology",', type: "str" },
       ],
       [
-        { text: '    dsaStatus: "500+ LeetCode Solved (Top 10% Global Rank)",', type: "str" },
+        { text: '    dsaStatus: "160+ Questions Solved (LeetCode & GitHub)",', type: "str" },
       ],
       [
         { text: "    focusAreas: [", type: "plain" },
@@ -85,7 +85,7 @@ export const rawCodeRegistry: Record<string, RawFileContent> = {
         { text: '      <div className="stats-grid">', type: "plain" },
       ],
       [
-        { text: "        {projectItems.length} Flagship Projects · 500+ LeetCode Solved · Response < 24h", type: "str" },
+        { text: "        {projectItems.length} Flagship Projects · 160+ Questions Solved · Response < 24h", type: "str" },
       ],
       [
         { text: "      </div>", type: "plain" },
@@ -110,7 +110,7 @@ export default function HomeHero() {
     role: "Co-Founder @ Pradite | Full-Stack Systems Engineer",
     venture: "Pradite (https://pradite.com)",
     university: "Kanpur Institute of Technology",
-    dsaStatus: "500+ LeetCode Solved (Top 10% Global Rank)",
+    dsaStatus: "160+ Questions Solved (LeetCode & GitHub)",
     focusAreas: ["Local-First AI", "Web Systems", "Algorithmic Workstations"]
   };
 
@@ -123,7 +123,7 @@ export default function HomeHero() {
         Co-Founder @ Pradite. Designing privacy-first AI developer tools and real-time systems.
       </p>
       <div className="stats-grid">
-        {projectItems.length} Flagship Projects · 500+ LeetCode Solved · Response < 24h
+        {projectItems.length} Flagship Projects · 160+ Questions Solved · Response < 24h
       </div>
     </section>
   );
@@ -420,10 +420,10 @@ export const projectItems = [
         { text: '    "leetcode_handle": "RajatSharma404",', type: "str" },
       ],
       [
-        { text: '    "total_solved": 500,', type: "num" },
+        { text: '    "total_solved": 160,', type: "num" },
       ],
       [
-        { text: '    "difficulty_breakdown": { "easy": 220, "medium": 250, "hard": 30 },', type: "str" },
+        { text: '    "difficulty_breakdown": { "easy": 85, "medium": 65, "hard": 10 },', type: "str" },
       ],
       [
         { text: '    "primary_language": "C++",', type: "str" },
@@ -472,8 +472,8 @@ export const projectItems = [
   },
   "dsa_mastery": {
     "leetcode_handle": "RajatSharma404",
-    "total_solved": 500,
-    "difficulty_breakdown": { "easy": 220, "medium": 250, "hard": 30 },
+    "total_solved": 160,
+    "difficulty_breakdown": { "easy": 85, "medium": 65, "hard": 10 },
     "primary_language": "C++",
     "global_ranking": "Top 10%",
     "core_patterns": [
@@ -571,7 +571,7 @@ export const projectItems = [
         { text: '    organization: "Kanpur Institute of Technology",', type: "str" },
       ],
       [
-        { text: '    description: "500+ LeetCode problems solved in C++ with top 10% global ranking. DP, Graphs, and Trees.",', type: "str" },
+        { text: '    description: "160+ algorithmic problems solved in C++ on GitHub & LeetCode. DP, Graphs, and Trees.",', type: "str" },
       ],
       [
         { text: '    tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms"]', type: "str" },
@@ -610,7 +610,7 @@ export const experienceTimeline: ExperienceItem[] = [
     period: "2023 - 2027",
     role: "B.Tech in Computer Science & Engineering",
     organization: "Kanpur Institute of Technology",
-    description: "500+ LeetCode problems solved in C++ with top 10% global ranking. DP, Graphs, and Trees.",
+    description: "160+ algorithmic problems solved in C++ on GitHub & LeetCode. DP, Graphs, and Trees.",
     tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms"]
   }
 ];`,
