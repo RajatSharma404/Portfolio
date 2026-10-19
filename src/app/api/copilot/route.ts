@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
   function getContextualFallback(rawPrompt: string): string {
     const p = rawPrompt.toLowerCase();
     if (p.includes("dsa") || p.includes("leetcode") || p.includes("problem")) {
-      return "Rajat has solved 500+ LeetCode problems primarily in C++, with an active 100+ day streak and top 10% global ranking. Check skills.json in the sidebar to explore his topic mastery clusters!";
+      return "Rajat has solved 160+ algorithmic problems primarily in C++, with active practice across GitHub and LeetCode. Check skills.json in the sidebar to explore his topic mastery clusters!";
     }
     if (p.includes("project") || p.includes("build") || p.includes("portfolio")) {
       return "Rajat has built 15+ full-stack and AI applications including DSA Tracker, Expense Tracker, and Weather Forecast App. Head over to projects.js to inspect the source code and live demos.";
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     if (p.includes("education") || p.includes("college") || p.includes("degree") || p.includes("university")) {
       return "Rajat is currently pursuing his B.Tech in Computer Science & Engineering (2023-2027) at Kanpur Institute of Technology. Check experience.ts for details!";
     }
-    return "I'm Rajat's Portfolio Copilot! You can ask me about his 500+ LeetCode milestones, full-stack projects, tech stack, or engineering internship availability. Or type /projects, /contact, or /resume to navigate.";
+    return "I'm Rajat's Portfolio Copilot! You can ask me about his 160+ solved questions, full-stack projects, tech stack, or engineering internship availability. Or type /projects, /contact, or /resume to navigate.";
   }
 
   // 1. Google Gemini 2.5 Flash (Primary AI Provider)
