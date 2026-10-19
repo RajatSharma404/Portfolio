@@ -57,7 +57,7 @@ export function executeTerminalCommand(
         "Available Commands:",
         "  neofetch      - Display system & developer specifications",
         "  matrix        - Toggle digital matrix rain effect",
-        "  dsa / leetcode- Print 500+ LeetCode problem breakdown",
+        "  dsa / leetcode- Print 160+ algorithmic problem breakdown",
         "  skills        - Print technical competency matrix",
         "  projects      - List all flagship projects and ventures",
         "  theme <name>  - Switch theme (e.g. dracula, monokai, onedark, synthwave)",
@@ -82,7 +82,7 @@ export function executeTerminalCommand(
         "   / / /  \\ \\ \\     Shell: zsh 5.9 (x86_64-portfolio)",
         "  /_/ /    \\ \\_\\    Editor: VS Code Web IDE v1.98.0",
         "    \\ \\    / /      Languages: C++, TypeScript, Python, JavaScript, SQL",
-        "     \\ \\  / /       LeetCode: 500+ Solved (Top 10% Global Rank)",
+        "     \\ \\  / /       LeetCode & GitHub: 160+ Solved",
         "      \\ \\/ /        Ventures: Pradite (https://pradite.com)",
         `       \\  /         Theme: ${ctx.activeThemeLabel}`,
         "        \\/          Memory: 4096MB / 8192MB Allocated",
@@ -118,12 +118,12 @@ export function executeTerminalCommand(
         "=========================================",
         "  LEETCODE PULSE: @RajatSharma404",
         "=========================================",
-        "  Total Problems Solved : 500+",
-        "  Easy                  : 220",
-        "  Medium                : 250",
-        "  Hard                  : 30+",
+        "  Total Problems Solved : 160+",
+        "  Easy                  : 85",
+        "  Medium                : 65",
+        "  Hard                  : 10+",
         "  Primary Language      : C++",
-        "  Global Percentile     : Top 10%",
+        "  Global Percentile     : Consistent Grind",
         "  Active Streak         : 100+ Days Badge Unlocked",
         "  Core Patterns         : DP, Graphs, Trees, Sliding Window",
         "=========================================",
@@ -202,7 +202,7 @@ export function executeTerminalCommand(
         "Author: Rajat Sharma <rajat.sharma.myid1@gmail.com>",
         "Date:   Sat Oct 17 2026",
         "",
-        "    feat(dsa): update 500+ LeetCode pulse metrics & C++ patterns",
+        "    feat(dsa): update 160+ questions pulse metrics & C++ patterns",
       ],
     };
   }
@@ -302,7 +302,7 @@ export function executeTerminalCommand(
   if (lower === "cat resume.pdf" || lower === "cat readme.md") {
     return {
       lines: [
-        "Rajat Sharma: Co-Founder @ Pradite, full-stack systems engineer, 500+ LeetCode solved in C++.",
+        "Rajat Sharma: Co-Founder @ Pradite, full-stack systems engineer, 160+ algorithmic problems solved in C++.",
       ],
     };
   }
