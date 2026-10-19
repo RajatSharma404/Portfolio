@@ -29,7 +29,7 @@ export function ExperienceSection() {
       org: "Kanpur Institute of Technology",
       icon: <GraduationCap size={14} className="text-purple-300" />,
       badge: "Academics & DSA",
-      desc: "500+ LeetCode problems solved in C++ with consistent top 10% global problem-solving percentile. Specialized in Dynamic Programming, Graph Theory, Binary Search trees, and Sliding Window algorithms.",
+      desc: "160+ algorithmic problems solved in C++ on GitHub & LeetCode. Specialized in Dynamic Programming, Graph Theory, Binary Search trees, and Sliding Window algorithms.",
       tags: ["C++", "DSA", "Dynamic Programming", "Graph Theory", "Algorithms", "Complexity Auditing"],
     },
   ];
