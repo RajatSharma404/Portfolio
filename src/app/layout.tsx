@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://portfolio-chi-self-31.vercel.app"),
   title: "Rajat Sharma | Co-Founder @ Pradite & Full-Stack Systems Engineer",
   description:
-    "Interactive VS Code developer operating system of Rajat Sharma — Co-Founder @ Pradite, full-stack systems engineer, 500+ LeetCode problems solved, and creator of Ghost AI & NotebookLM-lite.",
+    "Interactive VS Code developer operating system of Rajat Sharma — Co-Founder @ Pradite, full-stack systems engineer, 160+ algorithmic problems solved, and creator of Ghost AI & NotebookLM-lite.",
   keywords: [
     "Rajat Sharma",
     "Pradite",
@@ -38,7 +38,8 @@ export const metadata: Metadata = {
     "Ghost AI",
     "NotebookLM-lite",
     "DSA Tracker",
-    "LeetCode 500",
+    "LeetCode 160+",
+    "DSA 160+",
     "Kanpur Institute of Technology",
     "Next.js 16",
     "React 19",
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Rajat Sharma | Co-Founder @ Pradite & Systems Engineer",
     description:
-      "Interactive VS Code portfolio: explore Rajat's flagship ventures, local-first AI systems, 500+ LeetCode DSA pulse, and terminal CLI.",
+      "Interactive VS Code portfolio: explore Rajat's flagship ventures, local-first AI systems, 160+ LeetCode & DSA pulse, and terminal CLI.",
     type: "website",
     siteName: "Rajat Sharma Portfolio",
     url: "https://portfolio-chi-self-31.vercel.app",
