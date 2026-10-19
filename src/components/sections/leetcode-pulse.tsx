@@ -11,13 +11,13 @@ export function LeetCodePulse() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const stats = {
-    total: 500,
-    easy: 220,
-    medium: 250,
-    hard: 30,
+    total: 160,
+    easy: 85,
+    medium: 65,
+    hard: 10,
     totalQuestions: 3100,
     streak: "100+ Days",
-    rating: "Top 10%",
+    rating: "Consistent Grind",
     language: "C++ (Primary)",
     handle: "RajatSharma404",
     profileUrl: "https://leetcode.com/u/RajatSharma404/",
@@ -26,43 +26,43 @@ export function LeetCodePulse() {
   const topics = [
     {
       name: "Arrays & Sliding Window",
-      solved: 120,
-      total: 130,
+      solved: 48,
+      total: 50,
       color: "from-cyan-500 to-blue-500",
       description: "Two pointers, prefix sums, kadane's, and variable windows",
     },
     {
       name: "Dynamic Programming",
-      solved: 90,
-      total: 100,
+      solved: 36,
+      total: 40,
       color: "from-purple-500 to-indigo-500",
       description: "0/1 Knapsack, LCS, LIS, grid DP, and bitmask state compression",
     },
     {
       name: "Trees & Binary Search",
-      solved: 80,
-      total: 90,
+      solved: 30,
+      total: 35,
       color: "from-emerald-500 to-teal-500",
       description: "BST, segment trees, tries, and lowest common ancestor",
     },
     {
       name: "Graphs & Disjoint Sets",
-      solved: 75,
-      total: 85,
+      solved: 22,
+      total: 25,
       color: "from-amber-500 to-orange-500",
       description: "Dijkstra, topological sort, BFS/DFS, and union-find",
     },
     {
       name: "Heaps & Monotonic Stack",
-      solved: 50,
-      total: 60,
+      solved: 14,
+      total: 16,
       color: "from-rose-500 to-pink-500",
       description: "Next greater element, priority queues, and sliding window maximum",
     },
     {
       name: "Backtracking & Greedy",
-      solved: 45,
-      total: 50,
+      solved: 10,
+      total: 12,
       color: "from-fuchsia-500 to-pink-500",
       description: "N-queens, subset partitioning, and interval scheduling",
     },
@@ -75,15 +75,15 @@ export function LeetCodePulse() {
 
   const easyRadius = center - 16;
   const easyCircumference = 2 * Math.PI * easyRadius;
-  const easyDashoffset = easyCircumference * (1 - stats.easy / 700);
+  const easyDashoffset = easyCircumference * (1 - Math.min(1, stats.easy / 100));
 
   const medRadius = center - 32;
   const medCircumference = 2 * Math.PI * medRadius;
-  const medDashoffset = medCircumference * (1 - stats.medium / 700);
+  const medDashoffset = medCircumference * (1 - Math.min(1, stats.medium / 80));
 
   const hardRadius = center - 48;
   const hardCircumference = 2 * Math.PI * hardRadius;
-  const hardDashoffset = hardCircumference * (1 - stats.hard / 200);
+  const hardDashoffset = hardCircumference * (1 - Math.min(1, stats.hard / 20));
 
   return (
     <section className="section-card panel-sheen rounded-4xl p-5 md:p-7 select-none">
@@ -100,7 +100,7 @@ export function LeetCodePulse() {
             </span>
           </div>
           <h3 className="display-font mt-2 text-3xl text-white md:text-4xl font-bold">
-            LeetCode 500+ Solved
+            160+ Questions Solved
           </h3>
           <p className="mt-1 max-w-2xl text-xs md:text-sm text-(--text-muted) leading-relaxed">
             Consistent algorithmic problem solving with strong foundations in Data
@@ -199,10 +199,10 @@ export function LeetCodePulse() {
                 TOTAL SOLVED
               </p>
               <p className="display-font text-3xl font-extrabold text-white">
-                500+
+                160+
               </p>
               <p className="text-[10px] text-emerald-400 font-mono font-semibold">
-                ★ Top 10%
+                ★ Consistent Grind
               </p>
             </div>
           </div>
