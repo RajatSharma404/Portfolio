@@ -19,7 +19,7 @@ export function TitleBar() {
   } = useWorkspace();
 
   return (
-    <header className="relative flex items-center justify-between bg-(--titlebar) px-4 py-1.5 text-sm select-none border-b border-black/20">
+    <header className="relative z-50 flex items-center justify-between bg-(--titlebar) px-4 py-1.5 text-sm select-none border-b border-black/20">
       <div className="flex items-center gap-2">
         {/* Traffic Light Window Controls */}
         <button

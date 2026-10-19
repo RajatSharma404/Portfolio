@@ -110,37 +110,40 @@ export const themes: { value: ThemeName; label: string; dot: string }[] = [
 
 export const menuItems: Record<MenuName, MenuItem[]> = {
   File: [
-    { label: "New File", hint: "Ctrl+N" },
+    { label: "New File", hint: "Ctrl+N", action: "open-file" },
     { label: "Open File...", hint: "Ctrl+P", action: "open-file" },
-    { section: "FILES", label: "home.tsx", action: "open-home" },
+    { section: "WORKSPACE FILES", label: "home.tsx", action: "open-home" },
     { label: "about.html", action: "open-about" },
     { label: "projects.js", action: "open-projects" },
     { label: "skills.json", action: "open-skills" },
     { label: "experience.ts", action: "open-education" },
     { label: "contact.css", action: "open-contact" },
-    { label: "Download Resume", action: "download-resume" },
+    { label: "README.md", action: "open-readme" },
+    { label: "resume.pdf", action: "open-resume" },
+    { section: "EXPORT", label: "Download Resume (PDF)", action: "download-resume" },
   ],
   Edit: [
-    { label: "Find...", hint: "Ctrl+P", action: "open-file" },
-    { label: "Select All", hint: "Ctrl+A", action: "select-all" },
-    { label: "Copy", hint: "Ctrl+C", action: "copy" },
+    { label: "Find in Files...", hint: "Ctrl+P", action: "open-file" },
+    { label: "Copy Email Address", hint: "Ctrl+C", action: "copy-email" },
+    { label: "Toggle Sound Effects", action: "toggle-sound" },
+    { label: "Cycle Sound Preset", action: "cycle-sound" },
   ],
   View: [
-    { label: "Command Palette", hint: "Ctrl+P", action: "open-file" },
-    { label: "Toggle Sidebar", hint: "Ctrl+B", action: "toggle-sidebar" },
-    { label: "Toggle Terminal", hint: "Ctrl+`", action: "toggle-terminal" },
+    { label: "Command Palette...", hint: "Ctrl+P", action: "open-file" },
+    { label: "Toggle Primary Sidebar", hint: "Ctrl+B", action: "toggle-sidebar" },
+    { label: "Toggle Terminal Panel", hint: "Ctrl+`", action: "toggle-terminal" },
     {
       label: "Rajat's Copilot",
       hint: "Ctrl+Shift+C",
       action: "toggle-copilot",
     },
-    { label: "Enter Full Screen", hint: "F11" },
-    { label: "Zoom In", hint: "Ctrl++" },
-    { label: "Zoom Out", hint: "Ctrl+-" },
+    { label: "Toggle Code / Preview", action: "toggle-viewmode" },
+    { label: "Color Themes...", hint: "Ctrl+Shift+P", action: "open-theme-picker" },
+    { label: "Toggle Full Screen", hint: "F11", action: "toggle-fullscreen" },
   ],
   Go: [
     { label: "Go to File...", hint: "Ctrl+P", action: "open-file" },
-    { section: "FILES", label: "home.tsx", action: "open-home" },
+    { section: "NAVIGATION", label: "home.tsx", action: "open-home" },
     { label: "about.html", action: "open-about" },
     { label: "projects.js", action: "open-projects" },
     { label: "skills.json", action: "open-skills" },
@@ -149,24 +152,34 @@ export const menuItems: Record<MenuName, MenuItem[]> = {
     { label: "README.md", action: "open-readme" },
     { label: "resume.pdf", action: "open-resume" },
   ],
-  Run: [{ label: "Start Terminal", hint: "Ctrl+`", action: "toggle-terminal" }],
+  Run: [
+    { label: "Open Integrated Terminal", hint: "Ctrl+`", action: "open-terminal" },
+    { label: "Run Last Terminal Command", action: "run-last" },
+    { label: "Toggle Matrix Animation", action: "run-matrix" },
+    { label: "Play Dino Runner Game", action: "play-dino" },
+  ],
   Terminal: [
-    { label: "Start Terminal", hint: "Ctrl+`", action: "toggle-terminal" },
-    { label: "Run Last Command", action: "run-last" },
+    { label: "Toggle Terminal Panel", hint: "Ctrl+`", action: "toggle-terminal" },
+    { label: "Run 'neofetch'", action: "run-neofetch" },
+    { label: "Run 'dsa'", action: "run-dsa" },
+    { label: "Run 'projects'", action: "run-projects" },
+    { label: "Clear Terminal Output", action: "clear-terminal" },
   ],
   Help: [
+    { label: "Welcome (home.tsx)", action: "open-home" },
+    { label: "Documentation (README.md)", action: "open-readme" },
+    { label: "View Resume (resume.pdf)", action: "open-resume" },
+    { label: "Keyboard Shortcuts", hint: "?", action: "open-shortcuts" },
     { label: "Command Palette", hint: "Ctrl+P", action: "open-file" },
-    { section: "KEYBOARD SHORTCUTS", label: "Ctrl+P   Go to file" },
-    { label: "Ctrl+B   Toggle sidebar" },
-    { label: "Ctrl+`   Toggle terminal" },
-    { label: "Ctrl+Shift+C   Toggle Copilot" },
-    { label: "Esc   Close overlay" },
-    { label: "GitHub ↗", action: "open-github" },
+    { section: "PROFILES", label: "GitHub Profile ↗", action: "open-github" },
+    { label: "LeetCode Profile ↗", action: "open-leetcode" },
   ],
   Copilot: [
-    { label: "Open Copilot", action: "toggle-copilot" },
-    { label: "Ask About Projects", action: "copilot-projects" },
-    { label: "Ask About Skills", action: "copilot-skills" },
+    { label: "Open Copilot Chat", hint: "Ctrl+Shift+C", action: "toggle-copilot" },
+    { label: "Ask About Flagship Projects", action: "copilot-projects" },
+    { label: "Ask About Core Tech Stack", action: "copilot-skills" },
+    { label: "Ask About DSA Milestones", action: "copilot-dsa" },
+    { label: "Ask About Work Experience", action: "copilot-experience" },
   ],
 };
 
@@ -305,7 +318,7 @@ interface WorkspaceContextType {
   setVolume: (vol: number) => void;
   playSound: (type: "click" | "success" | "pop") => void;
   editorRef: React.RefObject<HTMLDivElement | null>;
-  menuRef: React.RefObject<HTMLDivElement | null>;
+  menuRef: React.RefObject<HTMLElement | null>;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | null>(null);
@@ -409,7 +422,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const editorRef = useRef<HTMLDivElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLElement | null>(null);
 
   const activeThemeObj = themes.find((item) => item.value === theme);
   const activeThemeLabel = activeThemeObj?.label ?? "Dracula";
@@ -673,6 +686,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const executeMenuAction = useCallback(
     (action?: string) => {
       if (!action) return;
+      playSound("click");
       if (action === "open-file") {
         openPalette();
       } else if (action === "download-resume") {
@@ -681,10 +695,50 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setSidebarOpen((prev) => !prev);
       } else if (action === "toggle-terminal") {
         setTerminalOpen((prev) => !prev);
+      } else if (action === "open-terminal") {
+        setTerminalOpen(true);
       } else if (action === "toggle-copilot") {
         setChatOpen((prev) => !prev);
+      } else if (action === "toggle-viewmode") {
+        toggleViewMode();
+      } else if (action === "open-theme-picker") {
+        setThemePickerOpen((prev) => !prev);
+      } else if (action === "open-shortcuts") {
+        setShortcutHelpOpen(true);
+      } else if (action === "copy-email") {
+        copyEmailAddress();
+      } else if (action === "toggle-sound") {
+        toggleSound();
+      } else if (action === "cycle-sound") {
+        cycleSoundPreset();
+      } else if (action === "toggle-fullscreen") {
+        if (typeof document !== "undefined") {
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          } else {
+            document.documentElement.requestFullscreen().catch(() => {});
+          }
+        }
+      } else if (action === "run-matrix") {
+        setShowMatrix((prev) => !prev);
+      } else if (action === "play-dino") {
+        setTerminalOpen(true);
+        setShowDino(true);
+      } else if (action === "run-neofetch") {
+        setTerminalOpen(true);
+        runTerminalCommand("neofetch");
+      } else if (action === "run-dsa") {
+        setTerminalOpen(true);
+        runTerminalCommand("dsa");
+      } else if (action === "run-projects") {
+        setTerminalOpen(true);
+        runTerminalCommand("projects");
+      } else if (action === "clear-terminal") {
+        setTerminalLines([]);
       } else if (action === "open-github") {
         window.open("https://github.com/RajatSharma404", "_blank");
+      } else if (action === "open-leetcode") {
+        window.open("https://leetcode.com/u/RajatSharma404/", "_blank");
       } else if (action === "run-last") {
         if (lastTerminalCommand) runTerminalCommand(lastTerminalCommand);
       } else if (action === "copilot-projects") {
@@ -693,6 +747,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       } else if (action === "copilot-skills") {
         setChatOpen(true);
         askCopilot("What's your tech stack?");
+      } else if (action === "copilot-dsa") {
+        setChatOpen(true);
+        askCopilot("How many algorithmic questions has Rajat solved?");
+      } else if (action === "copilot-experience") {
+        setChatOpen(true);
+        askCopilot("Tell me about Rajat's work experience at Pradite and Sparqor");
       } else if (action.startsWith("open-")) {
         const fileId = action.replace("open-", "");
         openFile(fileId);
@@ -701,10 +761,24 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     },
     [
       askCopilot,
+      copyEmailAddress,
+      cycleSoundPreset,
       lastTerminalCommand,
       openFile,
       openPalette,
+      playSound,
       runTerminalCommand,
+      setChatOpen,
+      setMenuOpen,
+      setShowDino,
+      setShowMatrix,
+      setShortcutHelpOpen,
+      setSidebarOpen,
+      setTerminalLines,
+      setTerminalOpen,
+      setThemePickerOpen,
+      toggleSound,
+      toggleViewMode,
     ],
   );
 
